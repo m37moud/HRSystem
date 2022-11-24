@@ -3,7 +3,7 @@ plugins {
     kotlin("kapt")
 }
 
-group = "com.myapp"
+group = "com.HrAppV"
 version = "1.0.0"
 
 repositories {
@@ -20,4 +20,9 @@ dependencies {
 
     // Arbor : Like Timber, just different.
     api("com.ToxicBakery.logging:arbor-jvm:1.34.109")
+
+    //excel
+    implementation("org.apache.poi:poi:3.17")
+    implementation("org.apache.poi:poi-ooxml:3.17")
+
 }

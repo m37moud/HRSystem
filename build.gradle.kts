@@ -9,7 +9,7 @@ plugins {
     id("org.jetbrains.compose") version "1.1.0"
 }
 
-group = "com.myapp"
+group = "com.HrAppV"
 version = "1.0.0"
 
 repositories {
@@ -39,6 +39,8 @@ dependencies {
     val decomposeVersion = "0.2.5"
     implementation("com.arkivanov.decompose:decompose-jvm:$decomposeVersion")
     implementation("com.arkivanov.decompose:extensions-compose-jetbrains-jvm:$decomposeVersion")
+
+
 
 
     /**
@@ -73,10 +75,10 @@ tasks.withType<KotlinCompile>() {
 
 compose.desktop {
     application {
-        mainClass = "com.myapp.AppKt"
+        mainClass = "com.HrAppV.AppKt"
         nativeDistributions {
             targetFormats(TargetFormat.Dmg, TargetFormat.Msi, TargetFormat.Deb)
-            packageName = "myapp"
+            packageName = "HrAppV"
             packageVersion = "1.0.0"
 
             val iconsRoot = project.file("src/main/resources/drawables")
