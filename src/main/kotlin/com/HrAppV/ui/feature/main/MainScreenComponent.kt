@@ -31,6 +31,6 @@ class MainScreenComponent(
             println("startEmpResult is $startEmpResultScreen")
             onClickEmpResult()
         }
-        MainScreen(viewModel)
+        MainScreen2(viewModel)
     }
 }
