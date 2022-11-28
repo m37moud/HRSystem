@@ -40,7 +40,7 @@ fun EmployeeResultScreen(viewModel: EmployeeResultViewModel,) {
         scaffoldState = scaffoldState, topBar = {
             TopAppBar(
                 title = {
-                    Text(text = "Home")
+                    Text(text = "Register Attends")
                 }
             )
         }

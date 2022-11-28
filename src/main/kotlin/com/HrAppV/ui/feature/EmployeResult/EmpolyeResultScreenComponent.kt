@@ -11,6 +11,7 @@ import javax.inject.Inject
 class EmpolyeResultScreenComponent(
     appComponent: AppComponent,
     private val componentContext: ComponentContext,
+    private val onClickEmpResult: () ->Unit
 ): Component, ComponentContext by componentContext {
     @Inject
     lateinit var viewModel: EmployeeResultViewModel
@@ -25,10 +26,11 @@ class EmpolyeResultScreenComponent(
         LaunchedEffect(viewModel) {
             viewModel.init(scope)
         }
-        val folderPath by viewModel.folderPath.collectAsState()
-        if(folderPath.isNotBlank()){
+//        val folderPath by viewModel.folderPath.collectAsState()
+//        if(folderPath.isNotBlank()){
+//
+//        }
 
-        }
 
         EmployeeResultScreen(viewModel)
     }

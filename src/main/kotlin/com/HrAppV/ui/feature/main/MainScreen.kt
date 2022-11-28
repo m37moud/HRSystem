@@ -3,19 +3,22 @@ package com.HrAppV.ui.feature.main
 import androidx.compose.desktop.ui.tooling.preview.Preview
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
+import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.*
-import androidx.compose.material.Button
-import androidx.compose.material.Card
-import androidx.compose.material.MaterialTheme
-import androidx.compose.material.Text
-import androidx.compose.runtime.Composable
-import androidx.compose.runtime.collectAsState
-import androidx.compose.runtime.getValue
+import androidx.compose.material.*
+import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.filled.*
+import androidx.compose.material.icons.twotone.Favorite
+import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.compose.ui.res.painterResource
+import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.unit.dp
+import com.HrAppV.App
+import com.HrAppV.ui.value.HrAppVTheme
 import com.HrAppV.ui.value.R
 
 
@@ -66,27 +69,32 @@ fun MainScreen(
 
 @Preview
 @Composable
-fun MainScreen2(viewModel: MainViewModel,modifier: Modifier = Modifier) {
-    Box(modifier = modifier.fillMaxSize().background(Color.LightGray)) {
-        Row(modifier = modifier.fillMaxSize()) {
-            HomeContent(modifier)
-            NavMenu(modifier)
+fun MainScreen2(
+    viewModel: MainViewModel,
+    modifier: Modifier = Modifier
+) {
+    Row(modifier = modifier.fillMaxSize().background(Color.LightGray)) {
+        NavMenu(modifier.weight(1f), viewModel)
+        HomeContent(modifier.weight(4f))
 
-        }
+
     }
 }
 
 
 @Composable
 private fun HomeContent(modifier: Modifier = Modifier) {
-    Row() {
+    Row(
+        modifier = modifier.fillMaxSize().padding(8.dp),
+        horizontalArrangement = Arrangement.Center
+    ) {
         Spacer(modifier = Modifier.width(8.dp))
 
-        LeftPart()
+        LeftPart(Modifier.weight(1f))
         Spacer(modifier = Modifier.width(12.dp))
 
 
-        RightPart()
+        RightPart(Modifier.weight(3f))
         Spacer(modifier = Modifier.width(8.dp))
 
     }
@@ -94,45 +102,70 @@ private fun HomeContent(modifier: Modifier = Modifier) {
 
 }
 
+
 @Composable
-private fun LeftPart() {
+private fun LeftPart(modifier: Modifier = Modifier) {
 
-    Card (modifier = Modifier.size(100.dp , 250.dp)){
+    Card(
+        modifier.padding(top = 12.dp)
+            .background(Color.White),
+        elevation = 4.dp
+    ) {
 
-        Column(){
+        Column(
+            modifier = Modifier.padding(12.dp),
+//            horizontalAlignment = Alignment.Start
+        ) {
             Text("My Profile")
 
-            Image(
-                painter = painterResource("drawables/logo.png"),
-                modifier = Modifier.size(50.dp),
-                contentDescription = "Logo"
-            )
+            Column(
+                modifier = Modifier.padding(start = 24.dp,end = 24.dp),
+                horizontalAlignment = Alignment.CenterHorizontally
+            ) {
+                Image(
+                    painter = painterResource("drawables/logo.png"),
+                    modifier = Modifier.size(50.dp),
+                    contentDescription = "Logo",
 
-            Text("My Profile")
+
+                    )
+
+                Text("Mr-Mahmoud Aly", modifier = Modifier.align(Alignment.CenterHorizontally))
+
+            }
+
+            Spacer(modifier = Modifier.height(300.dp))
+
 
         }
 
+
     }
+
 
 }
 
 
 @Composable
-private fun RightPart() {
-    Column() {
+private fun RightPart(modifier: Modifier = Modifier) {
+    Column(modifier = modifier.padding(4.dp)) {
+        //Dashboard
         Spacer(modifier = Modifier.height(8.dp))
-        Dashboard()
+        Dashboard(Modifier.weight(1f))
+
+        //Report
         Spacer(modifier = Modifier.height(8.dp))
-        Report()
-        Spacer(modifier = Modifier.height(8.dp))
+        Report(Modifier.weight(1f))
+
+        Spacer(modifier = Modifier.weight(2f))
 
 
     }
 }
 
 @Composable
-private fun Dashboard() {
-    Column() {
+private fun Dashboard(modifier: Modifier = Modifier) {
+    Column(modifier = modifier.padding(start = 20.dp)) {
         Text("Dashboard")
         Spacer(modifier = Modifier.height(8.dp))
         DashboardCard("Mr : mahmoud")
@@ -143,22 +176,32 @@ private fun Dashboard() {
 
 @Composable
 private fun DashboardCard(text: String) {
-    Card() {
-        Column() {
-            Row() {
-                Text("welcome : ")
-                Text(text)
+    Card(modifier = Modifier.background(Color.Black), elevation = 4.dp) {
+        Row(modifier = Modifier.padding(8.dp)) {
+            Column(modifier = Modifier.padding(4.dp).weight(2f)) {
+                Row() {
+                    Text("welcome : ", style = MaterialTheme.typography.subtitle1)
+                    Text(text, style = MaterialTheme.typography.subtitle1.copy())
+
+                }
+                Row() {
+                    Text("have a nice day at work ")
+
+                }
+
             }
-            Row() {
-                Text("welcome : ")
-                Spacer(modifier = Modifier.width(20.dp))
+            Column(modifier = Modifier.padding(4.dp).weight(1f)) {
+                Spacer(modifier = Modifier.height(70.dp))
                 Image(
-                    painter = painterResource("drawables/logo.png"),
-                    modifier = Modifier.size(100.dp),
-                    contentDescription = "Logo"
-                )
+//                    painter = painterResource("drawables/logo.png"),
+                    imageVector = Icons.TwoTone.Favorite,
+                    modifier = Modifier.size(70.dp),
+                    contentDescription = "Logo",
 
+                    )
             }
+
+
         }
 
 
@@ -166,20 +209,22 @@ private fun DashboardCard(text: String) {
 }
 
 @Composable
-private fun Report() {
+private fun Report(modifier: Modifier = Modifier) {
 
-    Column() {
+    Column(modifier = modifier.padding(start = 20.dp)) {
         Text("Report")
+        Spacer(modifier = Modifier.height(8.dp))
         Row() {
-            Spacer(modifier = Modifier.width(20.dp))
-            ReportCard()
+            ReportCard(Modifier.weight(1f), Icons.Default.Person, "Employ Number", "120")
             Spacer(modifier = Modifier.width(8.dp))
-            ReportCard()
+
+            ReportCard(Modifier.weight(1f), Icons.Default.Person, "Total Salary", "12")
             Spacer(modifier = Modifier.width(8.dp))
-            ReportCard()
+
+            ReportCard(Modifier.weight(1f), Icons.Default.Person, "Total Motivation", "74")
             Spacer(modifier = Modifier.width(8.dp))
-            ReportCard()
-            Spacer(modifier = Modifier.width(20.dp))
+
+            ReportCard(Modifier.weight(1f), Icons.Default.Person, "Total Additional", "45")
 
         }
     }
@@ -187,22 +232,26 @@ private fun Report() {
 }
 
 @Composable
-private fun ReportCard() {
-    Card() {
-        Column() {
+private fun ReportCard(modifier: Modifier = Modifier, icon: ImageVector, name: String, number: String) {
+    Card(modifier, elevation = 4.dp) {
+        Column(
+            modifier = Modifier.padding(8.dp),
+            horizontalAlignment = Alignment.CenterHorizontally,
+            verticalArrangement = Arrangement.Center
+        ) {
             Spacer(modifier = Modifier.height(12.dp))
 
             Image(
-                painter = painterResource("drawables/logo.png"),
-                modifier = Modifier.size(100.dp),
+                imageVector = icon,
+                modifier = Modifier.size(50.dp),
                 contentDescription = "Logo"
             )
             Spacer(modifier = Modifier.height(4.dp))
 
-            Text("welcome : ")
+            Text(name, maxLines = 1)
             Spacer(modifier = Modifier.height(4.dp))
 
-            Text("welcome : ")
+            Text(number, maxLines = 1)
             Spacer(modifier = Modifier.height(12.dp))
 
 
@@ -211,24 +260,54 @@ private fun ReportCard() {
 }
 
 @Composable
+private fun NavMenu(modifier: Modifier = Modifier, viewModel: MainViewModel) {
+    Column(
+        modifier = modifier.fillMaxHeight()
+            .background(Color.White)
+    ) {
+        Row(
+            modifier = Modifier.fillMaxWidth()
+                .padding(4.dp)
+                .background(Color.White),
+            verticalAlignment = Alignment.CenterVertically
 
-private fun NavMenu(modifier: Modifier = Modifier) {
-    Column(modifier =  modifier.fillMaxHeight().width(100.dp)
-        .background(Color.White)){
+        ) {
+            Text("${App.appArgs.appName} ", style = MaterialTheme.typography.subtitle1, color = Color.Black)
+
+            Spacer(modifier = Modifier.weight(1f))
+
+            Image(
+                imageVector = Icons.Default.Menu,
+                modifier = Modifier.size(25.dp),
+                contentDescription = null
+            )
+
+
+        }
+
+        Spacer(modifier = Modifier.height(16.dp))
+        NavItem(Icons.Default.Home, "Home", viewModel) {
+
+        }
 
         Spacer(modifier = Modifier.height(8.dp))
-        NavItem("Home" , "Home")
+        NavItem(Icons.Default.Person, "Add Employee", viewModel) {
+
+        }
 
         Spacer(modifier = Modifier.height(8.dp))
-        NavItem("Register Attends" , "Home")
+        NavItem(Icons.Default.Edit, "Register Attends", viewModel) {
+            viewModel.startEmpResultScreen()
+        }
 
         Spacer(modifier = Modifier.height(8.dp))
-        NavItem("Add Employee" , "Home")
+        NavItem(Icons.Default.Settings, "Settings", viewModel) {
 
+        }
         Spacer(modifier = Modifier.height(8.dp))
-        NavItem("Settings" , "Home")
-        Spacer(modifier = Modifier.height(8.dp))
-        NavItem("About" , "Home")
+        NavItem(Icons.Default.Info, "About", viewModel) {
+
+        }
 
 
     }
@@ -236,19 +315,36 @@ private fun NavMenu(modifier: Modifier = Modifier) {
 }
 
 @Composable
-private fun NavItem(name:String , img :String){
-    Row(modifier = Modifier.fillMaxWidth().padding(4.dp).background(Color.White)){
+private fun NavItem(icon: ImageVector, name: String, viewModel: MainViewModel, click: () -> Unit) {
+    Row(
+        modifier = Modifier.fillMaxWidth().padding(4.dp).background(Color.White)
+            .clickable { click() },
+        verticalAlignment = Alignment.CenterVertically
+
+    ) {
+        Spacer(modifier = Modifier.width(8.dp))
         Image(
-            painter = painterResource("drawables/logo.png"),
+            imageVector = icon,
             modifier = Modifier.size(25.dp),
-            contentDescription = "Logo"
+            contentDescription = null
         )
+        Spacer(modifier = Modifier.width(8.dp))
 
-        Text(name)
+
+        Text(name, style = MaterialTheme.typography.subtitle2, color = Color.Black)
         Spacer(modifier = Modifier.width(50.dp))
-
 
 
     }
 
+}
+
+@Composable
+@Preview
+fun FavoriteCollectionCardPreview() {
+    val darkTheme by remember { mutableStateOf(false) }
+    HrAppVTheme(darkTheme) {
+//        MainScreen2()
+
+    }
 }
