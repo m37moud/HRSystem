@@ -1,11 +1,9 @@
 package com.HrAppV.di
 
-import com.HrAppV.data.di.module.MyModule
-import com.HrAppV.ui.feature.EmployeResult.EmpolyeResultScreenComponent
+import com.HrAppV.ui.feature.EmployeResult.EmployResultScreenComponent
 import com.HrAppV.ui.feature.main.MainScreenComponent
 import com.HrAppV.ui.feature.splash.SplashScreenComponent
 import dagger.Component
-import dagger.Provides
 import excel.ImportExcelFile
 import javax.inject.Singleton
 
@@ -19,7 +17,7 @@ import javax.inject.Singleton
 interface AppComponent {
     fun inject(splashScreenComponent: SplashScreenComponent)
     fun inject(mainScreenComponent: MainScreenComponent)
-    fun inject(employeScreenComponent: EmpolyeResultScreenComponent)
+    fun inject(employeScreenComponent: EmployResultScreenComponent)
 
     fun getImporter() :ImportExcelFile
 }

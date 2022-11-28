@@ -34,7 +34,7 @@ class MainActivity : Activity() {
                 icon = painterResource("drawables/launcher_icons/system.png"),
                 state = rememberWindowState(width = 1024.dp, height = 600.dp),
             ) {
-                HrAppVTheme {
+                HrAppVTheme (false){
                     // Igniting navigation
                     rememberRootComponent(factory = ::NavHostComponent)
                         .render()

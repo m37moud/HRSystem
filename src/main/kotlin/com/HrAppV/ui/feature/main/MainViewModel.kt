@@ -27,4 +27,7 @@ class MainViewModel @Inject constructor(
     fun startEmpResultScreen() {
         _isStartEmpResult.value = true
     }
+    fun onBackPress() {
+        _isStartEmpResult.value = false
+    }
 }

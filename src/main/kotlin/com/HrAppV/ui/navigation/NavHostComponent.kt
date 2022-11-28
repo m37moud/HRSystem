@@ -1,18 +1,15 @@
 package com.HrAppV.ui.navigation
 
 import androidx.compose.runtime.Composable
-import com.arkivanov.decompose.ComponentContext
 import com.arkivanov.decompose.extensions.compose.jetbrains.Children
 import com.arkivanov.decompose.extensions.compose.jetbrains.animation.child.crossfadeScale
-import com.arkivanov.decompose.replaceCurrent
-import com.arkivanov.decompose.router
 import com.arkivanov.decompose.statekeeper.Parcelable
 import com.HrAppV.di.AppComponent
 import com.HrAppV.di.DaggerAppComponent
-import com.HrAppV.ui.feature.EmployeResult.EmpolyeResultScreenComponent
+import com.HrAppV.ui.feature.EmployeResult.EmployResultScreenComponent
 import com.HrAppV.ui.feature.main.MainScreenComponent
 import com.HrAppV.ui.feature.splash.SplashScreenComponent
-import com.arkivanov.decompose.pop
+import com.arkivanov.decompose.*
 
 /**
  * All navigation decisions are made from here
@@ -52,21 +49,22 @@ class NavHostComponent(
                 onSplashFinished = ::onSplashFinished,
             )
 
-            is Config.EmployeResult -> EmpolyeResultScreenComponent(
+            is Config.EmployeResult -> EmployResultScreenComponent(
                 appComponent = appComponent,
                 componentContext = componentContext,
-               onBackClickEmpResult = :: EmployeScreenStartBackPress
+               onBackClickEmpResult = :: employScreenStartBackPress
             )
 
             Config.Main -> MainScreenComponent(
                 appComponent = appComponent,
                 componentContext = componentContext,
-                onClickEmpResult = ::EmployeScreenStart
+                onClickEmpResult = ::employScreenStart
 
             )
         }
     }
 
+    @OptIn(ExperimentalDecomposeApi::class)
     @Composable
     override fun render() {
         Children(
@@ -85,10 +83,12 @@ class NavHostComponent(
     }
 
 
-    private fun EmployeScreenStart() {
+    private fun employScreenStart() {
         router.replaceCurrent(Config.EmployeResult)
     }
-    private fun EmployeScreenStartBackPress() {
-        router.pop()
+    private fun employScreenStartBackPress() {
+//        router.pop()
+        router.replaceCurrent(Config.Main)
+
     }
 }

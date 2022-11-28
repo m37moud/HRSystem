@@ -7,6 +7,7 @@ import androidx.compose.foundation.lazy.items
 import androidx.compose.material.*
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.AccountBox
+import androidx.compose.material.icons.filled.ArrowBack
 import androidx.compose.material.icons.filled.Refresh
 import androidx.compose.material.icons.outlined.Search
 import androidx.compose.runtime.*
@@ -19,12 +20,15 @@ import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
 import com.HrAppV.data.di.module.EmployeeResult
+import com.HrAppV.ui.feature.main.MainViewModel
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 import utils.LCE
 
 @Composable
-fun EmployeeResultScreen(viewModel: EmployeeResultViewModel,) {
+fun EmployeeResultScreen(viewModel: EmployeeResultViewModel
+//                         ,mainViewModel: MainViewModel
+) {
 
     var path by remember { mutableStateOf("E:\\8") }
     // 1
@@ -41,7 +45,9 @@ fun EmployeeResultScreen(viewModel: EmployeeResultViewModel,) {
             TopAppBar(
                 title = {
                     Text(text = "Register Attends")
-                }
+                }, navigationIcon = { IconButton(onClick = {viewModel.onBackPress()}){
+                    Icon(imageVector = Icons.Filled.ArrowBack,contentDescription = "back")
+                } }
             )
         }
     ) {

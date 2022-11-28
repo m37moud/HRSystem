@@ -23,6 +23,10 @@ class EmployeeResultViewModel @Inject constructor(
     private val _EmpResults: MutableStateFlow<LCE<List<EmployeeResult>>> = MutableStateFlow(LCE.NOACTION)
     val empResults: StateFlow<LCE<List<EmployeeResult>>> = _EmpResults
 
+
+    private val _isBackPressed = MutableStateFlow(false)
+    val backToMain: StateFlow<Boolean> = _isBackPressed
+
     fun onClickMeClicked() {
         _folderPath.value = myRepo.getClickedWelcomeText()
     }
@@ -31,6 +35,8 @@ class EmployeeResultViewModel @Inject constructor(
         _EmpResults.value = LCE.LOADING
         _EmpResults.value = myRepo.importer.getEmployReport(folderPath)
     }
-
+    fun onBackPress() {
+        _isBackPressed.value = true
+    }
 
 }
