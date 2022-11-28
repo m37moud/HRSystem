@@ -12,6 +12,7 @@ import com.HrAppV.di.DaggerAppComponent
 import com.HrAppV.ui.feature.EmployeResult.EmpolyeResultScreenComponent
 import com.HrAppV.ui.feature.main.MainScreenComponent
 import com.HrAppV.ui.feature.splash.SplashScreenComponent
+import com.arkivanov.decompose.pop
 
 /**
  * All navigation decisions are made from here
@@ -53,7 +54,8 @@ class NavHostComponent(
 
             is Config.EmployeResult -> EmpolyeResultScreenComponent(
                 appComponent = appComponent,
-                componentContext = componentContext
+                componentContext = componentContext,
+               onBackClickEmpResult = :: EmployeScreenStartBackPress
             )
 
             Config.Main -> MainScreenComponent(
@@ -85,5 +87,8 @@ class NavHostComponent(
 
     private fun EmployeScreenStart() {
         router.replaceCurrent(Config.EmployeResult)
+    }
+    private fun EmployeScreenStartBackPress() {
+        router.pop()
     }
 }

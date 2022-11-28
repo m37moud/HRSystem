@@ -11,7 +11,7 @@ import javax.inject.Inject
 class EmpolyeResultScreenComponent(
     appComponent: AppComponent,
     private val componentContext: ComponentContext,
-    private val onClickEmpResult: () ->Unit
+    private val onBackClickEmpResult: () ->Unit
 ): Component, ComponentContext by componentContext {
     @Inject
     lateinit var viewModel: EmployeeResultViewModel
@@ -30,7 +30,7 @@ class EmpolyeResultScreenComponent(
 //        if(folderPath.isNotBlank()){
 //
 //        }
-
+        onBackClickEmpResult()
 
         EmployeeResultScreen(viewModel)
     }
