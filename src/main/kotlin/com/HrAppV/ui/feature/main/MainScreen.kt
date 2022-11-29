@@ -15,11 +15,17 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.compose.ui.res.painterResource
-import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.unit.dp
 import com.HrAppV.App
 import com.HrAppV.ui.value.HrAppVTheme
 import com.HrAppV.ui.value.R
+import androidx.compose.foundation.*
+import androidx.compose.foundation.gestures.Orientation
+import androidx.compose.foundation.gestures.scrollable
+import androidx.compose.foundation.shape.CircleShape
+import androidx.compose.ui.draw.clip
+import androidx.compose.ui.graphics.LinearGradient
+import androidx.compose.ui.text.font.FontWeight
 
 
 @Composable
@@ -73,12 +79,21 @@ fun MainScreen2(
     viewModel: MainViewModel,
     modifier: Modifier = Modifier
 ) {
-    Row(modifier = modifier.fillMaxSize().background(Color.LightGray)) {
+    val scrollState = rememberScrollState(0)
+//    Surface {
+
+    Row(
+        modifier = modifier.fillMaxSize().background(Color.LightGray)
+            .scrollable(scrollState, Orientation.Horizontal)
+    ) {
         NavMenu(modifier.weight(1f), viewModel)
         HomeContent(modifier.weight(4f))
 
 
     }
+
+//    }
+
 }
 
 
@@ -114,23 +129,31 @@ private fun LeftPart(modifier: Modifier = Modifier) {
 
         Column(
             modifier = Modifier.padding(12.dp),
-//            horizontalAlignment = Alignment.Start
+            horizontalAlignment = Alignment.Start
         ) {
-            Text("My Profile")
+            Text("My Profile", style = MaterialTheme.typography.h5.copy(fontWeight = FontWeight.ExtraBold))
 
             Column(
-                modifier = Modifier.padding(start = 24.dp,end = 24.dp),
+                modifier = Modifier.padding(start = 24.dp, end = 24.dp),
                 horizontalAlignment = Alignment.CenterHorizontally
             ) {
+
                 Image(
-                    painter = painterResource("drawables/logo.png"),
-                    modifier = Modifier.size(50.dp),
+                    painter = painterResource("drawables/ic_user_placeholder.png"),
+                    modifier = Modifier.size(100.dp)
+                        .clip(CircleShape)
+                        .border(shape = CircleShape, border = BorderStroke(2.dp, Color.Black)),
                     contentDescription = "Logo",
+                )
+
+                Spacer(modifier = Modifier.height(8.dp))
 
 
-                    )
-
-                Text("Mr-Mahmoud Aly", modifier = Modifier.align(Alignment.CenterHorizontally))
+                Text(
+                    "Mr-Mahmoud Aly",
+                    modifier = Modifier.align(Alignment.CenterHorizontally),
+                    maxLines = 1
+                )
 
             }
 
@@ -166,19 +189,24 @@ private fun RightPart(modifier: Modifier = Modifier) {
 @Composable
 private fun Dashboard(modifier: Modifier = Modifier) {
     Column(modifier = modifier.padding(start = 20.dp)) {
-        Text("Dashboard")
+        Text("Dashboard", style = MaterialTheme.typography.h5.copy(fontWeight = FontWeight.ExtraBold))
         Spacer(modifier = Modifier.height(8.dp))
-        DashboardCard("Mr : mahmoud")
+        DashboardCard(text = "Mr/mahmoud")
 
     }
 
 }
 
 @Composable
-private fun DashboardCard(text: String) {
-    Card(modifier = Modifier.background(Color.Black), elevation = 4.dp) {
-        Row(modifier = Modifier.padding(8.dp)) {
-            Column(modifier = Modifier.padding(4.dp).weight(2f)) {
+@Preview
+private fun DashboardCard(modifier: Modifier = Modifier, text: String) {
+    Card(
+//        modifier = modifier.background(MaterialTheme.colors.primary) ,
+        elevation = 4.dp
+    ) {
+        Row(modifier = Modifier.padding(8.dp)
+            .background(MaterialTheme.colors.primary)) {
+            Column(modifier = Modifier.padding(4.dp)) {
                 Row() {
                     Text("welcome : ", style = MaterialTheme.typography.subtitle1)
                     Text(text, style = MaterialTheme.typography.subtitle1.copy())
@@ -190,8 +218,10 @@ private fun DashboardCard(text: String) {
                 }
 
             }
-            Column(modifier = Modifier.padding(4.dp).weight(1f)) {
-                Spacer(modifier = Modifier.height(70.dp))
+            Spacer(modifier = Modifier.weight(1f))
+
+            Column(modifier = Modifier.padding(4.dp)) {
+                Spacer(modifier = Modifier.weight(1f))
                 Image(
 //                    painter = painterResource("drawables/logo.png"),
                     imageVector = Icons.TwoTone.Favorite,
@@ -212,9 +242,9 @@ private fun DashboardCard(text: String) {
 private fun Report(modifier: Modifier = Modifier) {
 
     Column(modifier = modifier.padding(start = 20.dp)) {
-        Text("Report")
+        Text("Report", style = MaterialTheme.typography.h5.copy(fontWeight = FontWeight.ExtraBold))
         Spacer(modifier = Modifier.height(8.dp))
-        Row() {
+        Row(Modifier.fillMaxSize()) {
             ReportCard(Modifier.weight(1f), Icons.Default.Person, "Employ Number", "120")
             Spacer(modifier = Modifier.width(8.dp))
 
@@ -268,7 +298,8 @@ private fun NavMenu(modifier: Modifier = Modifier, viewModel: MainViewModel) {
         Row(
             modifier = Modifier.fillMaxWidth()
                 .padding(4.dp)
-                .background(Color.White),
+//                .background(Color.White)
+            ,
             verticalAlignment = Alignment.CenterVertically
 
         ) {
@@ -339,6 +370,11 @@ private fun NavItem(icon: ImageVector, name: String, viewModel: MainViewModel, c
 
 }
 
+
+//@Composable
+//fun spotifyGradient() = LinearGradient(spotifyGradient, startX = 0f, endX = 0f, startY = 0f, endY = 100f)
+//
+
 @Composable
 @Preview
 fun FavoriteCollectionCardPreview() {
@@ -348,3 +384,5 @@ fun FavoriteCollectionCardPreview() {
 
     }
 }
+
+

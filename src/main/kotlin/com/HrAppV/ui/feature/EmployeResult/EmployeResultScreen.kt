@@ -26,14 +26,15 @@ import kotlinx.coroutines.launch
 import utils.LCE
 
 @Composable
-fun EmployeeResultScreen(viewModel: EmployeeResultViewModel
+fun EmployeeResultScreen(
+    viewModel: EmployeeResultViewModel
 //                         ,mainViewModel: MainViewModel
 ) {
 
     var path by remember { mutableStateOf("E:\\8") }
     // 1
 //    var importState by remember { mutableStateOf<LCE<List<EmployeeResult>>?>(null) }
-    val importState =viewModel.empResults.collectAsState()
+    val importState = viewModel.empResults.collectAsState()
 
     // 2
     val scope = rememberCoroutineScope()
@@ -45,9 +46,11 @@ fun EmployeeResultScreen(viewModel: EmployeeResultViewModel
             TopAppBar(
                 title = {
                     Text(text = "Register Attends")
-                }, navigationIcon = { IconButton(onClick = {viewModel.onBackPress()}){
-                    Icon(imageVector = Icons.Filled.ArrowBack,contentDescription = "back")
-                } }
+                }, navigationIcon = {
+                    IconButton(onClick = { viewModel.onBackPress() }) {
+                        Icon(imageVector = Icons.Filled.ArrowBack, contentDescription = "back")
+                    }
+                }
             )
         }
     ) {
@@ -57,7 +60,10 @@ fun EmployeeResultScreen(viewModel: EmployeeResultViewModel
             Row(
                 modifier = Modifier
                     .fillMaxWidth()
-                    .padding(horizontal = 16.dp, vertical = 16.dp), // this can change for contentPadding = PaddingValues(horizontal = 16.dp)
+                    .padding(
+                        horizontal = 16.dp,
+                        vertical = 16.dp
+                    ), // this can change for contentPadding = PaddingValues(horizontal = 16.dp)
                 verticalAlignment = Alignment.CenterVertically, // this modifier for column
                 horizontalArrangement = Arrangement.Center      // this can change for Arrangement.spacedBy()
 
@@ -134,7 +140,7 @@ fun ContentUI(data: List<EmployeeResult>) {
         LazyColumn(
             modifier = Modifier.fillMaxSize()
 //                .padding(vertical = 4.dp) // this can change for contentPadding = PaddingValues(horizontal = 16.dp)
-            ,contentPadding = PaddingValues(vertical = 4.dp)
+            , contentPadding = PaddingValues(vertical = 4.dp)
         ) {
             items(items = data) { employee ->
                 EmployeeCard(employee)

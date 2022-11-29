@@ -10,7 +10,8 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.graphics.Color
 
 // Color set
-val LightTheme = lightColors( primary = md_theme_light_primary,
+val LightTheme = lightColors(
+    primary = md_theme_light_primary,
     onPrimary = md_theme_light_onPrimary,
     secondary = md_theme_light_secondary,
     onSecondary = md_theme_light_onSecondary,
@@ -21,6 +22,7 @@ val LightTheme = lightColors( primary = md_theme_light_primary,
     surface = md_theme_light_surface,
     onSurface = md_theme_light_onSurface,
 ) // TODO :
+
 val DarkTheme = darkColors(
     primary = R.color.PictonBlue,
     onPrimary = Color.White,
