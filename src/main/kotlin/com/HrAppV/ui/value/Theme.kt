@@ -12,9 +12,9 @@ import androidx.compose.ui.graphics.Color
 // Color set
 val LightTheme = lightColors(
     primary = md_theme_light_primary,
-    onPrimary = md_theme_light_onPrimary,
+    onPrimary =  Color.Black,
     secondary = md_theme_light_secondary,
-    onSecondary = md_theme_light_onSecondary,
+    onSecondary = Color.White,
     error = md_theme_light_error,
     onError = md_theme_light_onError,
     background = md_theme_light_background,
@@ -27,7 +27,7 @@ val DarkTheme = darkColors(
     primary = R.color.PictonBlue,
     onPrimary = Color.White,
     secondary = R.color.Elephant,
-    onSecondary = Color.White,
+    onSecondary = Color.Black,
     surface = R.color.BigStone,
     error = R.color.WildWatermelon
 )

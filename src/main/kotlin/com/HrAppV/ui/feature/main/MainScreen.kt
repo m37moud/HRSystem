@@ -24,6 +24,7 @@ import androidx.compose.foundation.gestures.Orientation
 import androidx.compose.foundation.gestures.scrollable
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.ui.draw.clip
+import androidx.compose.ui.graphics.ColorFilter
 import androidx.compose.ui.graphics.LinearGradient
 import androidx.compose.ui.text.font.FontWeight
 
@@ -80,14 +81,20 @@ fun MainScreen2(
     modifier: Modifier = Modifier
 ) {
     val scrollState = rememberScrollState(0)
-//    Surface {
+//    Surface(
+//        modifier = Modifier
+//            .fillMaxSize()
+//            .padding(16.dp)
+//    ) {
 
     Row(
-        modifier = modifier.fillMaxSize().background(Color.LightGray)
+        modifier = modifier
+            .fillMaxSize()
+            .background(Color.LightGray)
             .scrollable(scrollState, Orientation.Horizontal)
     ) {
-        NavMenu(modifier.weight(1f), viewModel)
-        HomeContent(modifier.weight(4f))
+        NavMenu(Modifier.weight(1f), viewModel)
+        HomeContent(Modifier.weight(4f))
 
 
     }
@@ -131,7 +138,7 @@ private fun LeftPart(modifier: Modifier = Modifier) {
             modifier = Modifier.padding(12.dp),
             horizontalAlignment = Alignment.Start
         ) {
-            Text("My Profile", style = MaterialTheme.typography.h5.copy(fontWeight = FontWeight.ExtraBold))
+            Text("My Profile", style = MaterialTheme.typography.h6.copy(fontWeight = FontWeight.ExtraBold))
 
             Column(
                 modifier = Modifier.padding(start = 24.dp, end = 24.dp),
@@ -152,7 +159,7 @@ private fun LeftPart(modifier: Modifier = Modifier) {
                 Text(
                     "Mr-Mahmoud Aly",
                     modifier = Modifier.align(Alignment.CenterHorizontally),
-                    maxLines = 1
+                    maxLines = 1, style = MaterialTheme.typography.subtitle1
                 )
 
             }
@@ -171,25 +178,32 @@ private fun LeftPart(modifier: Modifier = Modifier) {
 
 @Composable
 private fun RightPart(modifier: Modifier = Modifier) {
-    Column(modifier = modifier.padding(4.dp)) {
+//    Surface (modifier = modifier.padding(top = 12.dp)) {
+    Column(
+        modifier = modifier.fillMaxSize().padding(top = 12.dp)
+            .verticalScroll(rememberScrollState())
+    )
+    {
         //Dashboard
         Spacer(modifier = Modifier.height(8.dp))
         Dashboard(Modifier.weight(1f))
-
+        Spacer(modifier = Modifier.height(12.dp))
         //Report
         Spacer(modifier = Modifier.height(8.dp))
         Report(Modifier.weight(1f))
 
-        Spacer(modifier = Modifier.weight(2f))
+            Spacer(modifier = Modifier.weight(1f))
 
 
     }
+//    }
 }
 
 @Composable
 private fun Dashboard(modifier: Modifier = Modifier) {
     Column(modifier = modifier.padding(start = 20.dp)) {
-        Text("Dashboard", style = MaterialTheme.typography.h5.copy(fontWeight = FontWeight.ExtraBold))
+
+        Text("Dashboard", style = MaterialTheme.typography.h6.copy(fontWeight = FontWeight.ExtraBold))
         Spacer(modifier = Modifier.height(8.dp))
         DashboardCard(text = "Mr/mahmoud")
 
@@ -198,37 +212,52 @@ private fun Dashboard(modifier: Modifier = Modifier) {
 }
 
 @Composable
-@Preview
 private fun DashboardCard(modifier: Modifier = Modifier, text: String) {
-    Card(
-//        modifier = modifier.background(MaterialTheme.colors.primary) ,
-        elevation = 4.dp
+    Card(modifier
+
+//        modifier = Modifier.background(MaterialTheme.colors.onPrimary)
+        , elevation = 4.dp
     ) {
-        Row(modifier = Modifier.padding(8.dp)
-            .background(MaterialTheme.colors.primary)) {
-            Column(modifier = Modifier.padding(4.dp)) {
+        Row(
+            modifier = Modifier.padding(8.dp)
+                .background(MaterialTheme.colors.onPrimary)
+        ) {
+            Column(modifier = Modifier.padding(start = 8.dp)) {
+                Spacer(modifier = Modifier.height(8.dp))
+
                 Row() {
-                    Text("welcome : ", style = MaterialTheme.typography.subtitle1)
-                    Text(text, style = MaterialTheme.typography.subtitle1.copy())
+                    Text(
+                        "welcome : ",
+                        color = MaterialTheme.colors.onSecondary,
+                        style = MaterialTheme.typography.subtitle1
+                    )
+                    Text(text, color = MaterialTheme.colors.onSecondary, style = MaterialTheme.typography.subtitle1)
 
                 }
                 Row() {
-                    Text("have a nice day at work ")
+                    Text(
+                        "have a nice day at work ",
+                        color = MaterialTheme.colors.onSecondary,
+                        style = MaterialTheme.typography.subtitle2
+                    )
 
                 }
 
             }
             Spacer(modifier = Modifier.weight(1f))
 
-            Column(modifier = Modifier.padding(4.dp)) {
-                Spacer(modifier = Modifier.weight(1f))
+            Column(modifier = Modifier.padding(start = 8.dp)) {
+                Spacer(modifier = Modifier.height(70.dp))
                 Image(
 //                    painter = painterResource("drawables/logo.png"),
                     imageVector = Icons.TwoTone.Favorite,
                     modifier = Modifier.size(70.dp),
                     contentDescription = "Logo",
+                     colorFilter = ColorFilter.tint(Color.White)
 
-                    )
+                )
+                Spacer(modifier = Modifier.height(8.dp))
+
             }
 
 
@@ -242,9 +271,9 @@ private fun DashboardCard(modifier: Modifier = Modifier, text: String) {
 private fun Report(modifier: Modifier = Modifier) {
 
     Column(modifier = modifier.padding(start = 20.dp)) {
-        Text("Report", style = MaterialTheme.typography.h5.copy(fontWeight = FontWeight.ExtraBold))
+        Text("Report", style = MaterialTheme.typography.h6.copy(fontWeight = FontWeight.ExtraBold))
         Spacer(modifier = Modifier.height(8.dp))
-        Row(Modifier.fillMaxSize()) {
+        Row() {
             ReportCard(Modifier.weight(1f), Icons.Default.Person, "Employ Number", "120")
             Spacer(modifier = Modifier.width(8.dp))
 
@@ -278,10 +307,10 @@ private fun ReportCard(modifier: Modifier = Modifier, icon: ImageVector, name: S
             )
             Spacer(modifier = Modifier.height(4.dp))
 
-            Text(name, maxLines = 1)
+            Text(name, maxLines = 1, style = MaterialTheme.typography.subtitle2)
             Spacer(modifier = Modifier.height(4.dp))
 
-            Text(number, maxLines = 1)
+            Text(number, maxLines = 1, style = MaterialTheme.typography.subtitle2)
             Spacer(modifier = Modifier.height(12.dp))
 
 
