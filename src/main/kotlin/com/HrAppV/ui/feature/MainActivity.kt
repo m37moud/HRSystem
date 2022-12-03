@@ -26,13 +26,18 @@ class MainActivity : Activity() {
 
     override fun onCreate() {
         super.onCreate()
+        
+        val configuration = LocalConfiguration.current
+        val screenHeight = configuration.screenHeightDp.dp
+        val screenWidth = configuration.screenWidthDp.dp
 
         setContent {
             Window(
                 onCloseRequest = ::exitApplication,
                 title = "${App.appArgs.appName} (${App.appArgs.version})",
                 icon = painterResource("drawables/launcher_icons/system.png"),
-                state = rememberWindowState(width = 1024.dp, height = 600.dp),
+                //state = rememberWindowState(width = 1024.dp, height = 600.dp),
+                state = rememberWindowState(width = screenWidth, height = screenHeight),
             ) {
                 HrAppVTheme (false){
                     // Igniting navigation
