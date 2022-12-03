@@ -24,57 +24,19 @@ import com.hrappv.ui.value.R
 import androidx.compose.foundation.*
 import androidx.compose.foundation.gestures.Orientation
 import androidx.compose.foundation.gestures.scrollable
+import androidx.compose.foundation.lazy.LazyColumn
+import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.ui.draw.clip
+import androidx.compose.ui.graphics.Brush
 import androidx.compose.ui.graphics.ColorFilter
 import androidx.compose.ui.graphics.RectangleShape
+import androidx.compose.ui.graphics.painter.Painter
 import androidx.compose.ui.text.font.FontWeight
+import androidx.compose.ui.unit.sp
+import kotlinx.coroutines.delay
+import kotlinx.coroutines.launch
 
-
-@Composable
-fun MainScreen(
-    viewModel: MainViewModel,
-) {
-    val welcomeText by viewModel.welcomeText.collectAsState()
-
-    Box(
-        modifier = Modifier.fillMaxSize(),
-        contentAlignment = Alignment.Center
-    ) {
-        Column(
-            horizontalAlignment = Alignment.CenterHorizontally
-        ) {
-            Text(
-                text = welcomeText,
-                style = MaterialTheme.typography.h3
-            )
-
-            Spacer(
-                modifier = Modifier.height(10.dp)
-            )
-
-            Button(
-                onClick = {
-                    viewModel.onClickMeClicked()
-                }
-            ) {
-                Text(text = R.string.ACTION_MAIN_CLICK_ME)
-            }
-
-            Spacer(
-                modifier = Modifier.height(10.dp)
-            )
-
-            Button(
-                onClick = {
-                    viewModel.startEmpResultScreen()
-                }
-            ) {
-                Text(text = R.string.ACTION_EMPLOYEE_RESULT)
-            }
-        }
-    }
-}
 
 @Preview
 @Composable
@@ -83,22 +45,70 @@ fun MainScreen2(
     modifier: Modifier = Modifier
 ) {
     val scrollState = rememberScrollState(0)
+    val scaffoldState = rememberScaffoldState(rememberDrawerState(DrawerValue.Closed))
+//    val navController = rememberNavController()
+    val coroutineScope = rememberCoroutineScope()
+    var isMenuPressed by remember { mutableStateOf(false) }
 //    Surface(
-//        modifier = Modifier
+//        modifier = modifier
 //            .fillMaxSize()
-//            .padding(16.dp)
+//            .background(Color.LightGray)
+//    , elevation = 6.dp
 //    ) {
 
+//    Scaffold(
+//        modifier
+////            .animateContentSize(
+////                animationSpec = spring(
+////                    dampingRatio = Spring.DampingRatioHighBouncy,
+////                    stiffness = Spring.StiffnessHigh
+////                )
+////            )
+//        , scaffoldState = scaffoldState,
+////        topBar = {
+////            MyTopAppBar {
+////                coroutineScope.launch {
+//////                    scaffoldState.drawerState.open()
+////                }
+////            }
+////        },
+////        drawerContent = {
+////            DrawerContent { itemLabel ->
+////
+////                coroutineScope.launch {
+////                    // delay for the ripple effect
+////                    delay(timeMillis = 250)
+////                    scaffoldState.drawerState.close()
+////                }
+////            }
+////        }
+//
+////        drawerContent = {
+////            Text("Drawer title", modifier = Modifier.padding(16.dp))
+////            Divider()
+////
+////            // Drawer items
+////        }
+//        drawerGesturesEnabled = false
+//    ) {
     Row(
         modifier = modifier
-            .fillMaxSize()
+//                .fillMaxSize()
 //            .background(Color.LightGray)
-            .scrollable(scrollState, Orientation.Horizontal)
+//                .scrollable(scrollState, Orientation.Horizontal)
     ) {
         NavMenu(
+            isMenuPressed = isMenuPressed,
 //            modifier.weight(1f),
             viewModel = viewModel
-        )
+        ) {
+            coroutineScope.launch {
+//                    scaffoldState.drawerState.open()
+                isMenuPressed = !isMenuPressed
+
+
+            }
+        }
         HomeContent(
 //            modifier.weight(4f)
         )
@@ -110,6 +120,187 @@ fun MainScreen2(
 
 }
 
+@Composable
+private fun MyTopAppBar(onNavIconClick: () -> Unit) {
+    TopAppBar(
+        title = { Text(text = "SemicolonSpace") },
+        navigationIcon = {
+            IconButton(
+                onClick = {
+                    onNavIconClick()
+                }
+            ) {
+                Icon(
+                    imageVector = Icons.Filled.Menu,
+                    contentDescription = "Open Navigation Drawer"
+                )
+            }
+        }
+    )
+}
+
+@Composable
+private fun DrawerContent(
+    gradientColors: List<Color> = listOf(Color(0xFFF70A74), Color(0xFFF59118)),
+    itemClick: (String) -> Unit
+) {
+
+    val itemsList = prepareNavigationDrawerItems()
+
+    LazyColumn(
+        modifier = Modifier
+            .fillMaxSize()
+            .background(brush = Brush.verticalGradient(colors = gradientColors)),
+        horizontalAlignment = Alignment.CenterHorizontally,
+        contentPadding = PaddingValues(vertical = 36.dp)
+    ) {
+
+        item {
+
+            // user's image
+            Image(
+                modifier = Modifier
+                    .size(size = 120.dp)
+                    .clip(shape = CircleShape),
+                painter = painterResource("drawables/logo.png"),
+                contentDescription = "Profile Image"
+            )
+
+            // user's name
+            Text(
+                modifier = Modifier
+                    .padding(top = 12.dp),
+                text = "Hermione",
+                fontSize = 26.sp,
+                fontWeight = FontWeight.Bold,
+                color = Color.White
+            )
+
+            // user's email
+            Text(
+                modifier = Modifier.padding(top = 8.dp, bottom = 30.dp),
+                text = "hermione@email.com",
+                fontWeight = FontWeight.Normal,
+                fontSize = 16.sp,
+                color = Color.White
+            )
+        }
+
+        items(itemsList) { item ->
+            NavigationListItem(item = item) {
+                itemClick(item.label)
+            }
+        }
+    }
+}
+
+@Composable
+private fun NavigationListItem(
+    item: NavigationDrawerItem,
+    unreadBubbleColor: Color = Color(0xFF0FFF93),
+    itemClick: () -> Unit
+) {
+    Row(
+        modifier = Modifier
+            .fillMaxWidth()
+            .clickable {
+                itemClick()
+            }
+            .padding(horizontal = 24.dp, vertical = 10.dp),
+        verticalAlignment = Alignment.CenterVertically
+    ) {
+
+        // icon and unread bubble
+        Box {
+
+            Icon(
+                modifier = Modifier
+                    .padding(all = if (item.showUnreadBubble && item.label == "Messages") 5.dp else 2.dp)
+                    .size(size = if (item.showUnreadBubble && item.label == "Messages") 24.dp else 28.dp),
+                painter = item.image,
+                contentDescription = null,
+                tint = Color.White
+            )
+
+            // unread bubble
+            if (item.showUnreadBubble) {
+                Box(
+                    modifier = Modifier
+                        .size(size = 8.dp)
+                        .align(alignment = Alignment.TopEnd)
+                        .background(color = unreadBubbleColor, shape = CircleShape)
+                )
+            }
+        }
+
+        // label
+        Text(
+            modifier = Modifier.padding(start = 16.dp),
+            text = item.label,
+            fontSize = 20.sp,
+            fontWeight = FontWeight.Medium,
+            color = Color.White
+        )
+    }
+}
+
+@Composable
+private fun prepareNavigationDrawerItems(): List<NavigationDrawerItem> {
+    val itemsList = arrayListOf<NavigationDrawerItem>()
+
+    itemsList.add(
+        NavigationDrawerItem(
+            image = painterResource("drawables/logo.png"),
+            label = "Home"
+        )
+    )
+    itemsList.add(
+        NavigationDrawerItem(
+            image = painterResource("drawables/logo.png"),
+            label = "Messages",
+            showUnreadBubble = true
+        )
+    )
+    itemsList.add(
+        NavigationDrawerItem(
+            image = painterResource("drawables/logo.png"),
+            label = "Notifications",
+            showUnreadBubble = true
+        )
+    )
+    itemsList.add(
+        NavigationDrawerItem(
+            image = painterResource("drawables/logo.png"),
+            label = "Profile"
+        )
+    )
+    itemsList.add(
+        NavigationDrawerItem(
+            image = painterResource("drawables/logo.png"),
+            label = "Payments"
+        )
+    )
+    itemsList.add(
+        NavigationDrawerItem(
+            image = painterResource("drawables/logo.png"),
+            label = "Settings"
+        )
+    )
+    itemsList.add(
+        NavigationDrawerItem(
+            image = painterResource("drawables/logo.png"),
+            label = "Logout"
+        )
+    )
+
+    return itemsList
+}
+
+data class NavigationDrawerItem(
+    val image: Painter,
+    val label: String,
+    val showUnreadBubble: Boolean = false
+)
 
 @Composable
 private fun HomeContent(modifier: Modifier = Modifier) {
@@ -119,11 +310,15 @@ private fun HomeContent(modifier: Modifier = Modifier) {
     ) {
         Spacer(modifier = Modifier.width(8.dp))
 
-        LeftPart(Modifier.weight(1f))
+        LeftPart(
+//            modifier.weight(1f)
+        )
         Spacer(modifier = Modifier.width(12.dp))
 
 
-        RightPart(Modifier.weight(3f))
+        RightPart(
+//            modifier.weight(3f)
+        )
         Spacer(modifier = Modifier.width(8.dp))
 
     }
@@ -136,14 +331,14 @@ private fun HomeContent(modifier: Modifier = Modifier) {
 private fun LeftPart(modifier: Modifier = Modifier) {
 
     Card(
-        modifier.padding(top = 12.dp),
+        modifier.padding(top = 10.dp),
 //            .background(Color.White)
         elevation = 6.dp,
 //        border = BorderStroke(2.dp, MaterialTheme.colors.onPrimary)
     ) {
 
         Column(
-            modifier = Modifier.padding(12.dp),
+            modifier = modifier.padding(12.dp),
             horizontalAlignment = Alignment.Start
         ) {
             Text(
@@ -152,7 +347,7 @@ private fun LeftPart(modifier: Modifier = Modifier) {
             )
 
             Column(
-                modifier = Modifier.padding(start = 24.dp, end = 24.dp),
+                modifier = modifier.padding(start = 24.dp, end = 24.dp),
                 horizontalAlignment = Alignment.CenterHorizontally
             ) {
 
@@ -195,19 +390,23 @@ private fun LeftPart(modifier: Modifier = Modifier) {
 private fun RightPart(modifier: Modifier = Modifier) {
 //    Surface (modifier = modifier.padding(top = 12.dp)) {
     Column(
-        modifier = modifier.fillMaxSize().padding(top = 12.dp)
+        modifier = modifier.padding(top = 12.dp, end = 12.dp)
 //            .verticalScroll(rememberScrollState())
     )
     {
         //Dashboard
-        Spacer(modifier = Modifier.height(8.dp))
-        Dashboard(Modifier.weight(1f))
-        Spacer(modifier = Modifier.height(12.dp))
+        Spacer(modifier = modifier.height(8.dp))
+        Dashboard(
+//            modifier.weight(1f)
+        )
+        Spacer(modifier = modifier.height(12.dp))
         //Report
-        Spacer(modifier = Modifier.height(8.dp))
-        Report(Modifier.weight(1f))
+        Spacer(modifier = modifier.height(8.dp))
+        Report(
+//            modifier.weight(1f)
+        )
 
-        Spacer(modifier = Modifier.weight(1f))
+//        Spacer(modifier = modifier.weight(1f))
 
 
     }
@@ -230,9 +429,6 @@ private fun Dashboard(modifier: Modifier = Modifier) {
 private fun DashboardCard(modifier: Modifier = Modifier, text: String) {
     Card(
         modifier,
-//            .border(
-//                shape = CircleShape,
-//                border = BorderStroke(2.dp, MaterialTheme.colors.onPrimary))
         elevation = 6.dp,
         backgroundColor = MaterialTheme.colors.onPrimary,
 //        border = BorderStroke(2.dp, MaterialTheme.colors.onSecondary),
@@ -241,7 +437,6 @@ private fun DashboardCard(modifier: Modifier = Modifier, text: String) {
     ) {
         Row(
             modifier = Modifier.padding(8.dp)
-//                .background(MaterialTheme.colors.onPrimary)
         ) {
             Column(modifier = Modifier.padding(start = 8.dp)) {
                 Spacer(modifier = Modifier.height(8.dp))
@@ -252,6 +447,8 @@ private fun DashboardCard(modifier: Modifier = Modifier, text: String) {
                         color = MaterialTheme.colors.onSecondary,
                         style = MaterialTheme.typography.subtitle1
                     )
+                    Spacer(modifier = Modifier.height(4.dp))
+
                     Text(text, color = MaterialTheme.colors.onSecondary, style = MaterialTheme.typography.subtitle1)
 
                 }
@@ -293,18 +490,21 @@ private fun Report(modifier: Modifier = Modifier) {
 
     Column(modifier = modifier.padding(start = 20.dp)) {
         Text("Report", style = MaterialTheme.typography.h6.copy(fontWeight = FontWeight.ExtraBold))
-        Spacer(modifier = Modifier.height(8.dp))
-        Row() {
-            ReportCard(Modifier.weight(1f), Icons.Default.Person, "Employ Number", "120")
-            Spacer(modifier = Modifier.width(8.dp))
+        Spacer(modifier = modifier.height(8.dp))
+        Row(
+            modifier,
+            horizontalArrangement = Arrangement.spacedBy(8.dp)
+        ) {
+            ReportCard(modifier.weight(1f), Icons.Default.Person, "Employ Number", "120")
+//            Spacer(modifier = modifier.width(8.dp))
 
-            ReportCard(Modifier.weight(1f), Icons.Default.Person, "Total Salary", "12")
-            Spacer(modifier = Modifier.width(8.dp))
+            ReportCard(modifier.weight(1f), Icons.Default.Person, "Total Salary", "12")
+//            Spacer(modifier = modifier.width(8.dp))
 
-            ReportCard(Modifier.weight(1f), Icons.Default.Person, "Total Motivation", "74")
-            Spacer(modifier = Modifier.width(8.dp))
+            ReportCard(modifier.weight(1f), Icons.Default.Person, "Total Motivation", "74")
+//            Spacer(modifier = modifier.width(8.dp))
 
-            ReportCard(Modifier.weight(1f), Icons.Default.Person, "Total Additional", "45")
+            ReportCard(modifier.weight(1f), Icons.Default.Person, "Total Additional", "45")
 
         }
     }
@@ -318,7 +518,7 @@ private fun ReportCard(modifier: Modifier = Modifier, icon: ImageVector, name: S
 //        border = BorderStroke(2.dp, MaterialTheme.colors.onPrimary)
     ) {
         Column(
-            modifier = Modifier.padding(8.dp),
+            modifier = modifier.padding(8.dp),
             horizontalAlignment = Alignment.CenterHorizontally,
             verticalArrangement = Arrangement.Center
         ) {
@@ -344,36 +544,31 @@ private fun ReportCard(modifier: Modifier = Modifier, icon: ImageVector, name: S
 }
 
 @Composable
-private fun NavMenu(modifier: Modifier = Modifier, viewModel: MainViewModel) {
-    var isMenuPressed by remember { mutableStateOf(true) }
+private fun NavMenu(
+    modifier: Modifier = Modifier,
+    viewModel: MainViewModel,
+    isMenuPressed: Boolean,
+    onNavIconClick: () -> Unit
+) {
+//    var isMenuPressed by remember { mutableStateOf(true) }
 
     Card(
-        modifier
-            .animateContentSize(
-                animationSpec = spring(
-                    dampingRatio = Spring.DampingRatioHighBouncy,
-                    stiffness = Spring.StiffnessHigh
-                )
-            ),
-//            .background(Color.White)
+        Modifier
+            .animateContentSize(),
         elevation = 6.dp,
-//        border = BorderStroke(2.dp, MaterialTheme.colors.onPrimary)
     ) {
+
         Column(
             modifier = modifier
                 .fillMaxHeight()
-                .padding(top = 12.dp)
+                .padding(top = 20.dp)
 //                .border(shape = RectangleShape, border = BorderStroke(2.dp, MaterialTheme.colors.onPrimary))
 
-//            .background(Color.White)
         ) {
             Row(
                 modifier = modifier
 //                    .fillMaxWidth()
-                    .padding(4.dp)
-
-//                .background(Color.White)
-                ,
+                    .padding(4.dp),
                 verticalAlignment = Alignment.CenterVertically
 
             ) {
@@ -382,10 +577,8 @@ private fun NavMenu(modifier: Modifier = Modifier, viewModel: MainViewModel) {
                     Text(
                         "${App.appArgs.appName} ",
                         style = MaterialTheme.typography.subtitle1,
-//                color = Color.Black
                     )
 
-//                    Spacer(modifier = modifier.weight(1f))
                     Spacer(modifier = Modifier.width(150.dp))
                 } else {
                     Spacer(modifier = modifier.width(8.dp))
@@ -393,7 +586,9 @@ private fun NavMenu(modifier: Modifier = Modifier, viewModel: MainViewModel) {
 
                 Image(
                     imageVector = Icons.Default.Menu,
-                    modifier = Modifier.size(25.dp).clickable { isMenuPressed = !isMenuPressed },
+                    modifier = Modifier.size(25.dp).clickable {
+                        onNavIconClick()
+                    },
                     contentDescription = null,
                     colorFilter = ColorFilter.tint(MaterialTheme.colors.onPrimary)
 
@@ -403,26 +598,41 @@ private fun NavMenu(modifier: Modifier = Modifier, viewModel: MainViewModel) {
             }
 
             Spacer(modifier = modifier.height(16.dp))
-            NavItem(modifier=modifier,icon = Icons.Default.Home, name = "Home", isMenuPressed = isMenuPressed) {
+            NavItem(modifier = modifier, icon = Icons.Default.Home, name = "Home", isMenuPressed = isMenuPressed) {
 
             }
 
             Spacer(modifier = modifier.height(8.dp))
-            NavItem(modifier=modifier,icon = Icons.Default.Person, name = "Add Employee", isMenuPressed = isMenuPressed) {
+            NavItem(
+                modifier = modifier,
+                icon = Icons.Default.Person,
+                name = "Add Employee",
+                isMenuPressed = isMenuPressed
+            ) {
 
             }
 
             Spacer(modifier = modifier.height(8.dp))
-            NavItem(modifier=modifier,icon = Icons.Default.Edit, name = "Register Attends", isMenuPressed = isMenuPressed) {
+            NavItem(
+                modifier = modifier,
+                icon = Icons.Default.Edit,
+                name = "Register Attends",
+                isMenuPressed = isMenuPressed
+            ) {
                 viewModel.startEmpResultScreen()
             }
 
             Spacer(modifier = modifier.height(8.dp))
-            NavItem(modifier=modifier,icon = Icons.Default.Settings, name = "Settings", isMenuPressed = isMenuPressed) {
+            NavItem(
+                modifier = modifier,
+                icon = Icons.Default.Settings,
+                name = "Settings",
+                isMenuPressed = isMenuPressed
+            ) {
 
             }
             Spacer(modifier = modifier.height(8.dp))
-            NavItem(modifier=modifier,icon = Icons.Default.Info, name = "About", isMenuPressed = isMenuPressed) {
+            NavItem(modifier = modifier, icon = Icons.Default.Info, name = "About", isMenuPressed = isMenuPressed) {
 
             }
 
@@ -461,7 +671,7 @@ private fun NavItem(
             Text(
                 name, style = MaterialTheme.typography.subtitle2,
             )
-            Spacer(modifier = modifier.weight(1f,false))
+            Spacer(modifier = modifier.weight(1f, false))
         }
 
 
