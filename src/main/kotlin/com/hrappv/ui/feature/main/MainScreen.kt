@@ -27,6 +27,7 @@ import androidx.compose.foundation.gestures.scrollable
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.shape.CircleShape
+import androidx.compose.material.icons.twotone.AccountCircle
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Brush
 import androidx.compose.ui.graphics.ColorFilter
@@ -37,6 +38,52 @@ import androidx.compose.ui.unit.sp
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
 
+
+
+@Composable
+fun MainScreen(
+    viewModel: MainViewModel,
+) {
+    val welcomeText by viewModel.welcomeText.collectAsState()
+
+    Box(
+        modifier = Modifier.fillMaxSize(),
+        contentAlignment = Alignment.Center
+    ) {
+        Column(
+            horizontalAlignment = Alignment.CenterHorizontally
+        ) {
+            Text(
+                text = welcomeText,
+                style = MaterialTheme.typography.h3
+            )
+
+            Spacer(
+                modifier = Modifier.height(10.dp)
+            )
+
+                    Button(
+                        onClick = {
+                            viewModel.onClickMeClicked()
+                        }
+                    ) {
+                        Text(text = R.string.ACTION_MAIN_CLICK_ME)
+                    }
+
+            Spacer(
+                modifier = Modifier.height(10.dp)
+            )
+
+            Button(
+                onClick = {
+                    viewModel.startEmpResultScreen()
+                }
+            ) {
+                Text(text = R.string.ACTION_EMPLOYEE_RESULT)
+            }
+        }
+    }
+}
 
 @Preview
 @Composable
@@ -194,6 +241,7 @@ private fun DrawerContent(
     }
 }
 
+
 @Composable
 private fun NavigationListItem(
     item: NavigationDrawerItem,
@@ -217,7 +265,7 @@ private fun NavigationListItem(
                 modifier = Modifier
                     .padding(all = if (item.showUnreadBubble && item.label == "Messages") 5.dp else 2.dp)
                     .size(size = if (item.showUnreadBubble && item.label == "Messages") 24.dp else 28.dp),
-                painter = item.image,
+                imageVector = item.image,
                 contentDescription = null,
                 tint = Color.White
             )
@@ -250,45 +298,47 @@ private fun prepareNavigationDrawerItems(): List<NavigationDrawerItem> {
 
     itemsList.add(
         NavigationDrawerItem(
-            image = painterResource("drawables/logo.png"),
+            image = Icons.Default.Home,
             label = "Home"
         )
     )
     itemsList.add(
         NavigationDrawerItem(
-            image = painterResource("drawables/logo.png"),
-            label = "Messages",
+            image = Icons.Default.Person,
+            label = "Add Employee",
             showUnreadBubble = true
         )
     )
     itemsList.add(
         NavigationDrawerItem(
-            image = painterResource("drawables/logo.png"),
-            label = "Notifications",
+            image = Icons.Default.Edit,
+            label = "Register Attends",
             showUnreadBubble = true
         )
     )
     itemsList.add(
         NavigationDrawerItem(
-            image = painterResource("drawables/logo.png"),
-            label = "Profile"
-        )
-    )
-    itemsList.add(
-        NavigationDrawerItem(
-            image = painterResource("drawables/logo.png"),
-            label = "Payments"
-        )
-    )
-    itemsList.add(
-        NavigationDrawerItem(
-            image = painterResource("drawables/logo.png"),
+            image =Icons.Default.Settings,
             label = "Settings"
         )
     )
     itemsList.add(
         NavigationDrawerItem(
-            image = painterResource("drawables/logo.png"),
+            image = Icons.Default.Info,
+            label = "About"
+        )
+    )
+//
+//    itemsList.add(
+//        NavigationDrawerItem(
+//            image = painterResource("drawables/logo.png"),
+//            label = "Settings"
+//        )
+//    )
+
+    itemsList.add(
+        NavigationDrawerItem(
+            image = Icons.TwoTone.AccountCircle,
             label = "Logout"
         )
     )
@@ -297,11 +347,10 @@ private fun prepareNavigationDrawerItems(): List<NavigationDrawerItem> {
 }
 
 data class NavigationDrawerItem(
-    val image: Painter,
+    val image: ImageVector,
     val label: String,
     val showUnreadBubble: Boolean = false
 )
-
 @Composable
 private fun HomeContent(modifier: Modifier = Modifier) {
     Row(
