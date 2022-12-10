@@ -7,6 +7,7 @@ plugins {
     kotlin("jvm") version kotlinVersion
     kotlin("kapt") version kotlinVersion
     id("org.jetbrains.compose") version "1.1.0"
+    id("com.squareup.sqldelight") version "1.5.4"
 }
 
 group = "com.HrAppV"
@@ -41,6 +42,9 @@ dependencies {
     implementation("com.arkivanov.decompose:extensions-compose-jetbrains-jvm:$decomposeVersion")
 
 
+    // sqlDelight
+    val  sqlDelight  = "1.5.4"
+    implementation("com.squareup.sqldelight:gradle-plugin:$sqlDelight")
 
 
     /**
