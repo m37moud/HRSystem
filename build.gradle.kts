@@ -9,7 +9,7 @@ plugins {
     kotlin("jvm") version kotlinVersion
     kotlin("kapt") version kotlinVersion
     id("org.jetbrains.compose") version "1.1.0"
-    id("com.squareup.sqldelight") //version "1.5.4"
+//    id("com.squareup.sqldelight") version "1.5.4"
 }
 
 group = "com.HrAppV"
@@ -45,8 +45,9 @@ dependencies {
 
 
     // sqlDelight
-    val  sqlDelight  = "1.5.4"
-    implementation("com.squareup.sqldelight:gradle-plugin:$sqlDelight")
+//    val  sqlDelight  = "1.5.4"
+//    implementation("com.squareup.sqldelight:sqlite-driver$sqlDelight")
+//    implementation("com.squareup.sqldelight:gradle-plugin:$sqlDelight")
 
 
     /**
