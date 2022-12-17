@@ -1,0 +1,11 @@
+CREATE TABLE time_shift (
+    Saturday  TEXT,
+    Sunday    TEXT,
+    Monday    TEXT,
+    Tuesday   TEXT,
+    Wednesday TEXT,
+    Thursday  TEXT,
+    Friday    TEXT,
+    emp_id    INTEGER,
+    depart_id INTEGER
+);

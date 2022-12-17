@@ -1,0 +1,7 @@
+CREATE TABLE Absense (
+    absnt_type   TEXT,
+    absnt_date   TEXT,
+    absnt_reason TEXT,
+    emp_id       INTEGER,
+    depart_id    INTEGER
+);

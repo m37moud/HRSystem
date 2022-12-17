@@ -3,6 +3,7 @@ package com.hrappv.di
 import com.hrappv.ui.feature.EmployeResult.EditEmployeScreenComponent
 import com.hrappv.ui.feature.EmployeResult.EmployResultScreenComponent
 import com.hrappv.ui.feature.add_employe.AddEmployeScreenComponent
+import com.hrappv.ui.feature.login.LoginComponent
 import com.hrappv.ui.feature.main.MainScreenComponent
 import com.hrappv.ui.feature.splash.SplashScreenComponent
 import dagger.Component
@@ -18,6 +19,7 @@ import javax.inject.Singleton
 )
 interface AppComponent {
     fun inject(splashScreenComponent: SplashScreenComponent)
+    fun inject(loginhScreenComponent: LoginComponent)
     fun inject(mainScreenComponent: MainScreenComponent)
     fun inject(employResultScreenComponent: EmployResultScreenComponent)
     fun inject(addEmployeScreenComponent: AddEmployeScreenComponent)

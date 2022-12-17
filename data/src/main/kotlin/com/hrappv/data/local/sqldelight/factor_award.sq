@@ -1,0 +1,5 @@
+CREATE TABLE factor_award (
+    award_value REAL AS Double,
+    award_date  TEXT,
+    award_type  TEXT
+);

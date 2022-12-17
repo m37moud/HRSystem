@@ -9,7 +9,7 @@ plugins {
     kotlin("jvm") version kotlinVersion
     kotlin("kapt") version kotlinVersion
     id("org.jetbrains.compose") version "1.1.0"
-//    id("com.squareup.sqldelight") version "1.5.4"
+    id("com.squareup.sqldelight") version "1.5.4"
 }
 
 group = "com.HrAppV"
@@ -43,10 +43,17 @@ dependencies {
     implementation("com.arkivanov.decompose:decompose-jvm:$decomposeVersion")
     implementation("com.arkivanov.decompose:extensions-compose-jetbrains-jvm:$decomposeVersion")
 
+    //Icons
+    implementation("br.com.devsrsouza.compose.icons.jetbrains:font-awesome:1.0.0")
+    //date
+    implementation("com.github.lgooddatepicker:LGoodDatePicker:11.2.1")
+
 
     // sqlDelight
 //    val  sqlDelight  = "1.5.4"
-//    implementation("com.squareup.sqldelight:sqlite-driver$sqlDelight")
+    implementation("com.squareup.sqldelight:sqlite-driver$sqlDelight")
+    implementation("com.squareup.sqldelight:coroutines-extensions-jvm:$sqlDelight")
+
 //    implementation("com.squareup.sqldelight:gradle-plugin:$sqlDelight")
 
 

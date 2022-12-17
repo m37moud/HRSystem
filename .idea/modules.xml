@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project version="4">
+  <component name="ProjectModuleManager">
+    <modules>
+      <module fileurl="file://$PROJECT_DIR$/.idea/modules/HrAppV.iml" filepath="$PROJECT_DIR$/.idea/modules/HrAppV.iml" />
+      <module fileurl="file://$PROJECT_DIR$/.idea/modules/data/HrAppV.data.iml" filepath="$PROJECT_DIR$/.idea/modules/data/HrAppV.data.iml" />
+      <module fileurl="file://$PROJECT_DIR$/.idea/modules/data/HrAppV.data.main.iml" filepath="$PROJECT_DIR$/.idea/modules/data/HrAppV.data.main.iml" />
+      <module fileurl="file://$PROJECT_DIR$/.idea/modules/data/HrAppV.data.test.iml" filepath="$PROJECT_DIR$/.idea/modules/data/HrAppV.data.test.iml" />
+      <module fileurl="file://$PROJECT_DIR$/.idea/modules/HrAppV.main.iml" filepath="$PROJECT_DIR$/.idea/modules/HrAppV.main.iml" />
+      <module fileurl="file://$PROJECT_DIR$/.idea/modules/HrAppV.test.iml" filepath="$PROJECT_DIR$/.idea/modules/HrAppV.test.iml" />
+    </modules>
+  </component>
+</project>

@@ -1,0 +1,8 @@
+CREATE TABLE solaf (
+    solaf_val     REAL AS Double,
+    sbustract_val REAL AS Double,
+    solaf_net     REAL AS Double,
+    taken_date    TEXT,
+    emp_id        INTEGER,
+    depart_id     INTEGER
+);

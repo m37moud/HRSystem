@@ -1,0 +1,11 @@
+CREATE TABLE Department (
+    depart_id       INTEGER PRIMARY KEY ASC ON CONFLICT ROLLBACK AUTOINCREMENT
+                            NOT NULL
+                            UNIQUE,
+    department      TEXT DEFAULT "mayorca"
+                            NOT NULL,
+    commetion_rate  INTEGER,
+    depart_type     TEXT,
+    commetion_type  TEXT DEFAULT "fixed",
+    commetion_month TEXT --AS DATE
+);

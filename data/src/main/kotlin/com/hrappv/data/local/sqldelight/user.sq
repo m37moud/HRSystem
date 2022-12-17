@@ -1,0 +1,8 @@
+CREATE TABLE user (
+    ID       INTEGER PRIMARY KEY AUTOINCREMENT
+                     UNIQUE
+                     NOT NULL,
+    user     TEXT NOT NULL,
+    pass     TEXT NOT NULL,
+    playrole INTEGER DEFAULT (1)
+);

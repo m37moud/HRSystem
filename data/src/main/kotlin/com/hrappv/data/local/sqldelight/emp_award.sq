@@ -1,0 +1,7 @@
+CREATE TABLE emp_award (
+    award_value REAL AS Double,
+    award_date  TEXT,
+    award_type  TEXT,
+    emp_id      INTEGER,
+    depart_id   INTEGER
+);

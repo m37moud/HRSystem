@@ -1,0 +1,10 @@
+CREATE TABLE monthly_commition (
+    comm_prcentage INTEGER,
+    comm_value     REAL AS Double,
+    comm_substract REAL AS Double,
+    comm_plus      REAL AS Double,
+    comm_net       REAL AS Double,
+    comm_date      TEXT,
+    emp_id         INTEGER,
+    depart_id      INTEGER
+);

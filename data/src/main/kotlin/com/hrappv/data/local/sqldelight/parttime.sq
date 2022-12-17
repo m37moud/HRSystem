@@ -1,0 +1,10 @@
+CREATE TABLE parttime (
+    adding_byday      REAL AS Double,
+    day_value         REAL AS Double,
+    addtiont_type     TEXT,
+    addition_permtion TEXT,
+    bdlat_buhour      REAL AS Double,
+    addtion_date      TEXT,
+    emp_id            INTEGER,
+    depart_id     TEXT
+);

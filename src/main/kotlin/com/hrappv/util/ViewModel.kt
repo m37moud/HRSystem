@@ -1,6 +1,6 @@
 package com.hrappv.util
 
-import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.*
 
 open class ViewModel {
 
@@ -8,5 +8,18 @@ open class ViewModel {
 
     open fun init(viewModelScope: CoroutineScope) {
         this.viewModelScope = viewModelScope
+    }
+    protected fun launchOnMain(block: suspend CoroutineScope.() -> Unit): Job {
+        return viewModelScope.launch(Dispatchers.Main) { block() }
+    }
+
+    protected fun launchOnIO(block: suspend CoroutineScope.() -> Unit): Job {
+        return viewModelScope.launch(Dispatchers.IO) { block() }
+    }
+
+    protected fun onClear() {
+        if (viewModelScope.isActive) {
+            viewModelScope.cancel()
+        }
     }
 }
