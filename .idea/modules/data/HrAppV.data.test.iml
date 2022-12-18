@@ -11,6 +11,27 @@
             <flagArg name="noStdlib" arg="true" />
           </flagArguments>
           <stringArguments>
+            <stringArg name="classpath">
+              <args>
+                <arg>$MODULE_DIR$/../../../data/build/classes/java/main</arg>
+                <arg>$MODULE_DIR$/../../../data/build/classes/kotlin/main</arg>
+                <arg>$MODULE_DIR$/../../../data/build/tmp/kapt3/classes/main</arg>
+                <arg>C:/Users/mah/.gradle/caches/modules-2/files-2.1/com.google.dagger/dagger/2.39.1/1d31897e6b73e7672e111856dfb7dd65be35d259/dagger-2.39.1.jar</arg>
+                <arg>C:/Users/mah/.gradle/caches/modules-2/files-2.1/com.ToxicBakery.logging/arbor-jvm/1.34.109/73fa8a5163f2d01387be3c9ac843c60a72aefa42/common-jvm-1.34.109.jar</arg>
+                <arg>C:/Users/mah/.gradle/caches/modules-2/files-2.1/org.jetbrains.kotlin/kotlin-stdlib/1.6.10/b8af3fe6f1ca88526914929add63cf5e7c5049af/kotlin-stdlib-1.6.10.jar</arg>
+                <arg>C:/Users/mah/.gradle/caches/modules-2/files-2.1/org.apache.poi/poi-ooxml/3.17/7d8c44407178b73246462842bf1e206e99c8e0a/poi-ooxml-3.17.jar</arg>
+                <arg>C:/Users/mah/.gradle/caches/modules-2/files-2.1/org.apache.poi/poi/3.17/ae92292a2043888b40d418da97dc0b669fde326/poi-3.17.jar</arg>
+                <arg>C:/Users/mah/.gradle/caches/modules-2/files-2.1/javax.inject/javax.inject/1/6975da39a7040257bd51d21a231b76c915872d38/javax.inject-1.jar</arg>
+                <arg>C:/Users/mah/.gradle/caches/modules-2/files-2.1/org.jetbrains/annotations/13.0/919f0dfe192fb4e063e7dacadee7f8bb9a2672a9/annotations-13.0.jar</arg>
+                <arg>C:/Users/mah/.gradle/caches/modules-2/files-2.1/org.jetbrains.kotlin/kotlin-stdlib-common/1.6.10/c118700e3a33c8a0d9adc920e9dec0831171925/kotlin-stdlib-common-1.6.10.jar</arg>
+                <arg>C:/Users/mah/.gradle/caches/modules-2/files-2.1/commons-codec/commons-codec/1.10/4b95f4897fa13f2cd904aee711aeafc0c5295cd8/commons-codec-1.10.jar</arg>
+                <arg>C:/Users/mah/.gradle/caches/modules-2/files-2.1/org.apache.commons/commons-collections4/4.1/a4cf4688fe1c7e3a63aa636cc96d013af537768e/commons-collections4-4.1.jar</arg>
+                <arg>C:/Users/mah/.gradle/caches/modules-2/files-2.1/org.apache.poi/poi-ooxml-schemas/3.17/890114bfa82f5b6380ea0e9b0bf49b0af797b414/poi-ooxml-schemas-3.17.jar</arg>
+                <arg>C:/Users/mah/.gradle/caches/modules-2/files-2.1/com.github.virtuald/curvesapi/1.04/3386abf821719bc89c7685f9eaafaf4a842f0199/curvesapi-1.04.jar</arg>
+                <arg>C:/Users/mah/.gradle/caches/modules-2/files-2.1/org.apache.xmlbeans/xmlbeans/2.6.0/29e80d2dd51f9dcdef8f9ffaee0d4dc1c9bbfc87/xmlbeans-2.6.0.jar</arg>
+                <arg>C:/Users/mah/.gradle/caches/modules-2/files-2.1/stax/stax-api/1.0.1/49c100caf72d658aca8e58bd74a4ba90fa2b0d70/stax-api-1.0.1.jar</arg>
+              </args>
+            </stringArg>
             <stringArg name="destination" arg="$MODULE_DIR$/../../../data/build/classes/kotlin/test" />
             <stringArg name="jvmTarget" arg="1.8" />
             <stringArg name="moduleName" arg="data" />
@@ -71,22 +92,18 @@
     </orderEntry>
     <orderEntry type="library" name="Gradle: com.google.dagger:dagger:2.39.1" level="project" />
     <orderEntry type="library" name="Gradle: com.ToxicBakery.logging:arbor-jvm:1.34.109" level="project" />
-    <orderEntry type="library" name="Gradle: com.squareup.sqldelight:runtime-jvm:1.5.4" level="project" />
     <orderEntry type="library" name="Gradle: org.jetbrains.kotlin:kotlin-stdlib:1.6.10" level="project" />
     <orderEntry type="library" name="Gradle: org.apache.poi:poi-ooxml:3.17" level="project" />
     <orderEntry type="library" name="Gradle: org.apache.poi:poi:3.17" level="project" />
     <orderEntry type="library" name="Gradle: javax.inject:javax.inject:1" level="project" />
-    <orderEntry type="library" name="Gradle: org.jetbrains.kotlin:kotlin-stdlib-jdk8:1.5.31" level="project" />
-    <orderEntry type="library" name="Gradle: org.jetbrains.kotlin:kotlin-stdlib-common:1.6.10" level="project" />
     <orderEntry type="library" name="Gradle: org.jetbrains:annotations:13.0" level="project" />
+    <orderEntry type="library" name="Gradle: org.jetbrains.kotlin:kotlin-stdlib-common:1.6.10" level="project" />
     <orderEntry type="library" name="Gradle: org.apache.poi:poi-ooxml-schemas:3.17" level="project" />
     <orderEntry type="library" name="Gradle: com.github.virtuald:curvesapi:1.04" level="project" />
     <orderEntry type="library" name="Gradle: commons-codec:commons-codec:1.10" level="project" />
     <orderEntry type="library" name="Gradle: org.apache.commons:commons-collections4:4.1" level="project" />
-    <orderEntry type="library" name="Gradle: org.jetbrains.kotlin:kotlin-stdlib-jdk7:1.5.31" level="project" />
     <orderEntry type="library" name="Gradle: org.apache.xmlbeans:xmlbeans:2.6.0" level="project" />
     <orderEntry type="library" name="Gradle: stax:stax-api:1.0.1" level="project" />
-    <orderEntry type="library" name="Gradle: com.squareup.sqldelight:sqlite-driver:1.5.4" level="project" />
   </component>
   <component name="TestModuleProperties" production-module="HrAppV.data.main" />
 </module>

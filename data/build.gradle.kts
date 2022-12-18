@@ -3,7 +3,7 @@
 plugins {
     kotlin("jvm")
     kotlin("kapt")
-    id("com.squareup.sqldelight") version "1.5.4"
+//    id("com.squareup.sqldelight") version "1.5.4"
 }
 
 
@@ -31,6 +31,13 @@ plugins {
 //     }
 // }
 
+
+//sqldelight {
+//    hrappv { // This will be the name of the generated database class.
+//        packageName = "com.hrappv"
+//    }
+//}
+
 group = "com.HrAppV"
 version = "1.0.0"
 
@@ -55,10 +62,9 @@ dependencies {
 
 
 //    // sqlDelight //https://cashapp.github.io/sqldelight/1.5.4/jvm_sqlite/gradle/
-    val  sqlDelight  = "1.5.4"
-////    implementation("com.squareup.sqldelight:gradle-plugin:$sqlDelight")
-    implementation("com.squareup.sqldelight:sqlite-driver:$sqlDelight")
-    implementation("com.squareup.sqldelight:coroutines-extensions-jvm:$sqlDelight")
+//    val  sqlDelight  = "1.5.4"
+//    implementation("com.squareup.sqldelight:sqlite-driver:$sqlDelight")
+//    implementation("com.squareup.sqldelight:coroutines-extensions-jvm:$sqlDelight")
 
 
 //     // PostgreSQL JDBC driver

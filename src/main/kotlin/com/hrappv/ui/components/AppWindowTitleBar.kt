@@ -28,7 +28,7 @@ import compose.icons.fontawesomeicons.solid.UserCircle
 
 @Composable
 fun WindowScope.AppWindowTitleBar(
-    viewModel: GlobalViewModel,
+//    viewModel: GlobalViewModel,
     windowState: WindowState,
     themeState: AppThemeState,
     onClose: () -> Unit
@@ -62,7 +62,7 @@ fun WindowScope.AppWindowTitleBar(
                         horizontalArrangement = Arrangement.Center
                     ) {
                         Text(
-                            text = viewModel.getUserName(),
+                            text = "viewModel.getUserName()",
                         )
                         Spacer(modifier = Modifier.width(4.dp))
                         Icon(
