@@ -9,16 +9,17 @@ plugins {
     kotlin("jvm") version kotlinVersion
     kotlin("kapt") version kotlinVersion
     id("org.jetbrains.compose") version "1.1.0"
-    id("com.squareup.sqldelight") version "1.5.3"
+//    id("com.squareup.sqldelight") version "1.5.4"
 }
 //
-sqldelight {
-   database("HrAppDb")  { // This will be the name of the generated database class.
-        packageName = "com.hrappv"
-//        dependency project(":data")
-//        implementation(project(":data"))
-    }
-}
+//sqldelight {
+//   database("HrAppDb")  { // This will be the name of the generated database class.
+////   HrAppDb  { // This will be the name of the generated database class.
+//        packageName = "com.hrappv"
+////        dependency project(":data")
+////        implementation(project(":data"))
+//    }
+//}
 
 group = "com.hrappv"
 version = "1.0.0"
@@ -58,11 +59,11 @@ dependencies {
 
 
     // sqlDelight
-    val  sqlDelight  = "1.5.3"
-    implementation("com.squareup.sqldelight:sqlite-driver:$sqlDelight")
-    implementation("com.squareup.sqldelight:coroutines-extensions-jvm:$sqlDelight")
-
-//    implementation("com.squareup.sqldelight:gradle-plugin:$sqlDelight")
+//    val  sqlDelight  = "1.5.4"
+//    implementation("com.squareup.sqldelight:sqlite-driver:$sqlDelight")
+////    implementation("com.squareup.sqldelight:native-driver:$sqlDelight")
+//    implementation("com.squareup.sqldelight:coroutines-extensions-jvm:$sqlDelight")
+//
 
 
     /**

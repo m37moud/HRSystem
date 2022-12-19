@@ -1,9 +1,9 @@
 package excel
 
 import org.apache.poi.ss.usermodel.WorkbookFactory
-import com.hrappv.data.di.module.DayDetails
-import com.hrappv.data.di.module.Employee
-import com.hrappv.data.di.module.EmployeeResult
+import com.hrappv.data.models.DayDetails
+import com.hrappv.data.models.Employee
+import com.hrappv.data.models.EmployeeResult
 import com.toxicbakery.logging.Arbor
 import utils.Constatnts.Companion.getLastDay
 import utils.Constatnts.Companion.getMonth

@@ -19,7 +19,7 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
-import com.hrappv.data.di.module.EmployeeResult
+import com.hrappv.data.models.EmployeeResult
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 import utils.LCE

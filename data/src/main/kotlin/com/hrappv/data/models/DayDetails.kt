@@ -1,4 +1,4 @@
-package com.hrappv.data.di.module
+package com.hrappv.data.models
 
 
 data class DayDetails(

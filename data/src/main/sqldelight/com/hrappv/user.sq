@@ -1,0 +1,25 @@
+CREATE TABLE user (
+    id       INTEGER PRIMARY KEY AUTOINCREMENT
+                     UNIQUE
+                     NOT NULL,
+    user     TEXT NOT NULL,
+    pass     TEXT NOT NULL,
+    playrole TEXT DEFAULT "user"
+);
+
+getSingleUser:
+SELECT *
+FROM user
+WHERE id = :id;
+
+
+getAllUser:
+SELECT * FROM user;
+
+
+
+upsertUSer: INSERT OR REPLACE INTO user
+VALUES (?, ?, ?,?);
+
+deleteUser: DELETE FROM user
+WHERE id = :id;
