@@ -8,8 +8,9 @@ import com.squareup.sqldelight.runtime.coroutines.mapToList
 import kotlinx.coroutines.CoroutineDispatcher
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.withContext
+import javax.inject.Inject
 
-class UserDataSourceImpl(
+class UserDataSourceImpl @Inject constructor(
     hrDb: HrAppDb,
     private val dispatcher: CoroutineDispatcher
 ) : UserDataSource {

@@ -14,17 +14,23 @@ import javax.inject.Singleton
 //@InstallIn(ApplicationComponent::class)
 //@Module
 @Module
-interface DatabaseModule {
+class DatabaseModule {
     @Provides
     @Singleton
     fun provideSqlDelightProvider(): SqlDriver {
-        return JdbcSqliteDriver (
+	val driver: SqlDriver = JdbcSqliteDriver(JdbcSqliteDriver.IN_MEMORY)
+    HrAppDb.Schema.create(driver)
+	
+        return driver
+		//JdbcSqliteDriver (
 //            schema = HrAppDb.Schema,
 //            context = app,
 //            name = "hr.db"
-            JdbcSqliteDriver.IN_MEMORY
-        )
+          //  JdbcSqliteDriver.IN_MEMORY
+       // )
     }
+	
+
 
     @Provides
     @Singleton

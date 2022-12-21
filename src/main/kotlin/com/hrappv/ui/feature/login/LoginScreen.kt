@@ -35,7 +35,10 @@ import androidx.compose.ui.text.input.PasswordVisualTransformation
 //import compose.icons.fontawesomeicons.solid.User
 import androidx.compose.ui.input.key.key
 import androidx.compose.ui.window.application
-
+import compose.icons.FontAwesomeIcons
+import compose.icons.fontawesomeicons.Solid
+import compose.icons.fontawesomeicons.solid.Key
+import compose.icons.fontawesomeicons.solid.User
 
 
 @Composable //ApplicationScope.
@@ -46,7 +49,8 @@ import androidx.compose.ui.window.application
         height = 600.dp,
     )
     Window(
-        onCloseRequest = ::exitApplication,
+        onCloseRequest = ::exitApplication
+        ,
         state = loginWindowState,
         resizable = false,
         title = R.string.LOGIN,

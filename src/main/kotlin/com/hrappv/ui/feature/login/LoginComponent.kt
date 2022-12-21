@@ -17,7 +17,7 @@ class LoginComponent(
     lateinit var viewModel: LoginViewModel
 
     init {
-        appComponent.inject(this)
+//        appComponent.inject(this)
     }
 
     @Composable
@@ -33,6 +33,7 @@ class LoginComponent(
             println("userAuthenticated is $authenticated")
             onClickEmpResult()
         }
-        AppLoginWindow(viewModel)
+
+//        AppLoginWindow(viewModel)
     }
 }

@@ -29,7 +29,7 @@ import com.hrappv.data.local.datastoreimp.UserDataSourceImpl
 )
 interface AppComponent {
     fun inject(splashScreenComponent: SplashScreenComponent)
-    fun inject(loginhScreenComponent: LoginComponent)
+//    fun inject(loginhScreenComponent: LoginComponent)
     fun inject(mainScreenComponent: MainScreenComponent)
     fun inject(employResultScreenComponent: EmployResultScreenComponent)
     fun inject(addEmployeScreenComponent: AddEmployeScreenComponent)

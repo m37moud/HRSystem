@@ -5,8 +5,7 @@ import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.material.MaterialTheme
 import androidx.compose.material.Surface
-import androidx.compose.runtime.Composable
-import androidx.compose.runtime.CompositionLocalProvider
+import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalLayoutDirection
@@ -27,6 +26,7 @@ import com.hrappv.ui.value.R
 import com.hrappv.ui.value.rememberAppThemeState
 import com.theapache64.cyclone.core.Activity
 import com.theapache64.cyclone.core.Intent
+import javax.inject.Inject
 import androidx.compose.ui.window.application as setContent
 
 /**
@@ -40,6 +40,8 @@ class MainActivity : Activity() {
             }
         }
     }
+    @Inject
+    lateinit var viewModel: LoginViewModel
 
     override fun onCreate() {
         super.onCreate()
@@ -47,8 +49,12 @@ class MainActivity : Activity() {
 //        val configuration = LocalConfiguration.current
 //        val screenHeight = configuration.screenHeightDp.dp
 //        val screenWidth = configuration.screenWidthDp.dp
+        val scope = rememberCoroutineScope()
+        LaunchedEffect(viewModel) {
+            viewModel.init(scope)
+        }
 
-        val auth by authSate.auth.collectAsState(false)
+        val auth by viewModel.userAuthenticated.collectAsState(false)
         val themeState = rememberAppThemeState()
         setContent {
             Window(
@@ -61,9 +67,9 @@ class MainActivity : Activity() {
             ) {
                 HrAppVTheme(isDark = themeState.isDarkTheme) {
                     if (auth) {
-                        AppMainWindow(LocalApplicationContext.current, themeState)
+                        AppMainWindow(themeState)
                     } else {
-                        AppLoginWindow(LocalApplicationContext.current)
+                        AppLoginWindow(viewModel)
                     }
 
 
@@ -128,7 +134,7 @@ class MainActivity : Activity() {
                 ) {
                     Column(modifier = Modifier.fillMaxSize()) {
                         AppWindowTitleBar(
-                            applicationContext.viewModel(),
+//                            applicationContext.viewModel(),
                             globalWindowState,
                             themeState
                         ) {

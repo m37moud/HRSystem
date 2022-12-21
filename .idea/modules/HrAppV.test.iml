@@ -13,8 +13,6 @@
           <stringArguments>
             <stringArg name="classpath">
               <args>
-                <arg>$MODULE_DIR$/../../build/classes/java/main</arg>
-                <arg>$MODULE_DIR$/../../build/classes/kotlin/main</arg>
                 <arg>$MODULE_DIR$/../../build/tmp/kapt3/classes/main</arg>
                 <arg>$MODULE_DIR$/../../build/resources/main</arg>
                 <arg>C:/Users/mah/.gradle/caches/modules-2/files-2.1/com.arkivanov.decompose/decompose-jvm/0.2.5/247fb08aeab91338e311cb7fcb97af6b1d9e13ba/decompose-jvm-0.2.5.jar</arg>

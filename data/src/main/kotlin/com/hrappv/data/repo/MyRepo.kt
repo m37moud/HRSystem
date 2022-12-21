@@ -1,12 +1,13 @@
 package com.hrappv.data.repo
 
+import com.hrappv.data.local.datastore.UserDataSource
 import com.hrappv.data.local.datastoreimp.UserDataSourceImpl
 import excel.ImportExcelFile
 import javax.inject.Inject
 
 class MyRepo @Inject constructor(
     private val importerExcel: ImportExcelFile,
-    private val usersDataSource: UserDataSourceImpl,
+    private val usersDataSource: UserDataSource,
 
     ) {
     fun getClickedWelcomeText() = "Hello Desktop!"

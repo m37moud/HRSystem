@@ -1,10 +1,15 @@
 package com.hrappv.ui.feature.login
 
+import com.hrappv.data.repo.MyRepo
 import com.hrappv.util.ViewModel
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
+import javax.inject.Inject
 
-class LoginViewModel : ViewModel() {
+class LoginViewModel @Inject constructor(
+    private val myRepo: MyRepo,
+    // Inject your repos here...
+) : ViewModel(){
 
 
     private val _isUserAuthenticated = MutableStateFlow(false)

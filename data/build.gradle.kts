@@ -11,6 +11,7 @@ sqldelight {
     database("HrAppDb") { // This will be the name of the generated database class.
 //   HrAppDb  { // This will be the name of the generated database class.
         packageName = "com.hrappv"
+		  schemaOutputDirectory = file("src/main/sqldelight/databases")
     }
 }
 
@@ -45,3 +46,11 @@ dependencies {
 
 
 }
+//
+//kotlin {
+//    // or sourceSets.iosMain, sourceSets.nativeMain, etc.windowsMain
+//    sourceSets.nativeMain.dependencies {
+//        implementation("com.squareup.sqldelight:native-driver:1.5.4")
+//    }
+//}
+

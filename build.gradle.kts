@@ -121,10 +121,3 @@ compose.desktop {
         }
     }
 }
-
-20kotlin {
-  // or sourceSets.iosMain, sourceSets.nativeMain, etc.
-  sourceSets.windowsMain.dependencies {
-    implementation "com.squareup.sqldelight:native-driver:1.5.4"
-  }
-}
