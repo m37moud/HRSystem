@@ -52,6 +52,7 @@ dependencies {
     implementation("com.arkivanov.decompose:decompose-jvm:$decomposeVersion")
     implementation("com.arkivanov.decompose:extensions-compose-jetbrains-jvm:$decomposeVersion")
 
+
     //Icons
     implementation("br.com.devsrsouza.compose.icons.jetbrains:font-awesome:1.0.0")
     //date

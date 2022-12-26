@@ -17,6 +17,7 @@ import androidx.compose.ui.window.*
 import com.arkivanov.decompose.extensions.compose.jetbrains.rememberRootComponent
 import com.hrappv.App
 import com.hrappv.ui.components.AppWindowTitleBar
+import com.hrappv.ui.feature.login.AppLoginWindow
 import com.hrappv.ui.feature.login.LoginScreen
 import com.hrappv.ui.feature.login.LoginViewModel
 import com.hrappv.ui.navigation.NavHostComponent
@@ -40,6 +41,7 @@ class MainActivity : Activity() {
             }
         }
     }
+
     @Inject
     lateinit var viewModel: LoginViewModel
 
@@ -49,63 +51,74 @@ class MainActivity : Activity() {
 //        val configuration = LocalConfiguration.current
 //        val screenHeight = configuration.screenHeightDp.dp
 //        val screenWidth = configuration.screenWidthDp.dp
-        val scope = rememberCoroutineScope()
-        LaunchedEffect(viewModel) {
-            viewModel.init(scope)
-        }
-
-        val auth by viewModel.userAuthenticated.collectAsState(false)
-        val themeState = rememberAppThemeState()
+//
         setContent {
             Window(
                 onCloseRequest = ::exitApplication,
                 title = "${App.appArgs.appName} (${App.appArgs.version})",
                 icon = painterResource("drawables/launcher_icons/system.png"),
-                state = rememberWindowState(placement = WindowPlacement.Maximized,
-                    width = 1024.dp, height = 600.dp),
+                state = rememberWindowState(
+                    placement = WindowPlacement.Maximized,
+                    width = 1024.dp, height = 600.dp
+                ),
 //                state = rememberWindowState(width = screenWidth, height = screenHeight),
             ) {
-                HrAppVTheme(isDark = themeState.isDarkTheme) {
+
+//
+//                val auth by viewModel.userAuthenticated.collectAsState(false)
+                val auth by remember{ mutableStateOf(false) }
+                val themeState = rememberAppThemeState()
+                val scope = rememberCoroutineScope()
+                LaunchedEffect(viewModel) {
+                    viewModel.init(scope)
+                }
+
+
+//                HrAppVTheme(isDark = themeState.isDarkTheme) {
+                HrAppVTheme(false) {
                     if (auth) {
                         AppMainWindow(themeState)
                     } else {
+
                         AppLoginWindow(viewModel)
+//                        rememberRootComponent(factory = ::NavHostComponent)
+//                            .render()
                     }
 
 
                     // Igniting navigation
-                    rememberRootComponent(factory = ::NavHostComponent)
-                        .render()
+
                 }
             }
 
         }
 
     }
-    @Composable //ApplicationScope.
-    fun ApplicationScope.AppLoginWindow(viewModel: LoginViewModel) {// parameter -> applicationContext: ApplicationContext
-        val loginWindowState = rememberWindowState(
-            position = WindowPosition(Alignment.Center),
-            width = 400.dp,
-            height = 600.dp,
-        )
-        Window(
-            onCloseRequest = {
-//                SpringApplication.exit(applicationContext)
-                exitApplication()
-            },
-            state = loginWindowState,
-            resizable = false,
-            title = R.string.LOGIN,
-            icon = painterResource("drawables/logo.png")
-        ) {
-            CompositionLocalProvider(
-                LocalLayoutDirection provides LayoutDirection.Ltr
-            ) {
-                LoginScreen(viewModel)
-            }
-        }
-    }
+
+//    @Composable //ApplicationScope.
+//    fun ApplicationScope.AppLoginWindow(viewModel: LoginViewModel) {// parameter -> applicationContext: ApplicationContext
+//        val loginWindowState = rememberWindowState(
+//            position = WindowPosition(Alignment.Center),
+//            width = 400.dp,
+//            height = 600.dp,
+//        )
+//        Window(
+//            onCloseRequest = {
+////                SpringApplication.exit(applicationContext)
+//                exitApplication()
+//            },
+//            state = loginWindowState,
+//            resizable = false,
+//            title = R.string.LOGIN,
+//            icon = painterResource("drawables/logo.png")
+//        ) {
+//            CompositionLocalProvider(
+//                LocalLayoutDirection provides LayoutDirection.Ltr
+//            ) {
+//                LoginScreen(viewModel)
+//            }
+//        }
+//    }
 
     @Composable
     private fun ApplicationScope.AppMainWindow(

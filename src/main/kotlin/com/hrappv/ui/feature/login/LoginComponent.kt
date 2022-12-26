@@ -1,6 +1,7 @@
 package com.hrappv.ui.feature.login
 
 import androidx.compose.runtime.*
+import androidx.compose.ui.window.application
 import com.arkivanov.decompose.ComponentContext
 import com.hrappv.di.AppComponent
 import com.hrappv.ui.navigation.Component
@@ -17,7 +18,7 @@ class LoginComponent(
     lateinit var viewModel: LoginViewModel
 
     init {
-//        appComponent.inject(this)
+        appComponent.inject(this)
     }
 
     @Composable
@@ -33,7 +34,8 @@ class LoginComponent(
             println("userAuthenticated is $authenticated")
             onClickEmpResult()
         }
-
-//        AppLoginWindow(viewModel)
+//        application {
+//            AppLoginWindow(viewModel)
+//        }
     }
 }

@@ -38,6 +38,8 @@ class NavHostComponent(
         childFactory = ::createScreenComponent
     )
 
+    
+
     /**
      * When a new navigation request made, the screen will be created by this method.
      */

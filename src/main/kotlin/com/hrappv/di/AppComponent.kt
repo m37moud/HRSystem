@@ -19,6 +19,7 @@ import javax.inject.Singleton
 
 import com.hrappv.data.local.datastore.UserDataSource
 import com.hrappv.data.local.datastoreimp.UserDataSourceImpl
+import com.hrappv.ui.feature.login.LoginViewModel
 
 @Singleton
 @Component(
@@ -29,13 +30,14 @@ import com.hrappv.data.local.datastoreimp.UserDataSourceImpl
 )
 interface AppComponent {
     fun inject(splashScreenComponent: SplashScreenComponent)
-//    fun inject(loginhScreenComponent: LoginComponent)
+    fun inject(loginhScreenComponent: LoginComponent)
     fun inject(mainScreenComponent: MainScreenComponent)
     fun inject(employResultScreenComponent: EmployResultScreenComponent)
     fun inject(addEmployeScreenComponent: AddEmployeScreenComponent)
     fun inject(editEmployeScreenComponent: EditEmployeScreenComponent)
 
     fun getImporter() :ImportExcelFile
+    fun getmodel() :LoginViewModel
 
 
 }

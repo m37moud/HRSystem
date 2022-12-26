@@ -42,7 +42,9 @@ import compose.icons.fontawesomeicons.solid.User
 
 
 @Composable //ApplicationScope.
- fun ApplicationScope.AppLoginWindow(viewModel: LoginViewModel) {// parameter -> applicationContext: ApplicationContext
+ fun ApplicationScope.AppLoginWindow(viewModel: LoginViewModel) {
+
+    // parameter -> applicationContext: ApplicationContext
     val loginWindowState = rememberWindowState(
         position = WindowPosition(Alignment.Center),
         width = 400.dp,
