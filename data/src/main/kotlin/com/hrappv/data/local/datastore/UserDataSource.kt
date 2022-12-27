@@ -4,8 +4,9 @@ import kotlinx.coroutines.flow.Flow
 interface UserDataSource {
 
     suspend fun getSingleUser(id: Long): User?
+    suspend fun getUser(username: String): User?
 
-    fun getAllUsers(): Flow<List<User>>
+    fun getAllUsers(): List<User>
 
     suspend fun deleteAdmin(id: Long)
 

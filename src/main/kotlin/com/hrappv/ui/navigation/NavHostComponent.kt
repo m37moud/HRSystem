@@ -10,6 +10,7 @@ import com.hrappv.ui.feature.EmployeResult.EmployResultScreenComponent
 import com.hrappv.ui.feature.main.MainScreenComponent
 import com.hrappv.ui.feature.splash.SplashScreenComponent
 import com.arkivanov.decompose.*
+import com.hrappv.ui.feature.login.LoginComponent
 
 /**
  * All navigation decisions are made from here
@@ -23,6 +24,7 @@ class NavHostComponent(
      */
     private sealed class Config : Parcelable {
         object Splash : Config()
+        object Login : Config()
         object Main : Config()
         object EmployeResult : Config()
     }
@@ -51,17 +53,23 @@ class NavHostComponent(
                 onSplashFinished = ::onSplashFinished,
             )
 
+
             is Config.EmployeResult -> EmployResultScreenComponent(
                 appComponent = appComponent,
                 componentContext = componentContext,
                onBackClickEmpResult = :: employScreenStartBackPress
             )
 
-            Config.Main -> MainScreenComponent(
+            is Config.Main -> MainScreenComponent(
                 appComponent = appComponent,
                 componentContext = componentContext,
                 onClickEmpResult = ::employScreenStart
 
+            )
+             Config.Login -> LoginComponent(
+                appComponent = appComponent,
+                componentContext = componentContext,
+                onUserAuthentcated = ::onUserAuthentcated,
             )
         }
     }
@@ -81,6 +89,9 @@ class NavHostComponent(
      * Invoked when splash finish data sync
      */
     private fun onSplashFinished() {
+        router.replaceCurrent(Config.Login)
+    }
+    private fun onUserAuthentcated() {
         router.replaceCurrent(Config.Main)
     }
 

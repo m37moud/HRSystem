@@ -30,13 +30,14 @@ import com.hrappv.ui.feature.login.LoginViewModel
 )
 interface AppComponent {
     fun inject(splashScreenComponent: SplashScreenComponent)
-    fun inject(loginhScreenComponent: LoginComponent)
+    fun inject(loginScreenComponent: LoginComponent)
     fun inject(mainScreenComponent: MainScreenComponent)
     fun inject(employResultScreenComponent: EmployResultScreenComponent)
     fun inject(addEmployeScreenComponent: AddEmployeScreenComponent)
     fun inject(editEmployeScreenComponent: EditEmployeScreenComponent)
 
     fun getImporter() :ImportExcelFile
+
     fun getmodel() :LoginViewModel
 
 

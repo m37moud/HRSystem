@@ -2,7 +2,7 @@ CREATE TABLE user (
     id       INTEGER PRIMARY KEY AUTOINCREMENT
                      UNIQUE
                      NOT NULL,
-    user     TEXT NOT NULL,
+    user_name     TEXT NOT NULL,
     pass     TEXT NOT NULL,
     playrole TEXT DEFAULT "user"
 );
@@ -12,9 +12,14 @@ SELECT *
 FROM user
 WHERE id = :id;
 
+getUser:
+SELECT *
+FROM user
+WHERE user_name = :userName;
+
 
 getAllUser:
-SELECT * FROM user;
+SELECT * FROM user WHERE 1;
 
 
 

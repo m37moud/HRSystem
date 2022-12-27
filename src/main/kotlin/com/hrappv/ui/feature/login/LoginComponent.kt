@@ -12,7 +12,7 @@ import javax.inject.Inject
 class LoginComponent(
     appComponent: AppComponent,
     private val componentContext: ComponentContext,
-    private val onClickEmpResult: () ->Unit
+    private val onUserAuthentcated: () ->Unit
 ) : Component, ComponentContext by componentContext {
     @Inject
     lateinit var viewModel: LoginViewModel
@@ -32,10 +32,14 @@ class LoginComponent(
         if (authenticated)
         {
             println("userAuthenticated is $authenticated")
-            onClickEmpResult()
+            onUserAuthentcated()
+        }else{
+            println("userAuthenticated is $authenticated")
+
         }
 //        application {
 //            AppLoginWindow(viewModel)
 //        }
+        LoginScreen(viewModel)
     }
 }

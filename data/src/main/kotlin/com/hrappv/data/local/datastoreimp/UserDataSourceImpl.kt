@@ -23,8 +23,14 @@ class UserDataSourceImpl @Inject constructor(
         }
     }
 
-    override fun getAllUsers(): Flow<List<User>> {
-        return queries.getAllUser().asFlow().mapToList()
+    override suspend fun getUser(username: String) : User? {
+        return withContext(dispatcher) {
+            queries.getUser(username).executeAsOneOrNull()
+        }
+    }
+
+    override fun getAllUsers(): List<User> {
+        return queries.getAllUser().executeAsList()
     }
 
     override suspend fun deleteAdmin(id: Long) {

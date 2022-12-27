@@ -77,7 +77,7 @@ fun LoginScreen(viewModel: LoginViewModel) {
     ) {
 
         Image(
-            painter = painterResource("app-icon.svg"),
+            painter = painterResource("drawables/launcher_icons/system.png"),
             contentDescription = "app-logo",
             modifier = Modifier.size(
                 80.dp
@@ -85,7 +85,7 @@ fun LoginScreen(viewModel: LoginViewModel) {
         )
         Spacer(modifier = Modifier.height(8.dp))
         Text(
-            text = "JetSpring",
+            text = "HR App System",
             fontSize = 23.sp,
             fontWeight = FontWeight.Bold
         )

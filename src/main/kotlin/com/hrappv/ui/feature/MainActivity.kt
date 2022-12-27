@@ -66,29 +66,34 @@ class MainActivity : Activity() {
 
 //
 //                val auth by viewModel.userAuthenticated.collectAsState(false)
-                val auth by remember{ mutableStateOf(false) }
-                val themeState = rememberAppThemeState()
-                val scope = rememberCoroutineScope()
-                LaunchedEffect(viewModel) {
-                    viewModel.init(scope)
-                }
+            val auth by remember { mutableStateOf(false) }
+            val themeState = rememberAppThemeState()
+            val scope = rememberCoroutineScope()
+//            viewModel = LoginViewModel()
+//            LaunchedEffect(viewModel) {
+//                viewModel.init(scope)
+//            }
 
-
+//            CompositionLocalProvider(
+//                LocalLayoutDirection provides LayoutDirection.Ltr
+//            ) {
 //                HrAppVTheme(isDark = themeState.isDarkTheme) {
                 HrAppVTheme(false) {
-                    if (auth) {
-                        AppMainWindow(themeState)
-                    } else {
-
-                        AppLoginWindow(viewModel)
-//                        rememberRootComponent(factory = ::NavHostComponent)
-//                            .render()
-                    }
+//                    if (auth) {
+//                        AppMainWindow(themeState)
+//                    } else {
+//
+//                    AppLoginWindow(viewModel)
+//
+//                    }
 
 
                     // Igniting navigation
+                    rememberRootComponent(factory = ::NavHostComponent)
+                        .render()
 
                 }
+//            }
             }
 
         }
@@ -126,22 +131,24 @@ class MainActivity : Activity() {
         themeState: AppThemeState
     ) {
         val globalWindowState = rememberWindowState(
+            placement = WindowPlacement.Maximized,
             position = WindowPosition(Alignment.Center),
-            width = 1400.dp,
-            height = 800.dp,
+            width = 1024.dp,
+            height = 600.dp,
         )
         Window(
             onCloseRequest = {
 //                SpringApplication.exit(applicationContext)
                 exitApplication()
             },
+            title = "${App.appArgs.appName} (${App.appArgs.version})",
             state = globalWindowState,
             undecorated = true,
-            icon = painterResource("app-icon.svg")
+            icon = painterResource("drawables/launcher_icons/system.png")
         ) {
-            CompositionLocalProvider(
-                LocalLayoutDirection provides LayoutDirection.Ltr
-            ) {
+//            CompositionLocalProvider(
+//                LocalLayoutDirection provides LayoutDirection.Ltr
+//            ) {
                 Surface(
                     modifier = Modifier.background(color = MaterialTheme.colors.background)
                 ) {
@@ -156,7 +163,7 @@ class MainActivity : Activity() {
                         AppMainContainer()
                     }
                 }
-            }
+//            }
         }
     }
 
