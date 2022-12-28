@@ -1,4 +1,4 @@
-CREATE TABLE Absense (
+CREATE TABLE IF NOT EXISTS Absense (
     absnt_type   TEXT,
     absnt_date   TEXT,
     absnt_reason TEXT,

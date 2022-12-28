@@ -35,6 +35,7 @@ repositories {
 val daggerVersion by extra("2.39.1")
 
 dependencies {
+    implementation(kotlin("stdlib-jdk8"))
     implementation(compose.desktop.currentOs)
 
     // Module dependencies
@@ -48,9 +49,13 @@ dependencies {
     implementation("com.theapache64:cyclone:1.0.0-alpha01")
 
     // Decompose : Decompose
-    val decomposeVersion = "0.2.5"
-    implementation("com.arkivanov.decompose:decompose-jvm:$decomposeVersion")
-    implementation("com.arkivanov.decompose:extensions-compose-jetbrains-jvm:$decomposeVersion")
+//    val decomposeVersion = "0.2.5"
+//    implementation("com.arkivanov.decompose:decompose-jvm:$decomposeVersion")
+//    implementation("com.arkivanov.decompose:extensions-compose-jetbrains-jvm:$decomposeVersion")
+
+    // Decompose : Decompose
+    implementation("com.arkivanov.decompose:decompose:1.0.0-alpha-04")
+    implementation("com.arkivanov.decompose:extensions-compose-jetbrains:1.0.0-alpha-04")
 
 
     //Icons
@@ -121,4 +126,13 @@ compose.desktop {
 
         }
     }
+}
+
+val compileKotlin: KotlinCompile by tasks
+compileKotlin.kotlinOptions {
+    jvmTarget = "1.8"
+}
+val compileTestKotlin: KotlinCompile by tasks
+compileTestKotlin.kotlinOptions {
+    jvmTarget = "1.8"
 }

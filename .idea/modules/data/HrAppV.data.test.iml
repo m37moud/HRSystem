@@ -122,5 +122,4 @@
     <orderEntry type="library" name="Gradle: stax:stax-api:1.0.1" level="project" />
     <orderEntry type="library" scope="RUNTIME" name="Gradle: org.xerial:sqlite-jdbc:3.34.0" level="project" />
   </component>
-  <component name="TestModuleProperties" production-module="HrAppV.data.main" />
 </module>

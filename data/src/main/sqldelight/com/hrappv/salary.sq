@@ -1,4 +1,4 @@
-CREATE TABLE salary (
+CREATE TABLE IF NOT EXISTS salary (
     emp_name     TEXT NOT NULL,
     department   TEXT NOT NULL
                          DEFAULT "mayorca",

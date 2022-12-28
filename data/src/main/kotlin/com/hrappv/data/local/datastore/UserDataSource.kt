@@ -10,5 +10,5 @@ interface UserDataSource {
 
     suspend fun deleteAdmin(id: Long)
 
-    suspend fun upsertUser(id: Long? = null, user: String, password: String,playRole:String)
+    suspend fun upsertUser(id: Long? = null, user: String, password: String,playRole:String?)
 }

@@ -35,6 +35,12 @@ import androidx.compose.ui.graphics.RectangleShape
 import androidx.compose.ui.graphics.painter.Painter
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.sp
+import com.hrappv.ui.security.UserAuthSate
+import compose.icons.FontAwesomeIcons
+import compose.icons.fontawesomeicons.Solid
+import compose.icons.fontawesomeicons.solid.DoorOpen
+import compose.icons.fontawesomeicons.solid.Key
+import compose.icons.fontawesomeicons.solid.SignOutAlt
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
 
@@ -89,6 +95,7 @@ fun MainScreen(
 @Composable
 fun MainScreen2(
     viewModel: MainViewModel,
+    userAuthSate: UserAuthSate,
     modifier: Modifier = Modifier
 ) {
     val scrollState = rememberScrollState(0)
@@ -146,8 +153,9 @@ fun MainScreen2(
     ) {
         NavMenu(
             isMenuPressed = isMenuPressed,
-//            modifier.weight(1f),
-            viewModel = viewModel
+           modifier= modifier.weight(0.2f),
+            viewModel = viewModel,
+            logout = true
         ) {
             coroutineScope.launch {
 //                    scaffoldState.drawerState.open()
@@ -156,8 +164,8 @@ fun MainScreen2(
 
             }
         }
-        HomeContent(
-//            modifier.weight(4f)
+        HomeContent(userAuthSate.username,
+            modifier.weight(.8f)
         )
 
 
@@ -352,14 +360,14 @@ data class NavigationDrawerItem(
     val showUnreadBubble: Boolean = false
 )
 @Composable
-private fun HomeContent(modifier: Modifier = Modifier) {
+private fun HomeContent(name :String , modifier: Modifier = Modifier) {
     Row(
         modifier = modifier.padding(8.dp),
         horizontalArrangement = Arrangement.Center
     ) {
         Spacer(modifier = Modifier.width(8.dp))
 
-        LeftPart(
+        LeftPart(name
 //            modifier.weight(1f)
         )
         Spacer(modifier = Modifier.width(12.dp))
@@ -377,7 +385,7 @@ private fun HomeContent(modifier: Modifier = Modifier) {
 
 
 @Composable
-private fun LeftPart(modifier: Modifier = Modifier) {
+private fun LeftPart(name :String , modifier: Modifier = Modifier) {
 
     Card(
         modifier.padding(top = 10.dp),
@@ -391,7 +399,7 @@ private fun LeftPart(modifier: Modifier = Modifier) {
             horizontalAlignment = Alignment.Start
         ) {
             Text(
-                "My Profile",
+                "$name",
                 style = MaterialTheme.typography.h6.copy(fontWeight = FontWeight.ExtraBold)
             )
 
@@ -416,7 +424,7 @@ private fun LeftPart(modifier: Modifier = Modifier) {
 
 
                 Text(
-                    "Mr-Mahmoud Aly",
+                    "Mr-$name",
                     modifier = Modifier.align(Alignment.CenterHorizontally),
                     maxLines = 1, style = MaterialTheme.typography.subtitle1
                 )
@@ -597,6 +605,7 @@ private fun NavMenu(
     modifier: Modifier = Modifier,
     viewModel: MainViewModel,
     isMenuPressed: Boolean,
+    logout: Boolean,
     onNavIconClick: () -> Unit
 ) {
 //    var isMenuPressed by remember { mutableStateOf(true) }
@@ -682,6 +691,11 @@ private fun NavMenu(
             }
             Spacer(modifier = modifier.height(8.dp))
             NavItem(modifier = modifier, icon = Icons.Default.Info, name = "About", isMenuPressed = isMenuPressed) {
+
+            }
+
+            Spacer(modifier = modifier.height(8.dp))
+            NavItem(modifier = modifier, icon = FontAwesomeIcons.Solid.SignOutAlt, name = "Log Out", isMenuPressed = isMenuPressed) {
 
             }
 

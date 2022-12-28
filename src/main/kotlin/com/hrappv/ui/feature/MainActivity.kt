@@ -14,7 +14,11 @@ import androidx.compose.ui.unit.LayoutDirection
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.window.*
 //import androidx.compose.ui.platform.LocalConfiguration
-import com.arkivanov.decompose.extensions.compose.jetbrains.rememberRootComponent
+//import com.arkivanov.decompose.extensions.compose.jetbrains.rememberRootComponent
+import com.arkivanov.decompose.extensions.compose.jetbrains.lifecycle.LifecycleController
+import com.arkivanov.essenty.lifecycle.LifecycleRegistry
+import com.arkivanov.decompose.DefaultComponentContext
+import com.arkivanov.decompose.ExperimentalDecomposeApi
 import com.hrappv.App
 import com.hrappv.ui.components.AppWindowTitleBar
 import com.hrappv.ui.feature.login.AppLoginWindow
@@ -28,6 +32,7 @@ import com.hrappv.ui.value.rememberAppThemeState
 import com.theapache64.cyclone.core.Activity
 import com.theapache64.cyclone.core.Intent
 import javax.inject.Inject
+import javax.swing.SwingUtilities
 import androidx.compose.ui.window.application as setContent
 
 /**
@@ -42,10 +47,14 @@ class MainActivity : Activity() {
         }
     }
 
-    @Inject
-    lateinit var viewModel: LoginViewModel
+    //    @Inject
+//    lateinit var viewModel: LoginViewModel
+    val windowState = WindowState()
+    val lifecycle = LifecycleRegistry()
+    val root = runOnMainThreadBlocking { NavHostComponent(DefaultComponentContext(lifecycle)) }
 
-    override fun onCreate() {
+    @OptIn(ExperimentalDecomposeApi::class)
+    override fun onCreate() { //decompose-desktop-example-master
         super.onCreate()
 
 //        val configuration = LocalConfiguration.current
@@ -66,9 +75,9 @@ class MainActivity : Activity() {
 
 //
 //                val auth by viewModel.userAuthenticated.collectAsState(false)
-            val auth by remember { mutableStateOf(false) }
-            val themeState = rememberAppThemeState()
-            val scope = rememberCoroutineScope()
+                val auth by remember { mutableStateOf(false) }
+                val themeState = rememberAppThemeState()
+                val scope = rememberCoroutineScope()
 //            viewModel = LoginViewModel()
 //            LaunchedEffect(viewModel) {
 //                viewModel.init(scope)
@@ -78,7 +87,12 @@ class MainActivity : Activity() {
 //                LocalLayoutDirection provides LayoutDirection.Ltr
 //            ) {
 //                HrAppVTheme(isDark = themeState.isDarkTheme) {
-                HrAppVTheme(false) {
+                singleWindowApplication(
+                    state = windowState,
+                    title = "Decompose Desktop Example",
+                ) {
+                    LifecycleController(lifecycle, windowState)
+                    HrAppVTheme(false) {
 //                    if (auth) {
 //                        AppMainWindow(themeState)
 //                    } else {
@@ -88,14 +102,15 @@ class MainActivity : Activity() {
 //                    }
 
 
-                    // Igniting navigation
-                    rememberRootComponent(factory = ::NavHostComponent)
-                        .render()
+                        // Igniting navigation
+//                    rememberRootComponent(factory = ::NavHostComponent)
+//                        .render()
+                        root.render()
 
-                }
+                    }
 //            }
+                }
             }
-
         }
 
     }
@@ -149,20 +164,20 @@ class MainActivity : Activity() {
 //            CompositionLocalProvider(
 //                LocalLayoutDirection provides LayoutDirection.Ltr
 //            ) {
-                Surface(
-                    modifier = Modifier.background(color = MaterialTheme.colors.background)
-                ) {
-                    Column(modifier = Modifier.fillMaxSize()) {
-                        AppWindowTitleBar(
+            Surface(
+                modifier = Modifier.background(color = MaterialTheme.colors.background)
+            ) {
+                Column(modifier = Modifier.fillMaxSize()) {
+                    AppWindowTitleBar(
 //                            applicationContext.viewModel(),
-                            globalWindowState,
-                            themeState
-                        ) {
-                            exitApplication()
-                        }
-                        AppMainContainer()
+                        globalWindowState,
+                        themeState
+                    ) {
+                        exitApplication()
                     }
+                    AppMainContainer()
                 }
+            }
 //            }
         }
     }
@@ -171,9 +186,15 @@ class MainActivity : Activity() {
     @Composable
     fun AppMainContainer() {
         // Igniting navigation
-        rememberRootComponent(factory = ::NavHostComponent)
-            .render()
+//        rememberRootComponent(factory = ::NavHostComponent)
+//            .render()
+        root.render()
     }
 
 
+    private inline fun <T : Any> runOnMainThreadBlocking(crossinline block: () -> T): T {
+        lateinit var result: T
+        SwingUtilities.invokeAndWait { result = block() }
+        return result
+    }
 }

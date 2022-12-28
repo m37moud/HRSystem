@@ -1,4 +1,4 @@
-CREATE TABLE Department (
+CREATE TABLE IF NOT EXISTS Department (
     depart_id       INTEGER PRIMARY KEY ASC ON CONFLICT ROLLBACK AUTOINCREMENT
                             NOT NULL
                             UNIQUE,

@@ -1,4 +1,4 @@
-CREATE TABLE user (
+CREATE TABLE IF NOT EXISTS user (
     id       INTEGER PRIMARY KEY AUTOINCREMENT
                      UNIQUE
                      NOT NULL,
@@ -19,7 +19,7 @@ WHERE user_name = :userName;
 
 
 getAllUser:
-SELECT * FROM user WHERE 1;
+SELECT * FROM user;
 
 
 

@@ -93,12 +93,12 @@ fun LoginScreen(viewModel: LoginViewModel) {
 
         LoginForm(viewModel)
 
-        val error by viewModel.errorState.collectAsState()
-        if (!error.isNullOrEmpty()) {
+        val error by viewModel.userAuthSate.collectAsState()
+        if (!error.error.isNullOrEmpty()) {
             Spacer(modifier = Modifier.height(15.dp))
             Text(
                 text = R.string.ERROR_STATE,
-                fontSize = 18.sp,
+                fontSize = 14.sp,
                 color = Color.Red
             )
         }

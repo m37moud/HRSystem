@@ -32,6 +32,22 @@ class UserDataSourceImpl @Inject constructor(
     override fun getAllUsers(): List<User> {
         return queries.getAllUser().executeAsList()
     }
+	
+	/*
+    suspend fun getBusStops(): List<BusStop> {
+        val results = galwayBusQueries.selectAll(mapper = { stop_id, short_name, irish_short_name ->
+            BusStop(stop_id.toInt(), short_name, irish_short_name)
+        }).executeAsList()
+
+        return results
+    }
+	
+	//@ExperimentalCoroutinesApi
+suspend fun getBusStopsFlow() = galwayBusQueries.selectAll(mapper = { stop_id, short_name, irish_short_name ->
+        BusStop(stop_id.toInt(), short_name, irish_short_name)
+    }).asFlow().mapToList()
+	
+	*/
 
     override suspend fun deleteAdmin(id: Long) {
         withContext(dispatcher) {
@@ -39,7 +55,7 @@ class UserDataSourceImpl @Inject constructor(
         }
     }
 
-    override suspend fun upsertUser(id: Long?, user: String, password: String,playRole:String) {
+    override suspend fun upsertUser(id: Long?, user: String, password: String,playRole:String?) {
         withContext(dispatcher) {
             queries.upsertUSer(id, user, password,playRole)
         }

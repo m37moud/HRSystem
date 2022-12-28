@@ -1,4 +1,4 @@
-CREATE TABLE monthly_commition (
+CREATE TABLE IF NOT EXISTS monthly_commition (
     comm_prcentage INTEGER,
     comm_value     REAL AS Double,
     comm_substract REAL AS Double,

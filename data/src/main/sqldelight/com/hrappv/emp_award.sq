@@ -1,4 +1,4 @@
-CREATE TABLE emp_award (
+CREATE TABLE IF NOT EXISTS emp_award (
     award_value REAL AS Double,
     award_date  TEXT,
     award_type  TEXT,

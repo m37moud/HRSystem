@@ -1,4 +1,4 @@
-CREATE TABLE emp_substraction (
+CREATE TABLE IF NOT EXISTS emp_substraction (
     substract_byday REAL AS Double,
     sub_value       REAL AS Double,
     sub_type        TEXT,

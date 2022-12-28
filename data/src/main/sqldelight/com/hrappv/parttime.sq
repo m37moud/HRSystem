@@ -1,4 +1,4 @@
-CREATE TABLE parttime (
+CREATE TABLE IF NOT EXISTS parttime (
     adding_byday      REAL AS Double,
     day_value         REAL AS Double,
     addtiont_type     TEXT,

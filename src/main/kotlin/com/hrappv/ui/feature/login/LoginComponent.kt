@@ -1,18 +1,19 @@
 package com.hrappv.ui.feature.login
 
 import androidx.compose.runtime.*
-import androidx.compose.ui.window.application
 import com.arkivanov.decompose.ComponentContext
 import com.hrappv.di.AppComponent
 import com.hrappv.ui.navigation.Component
+import com.hrappv.ui.security.UserAuthSate
 import javax.inject.Inject
+import kotlin.reflect.KFunction1
 
 
 //LoginComponent
 class LoginComponent(
     appComponent: AppComponent,
     private val componentContext: ComponentContext,
-    private val onUserAuthentcated: () ->Unit
+    private val onUserAuthentcated: (UserAuthSate)->Unit
 ) : Component, ComponentContext by componentContext {
     @Inject
     lateinit var viewModel: LoginViewModel
@@ -27,13 +28,12 @@ class LoginComponent(
         LaunchedEffect(viewModel) {
             viewModel.init(scope)
         }
-        val authenticated by viewModel.userAuthenticated.collectAsState()
+        val authenticated by viewModel.userAuthSate.collectAsState()
 
-        if (authenticated)
-        {
+        if (authenticated.auth) {
             println("userAuthenticated is $authenticated")
-            onUserAuthentcated()
-        }else{
+            onUserAuthentcated(authenticated)
+        } else {
             println("userAuthenticated is $authenticated")
 
         }
