@@ -29,6 +29,7 @@ class LoginComponent(
             viewModel.init(scope)
         }
         val authenticated by viewModel.userAuthSate.collectAsState()
+//        val authenticated by viewModel.userAuthenticated.collectAsState()
 
         if (authenticated.auth) {
             println("userAuthenticated is $authenticated")

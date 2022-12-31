@@ -35,6 +35,7 @@ import androidx.compose.ui.graphics.RectangleShape
 import androidx.compose.ui.graphics.painter.Painter
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.sp
+import com.hrappv.ui.feature.login.LoginViewModel
 import com.hrappv.ui.security.UserAuthSate
 import compose.icons.FontAwesomeIcons
 import compose.icons.fontawesomeicons.Solid
@@ -95,6 +96,7 @@ fun MainScreen(
 @Composable
 fun MainScreen2(
     viewModel: MainViewModel,
+    loginViewModel: LoginViewModel,
     userAuthSate: UserAuthSate,
     modifier: Modifier = Modifier
 ) {
@@ -147,15 +149,16 @@ fun MainScreen2(
 //    ) {
     Row(
         modifier = modifier
-//                .fillMaxSize()
+                .fillMaxSize()
 //            .background(Color.LightGray)
 //                .scrollable(scrollState, Orientation.Horizontal)
     ) {
         NavMenu(
             isMenuPressed = isMenuPressed,
-           modifier= modifier.weight(0.2f),
+           modifier= Modifier.weight(0.2f),
+//            modifier= Modifier.weight(1f),
             viewModel = viewModel,
-            logout = true
+            loginViewModel = loginViewModel
         ) {
             coroutineScope.launch {
 //                    scaffoldState.drawerState.open()
@@ -165,7 +168,8 @@ fun MainScreen2(
             }
         }
         HomeContent(userAuthSate.username,
-            modifier.weight(.8f)
+            Modifier.weight(0.8f)
+//            Modifier.weight(4f)
         )
 
 
@@ -605,7 +609,7 @@ private fun NavMenu(
     modifier: Modifier = Modifier,
     viewModel: MainViewModel,
     isMenuPressed: Boolean,
-    logout: Boolean,
+    loginViewModel : LoginViewModel,
     onNavIconClick: () -> Unit
 ) {
 //    var isMenuPressed by remember { mutableStateOf(true) }
@@ -696,7 +700,7 @@ private fun NavMenu(
 
             Spacer(modifier = modifier.height(8.dp))
             NavItem(modifier = modifier, icon = FontAwesomeIcons.Solid.SignOutAlt, name = "Log Out", isMenuPressed = isMenuPressed) {
-
+                    loginViewModel.logOut()
             }
 
 

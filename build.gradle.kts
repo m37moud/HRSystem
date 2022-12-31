@@ -9,6 +9,8 @@ plugins {
     kotlin("jvm") version kotlinVersion
     kotlin("kapt") version kotlinVersion
     id("org.jetbrains.compose") version "1.1.0"
+//    kotlin("jvm") version "1.7.10"
+//    id("org.jetbrains.compose") version "1.2.0-alpha01-dev774"
 //    id("com.squareup.sqldelight") version "1.5.4"
 }
 //
@@ -49,13 +51,19 @@ dependencies {
     implementation("com.theapache64:cyclone:1.0.0-alpha01")
 
     // Decompose : Decompose
-//    val decomposeVersion = "0.2.5"
-//    implementation("com.arkivanov.decompose:decompose-jvm:$decomposeVersion")
-//    implementation("com.arkivanov.decompose:extensions-compose-jetbrains-jvm:$decomposeVersion")
+    val decomposeVersion = "0.2.5"
+    implementation("com.arkivanov.decompose:decompose-jvm:$decomposeVersion")
+    implementation("com.arkivanov.decompose:extensions-compose-jetbrains-jvm:$decomposeVersion")
 
     // Decompose : Decompose
-    implementation("com.arkivanov.decompose:decompose:1.0.0-alpha-04")
-    implementation("com.arkivanov.decompose:extensions-compose-jetbrains:1.0.0-alpha-04")
+//    implementation("com.arkivanov.decompose:decompose:1.0.0-alpha-04")
+//    implementation("com.arkivanov.decompose:extensions-compose-jetbrains:1.0.0-alpha-04")
+//    implementation("com.arkivanov.decompose:extensions-compose-jetbrains:1.0.0-beta-01")
+
+
+    //corotunie swing
+    implementation("org.jetbrains.kotlinx:kotlinx-coroutines-swing")
+
 
 
     //Icons
@@ -127,12 +135,12 @@ compose.desktop {
         }
     }
 }
-
-val compileKotlin: KotlinCompile by tasks
-compileKotlin.kotlinOptions {
-    jvmTarget = "1.8"
-}
-val compileTestKotlin: KotlinCompile by tasks
-compileTestKotlin.kotlinOptions {
-    jvmTarget = "1.8"
-}
+//
+//val compileKotlin: KotlinCompile by tasks
+//compileKotlin.kotlinOptions {
+//    jvmTarget = "1.8"
+//}
+//val compileTestKotlin: KotlinCompile by tasks
+//compileTestKotlin.kotlinOptions {
+//    jvmTarget = "1.8"
+//}

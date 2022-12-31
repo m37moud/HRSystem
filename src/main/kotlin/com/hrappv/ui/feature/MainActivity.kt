@@ -15,10 +15,11 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.window.*
 //import androidx.compose.ui.platform.LocalConfiguration
 //import com.arkivanov.decompose.extensions.compose.jetbrains.rememberRootComponent
-import com.arkivanov.decompose.extensions.compose.jetbrains.lifecycle.LifecycleController
-import com.arkivanov.essenty.lifecycle.LifecycleRegistry
+//import com.arkivanov.decompose.extensions.compose.jetbrains.lifecycle.LifecycleController
+//import com.arkivanov.essenty.lifecycle.LifecycleRegistry
 import com.arkivanov.decompose.DefaultComponentContext
 import com.arkivanov.decompose.ExperimentalDecomposeApi
+import com.arkivanov.decompose.extensions.compose.jetbrains.rememberRootComponent
 import com.hrappv.App
 import com.hrappv.ui.components.AppWindowTitleBar
 import com.hrappv.ui.feature.login.AppLoginWindow
@@ -49,9 +50,10 @@ class MainActivity : Activity() {
 
     //    @Inject
 //    lateinit var viewModel: LoginViewModel
-    val windowState = WindowState()
-    val lifecycle = LifecycleRegistry()
-    val root = runOnMainThreadBlocking { NavHostComponent(DefaultComponentContext(lifecycle)) }
+//    val windowState = WindowState()
+//    val lifecycle = LifecycleRegistry()
+////    val root = runOnMainThreadBlocking { NavHostComponent(DefaultComponentContext(lifecycle)) }
+//    val root =  NavHostComponent(DefaultComponentContext(lifecycle))
 
     @OptIn(ExperimentalDecomposeApi::class)
     override fun onCreate() { //decompose-desktop-example-master
@@ -61,6 +63,15 @@ class MainActivity : Activity() {
 //        val screenHeight = configuration.screenHeightDp.dp
 //        val screenWidth = configuration.screenWidthDp.dp
 //
+
+//        val LocalComponentContext: ProvidableCompositionLocal<ComponentContext> =
+//            staticCompositionLocalOf { error("Root component context was not provided") }
+//
+//        @Composable
+//        fun ProvideComponentContext(componentContext: ComponentContext, content: @Composable () -> Unit) {
+//            CompositionLocalProvider(LocalComponentContext provides componentContext, content = content)
+//        }
+
         setContent {
             Window(
                 onCloseRequest = ::exitApplication,
@@ -87,11 +98,11 @@ class MainActivity : Activity() {
 //                LocalLayoutDirection provides LayoutDirection.Ltr
 //            ) {
 //                HrAppVTheme(isDark = themeState.isDarkTheme) {
-                singleWindowApplication(
-                    state = windowState,
-                    title = "Decompose Desktop Example",
-                ) {
-                    LifecycleController(lifecycle, windowState)
+//                singleWindowApplication(
+//                    state = windowState,
+//                    title = "Decompose Desktop Example",
+//                ) {
+//                    LifecycleController(lifecycle, windowState)
                     HrAppVTheme(false) {
 //                    if (auth) {
 //                        AppMainWindow(themeState)
@@ -103,13 +114,13 @@ class MainActivity : Activity() {
 
 
                         // Igniting navigation
-//                    rememberRootComponent(factory = ::NavHostComponent)
-//                        .render()
-                        root.render()
+                    rememberRootComponent(factory = ::NavHostComponent)
+                        .render()
+//                        root.render()
 
                     }
 //            }
-                }
+//                }
             }
         }
 
@@ -186,9 +197,9 @@ class MainActivity : Activity() {
     @Composable
     fun AppMainContainer() {
         // Igniting navigation
-//        rememberRootComponent(factory = ::NavHostComponent)
-//            .render()
-        root.render()
+        rememberRootComponent(factory = ::NavHostComponent)
+            .render()
+//        root.render()
     }
 
 

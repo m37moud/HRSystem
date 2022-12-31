@@ -15,10 +15,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.semantics.Role.Companion.Image
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.layout.*
-import androidx.compose.material.Button
-import androidx.compose.material.Icon
-import androidx.compose.material.Text
-import androidx.compose.material.TextField
+import androidx.compose.material.*
 import androidx.compose.runtime.*
 import androidx.compose.ui.ExperimentalComposeUiApi
 import androidx.compose.ui.draw.clip
@@ -93,11 +90,12 @@ fun LoginScreen(viewModel: LoginViewModel) {
 
         LoginForm(viewModel)
 
-        val error by viewModel.userAuthSate.collectAsState()
-        if (!error.error.isNullOrEmpty()) {
+//        val error by viewModel.userAuthSate.collectAsState()
+        val error= viewModel.userAuthSate.value.error
+        if (!error.isNullOrEmpty()) {
             Spacer(modifier = Modifier.height(15.dp))
             Text(
-                text = R.string.ERROR_STATE,
+                text = error,
                 fontSize = 14.sp,
                 color = Color.Red
             )
@@ -111,11 +109,11 @@ fun LoginScreen(viewModel: LoginViewModel) {
 private fun LoginForm(viewModel: LoginViewModel) {
     var userName by remember { mutableStateOf("") }
     var password by remember { mutableStateOf("") }
-    TextField(
+    OutlinedTextField(
         value = userName,
         onValueChange = {
             userName = it
-            viewModel.emitError(null)
+//            viewModel.emitError(null)
         },
         singleLine = true,
         label = {
@@ -131,11 +129,11 @@ private fun LoginForm(viewModel: LoginViewModel) {
         modifier = Modifier.testTag("username")
     )
     Spacer(modifier = Modifier.height(8.dp))
-    TextField(
+    OutlinedTextField(
         value = password,
         onValueChange = {
             password = it
-            viewModel.emitError(null)
+//            viewModel.emitError(null)
         },
         singleLine = true,
         label = {
