@@ -35,16 +35,21 @@ val DarkTheme = darkColors(
 @Composable
 fun HrAppVTheme(
     isDark: Boolean = true, // TODO: If you want to support both light theme and dark theme, you'll need to implement it manually.
-    content: @Composable ColumnScope.() -> Unit,
+//    content: @Composable ColumnScope.() -> Unit,
+    content: @Composable () -> Unit,
 ) {
     MaterialTheme(
         colors = if (isDark) DarkTheme else LightTheme,
-        typography = HrAppVTypography
-    ) {
-        Surface {
-            Column {
-                content()
-            }
-        }
-    }
+        typography = HrAppVTypography,
+        content = content
+
+    )
+//    {
+//        content()
+//        Surface {
+//            Column {
+//                content()
+//            }
+//        }
+//    }
 }

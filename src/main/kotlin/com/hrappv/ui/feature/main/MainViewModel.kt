@@ -4,6 +4,7 @@ import com.hrappv.data.repo.MyRepo
 import com.hrappv.util.ViewModel
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
+import kotlinx.coroutines.flow.asStateFlow
 import javax.inject.Inject
 
 class MainViewModel @Inject constructor(
@@ -16,6 +17,10 @@ class MainViewModel @Inject constructor(
 
     private val _welcomeText = MutableStateFlow(INIT_WELCOME_MSG)
     val welcomeText: StateFlow<String> = _welcomeText
+
+
+    private val _window = MutableStateFlow(WindowState())
+    val window: StateFlow<WindowState> = _window.asStateFlow()
 
 
     private val _isStartEmpResult = MutableStateFlow(false)

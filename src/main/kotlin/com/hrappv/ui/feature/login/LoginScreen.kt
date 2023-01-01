@@ -38,31 +38,6 @@ import compose.icons.fontawesomeicons.solid.Key
 import compose.icons.fontawesomeicons.solid.User
 
 
-@Composable //ApplicationScope.
- fun ApplicationScope.AppLoginWindow(viewModel: LoginViewModel) {
-
-    // parameter -> applicationContext: ApplicationContext
-    val loginWindowState = rememberWindowState(
-        position = WindowPosition(Alignment.Center),
-        width = 400.dp,
-        height = 600.dp,
-    )
-    Window(
-        onCloseRequest = ::exitApplication
-        ,
-        state = loginWindowState,
-        resizable = false,
-        title = R.string.LOGIN,
-        icon = painterResource("drawables/logo.png")
-    ) {
-        CompositionLocalProvider(
-            LocalLayoutDirection provides LayoutDirection.Ltr
-        ) {
-            LoginScreen(viewModel)
-        }
-    }
-}
-
 
 @Composable
 fun LoginScreen(viewModel: LoginViewModel) {

@@ -19,5 +19,16 @@ object R {
         const val ACTION_EMPLOYEE_RESULT = "Register Attend"
         const val LOGIN = "login"
         const val ERROR_STATE = "Username or password incorrect"
+
+
+        //screens
+        const val HOME = "HOME"
+        const val ADD_EMPLOYE = "AddEmployee"
+        const val REGISTER_ATTENDS = "RegisterAttends"
+        const val SETTINGS = "Settings"
+        const val ABOUT = "About"
+        const val LOG_OUT = "LogOut"
+
+
     }
 }

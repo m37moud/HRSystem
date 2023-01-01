@@ -46,7 +46,6 @@ import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
 
 
-
 @Composable
 fun MainScreen(
     viewModel: MainViewModel,
@@ -69,13 +68,13 @@ fun MainScreen(
                 modifier = Modifier.height(10.dp)
             )
 
-                    Button(
-                        onClick = {
-                            viewModel.onClickMeClicked()
-                        }
-                    ) {
-                        Text(text = R.string.ACTION_MAIN_CLICK_ME)
-                    }
+            Button(
+                onClick = {
+                    viewModel.onClickMeClicked()
+                }
+            ) {
+                Text(text = R.string.ACTION_MAIN_CLICK_ME)
+            }
 
             Spacer(
                 modifier = Modifier.height(10.dp)
@@ -148,29 +147,42 @@ fun MainScreen2(
 //        drawerGesturesEnabled = false
 //    ) {
     Row(
-        modifier = modifier
-                .fillMaxSize()
+        modifier = Modifier
+            .fillMaxSize()
 //            .background(Color.LightGray)
 //                .scrollable(scrollState, Orientation.Horizontal)
     ) {
-        NavMenu(
-            isMenuPressed = isMenuPressed,
-           modifier= Modifier.weight(0.2f),
-//            modifier= Modifier.weight(1f),
-            viewModel = viewModel,
-            loginViewModel = loginViewModel
+        Box(
+            modifier = modifier
+                .weight(0.15f)
         ) {
-            coroutineScope.launch {
+            NavMenu(
+//                modifier = modifier.width(150.dp).fillMaxHeight(),
+                //            modifier= Modifier.weight(1f),
+                isMenuPressed = isMenuPressed,
+                viewModel = viewModel,
+                loginViewModel = loginViewModel
+            ) {
+                coroutineScope.launch {
 //                    scaffoldState.drawerState.open()
-                isMenuPressed = !isMenuPressed
+                    isMenuPressed = !isMenuPressed
 
 
+                }
             }
+
         }
-        HomeContent(userAuthSate.username,
-            Modifier.weight(0.8f)
+
+        Box(
+            modifier = modifier.fillMaxHeight()
+                .weight(0.85f)
+        ) {
+            HomeContent(
+                name = userAuthSate.username,
+//            modifier = modifier.weight(0.8f),
 //            Modifier.weight(4f)
-        )
+            )
+        }
 
 
     }
@@ -330,7 +342,7 @@ private fun prepareNavigationDrawerItems(): List<NavigationDrawerItem> {
     )
     itemsList.add(
         NavigationDrawerItem(
-            image =Icons.Default.Settings,
+            image = Icons.Default.Settings,
             label = "Settings"
         )
     )
@@ -363,15 +375,17 @@ data class NavigationDrawerItem(
     val label: String,
     val showUnreadBubble: Boolean = false
 )
+
 @Composable
-private fun HomeContent(name :String , modifier: Modifier = Modifier) {
+private fun HomeContent(name: String, modifier: Modifier = Modifier) {
     Row(
         modifier = modifier.padding(8.dp),
         horizontalArrangement = Arrangement.Center
     ) {
         Spacer(modifier = Modifier.width(8.dp))
 
-        LeftPart(name
+        LeftPart(
+            name
 //            modifier.weight(1f)
         )
         Spacer(modifier = Modifier.width(12.dp))
@@ -389,7 +403,7 @@ private fun HomeContent(name :String , modifier: Modifier = Modifier) {
 
 
 @Composable
-private fun LeftPart(name :String , modifier: Modifier = Modifier) {
+private fun LeftPart(name: String, modifier: Modifier = Modifier) {
 
     Card(
         modifier.padding(top = 10.dp),
@@ -609,13 +623,13 @@ private fun NavMenu(
     modifier: Modifier = Modifier,
     viewModel: MainViewModel,
     isMenuPressed: Boolean,
-    loginViewModel : LoginViewModel,
+    loginViewModel: LoginViewModel,
     onNavIconClick: () -> Unit
 ) {
 //    var isMenuPressed by remember { mutableStateOf(true) }
 
     Card(
-        Modifier
+        modifier
             .animateContentSize(),
         elevation = 6.dp,
     ) {
@@ -641,7 +655,7 @@ private fun NavMenu(
                         style = MaterialTheme.typography.subtitle1,
                     )
 
-                    Spacer(modifier = Modifier.width(150.dp))
+                    Spacer(modifier = modifier.width(150.dp))
                 } else {
                     Spacer(modifier = modifier.width(8.dp))
                 }
@@ -699,8 +713,13 @@ private fun NavMenu(
             }
 
             Spacer(modifier = modifier.height(8.dp))
-            NavItem(modifier = modifier, icon = FontAwesomeIcons.Solid.SignOutAlt, name = "Log Out", isMenuPressed = isMenuPressed) {
-                    loginViewModel.logOut()
+            NavItem(
+                modifier = modifier,
+                icon = FontAwesomeIcons.Solid.SignOutAlt,
+                name = "Log Out",
+                isMenuPressed = isMenuPressed
+            ) {
+                loginViewModel.logOut()
             }
 
 
@@ -752,13 +771,102 @@ private fun NavItem(
 //
 
 @Composable
+fun Maintest(
+    userAuthSate: UserAuthSate = UserAuthSate(),
+    modifier: Modifier = Modifier
+) {
+    val scrollState = rememberScrollState(0)
+    val scaffoldState = rememberScaffoldState(rememberDrawerState(DrawerValue.Closed))
+//    val navController = rememberNavController()
+    val coroutineScope = rememberCoroutineScope()
+    var isMenuPressed by remember { mutableStateOf(false) }
+//    Surface(
+//        modifier = modifier
+//            .fillMaxSize()
+//            .background(Color.LightGray)
+//    , elevation = 6.dp
+//    ) {
+
+//    Scaffold(
+//        modifier
+////            .animateContentSize(
+////                animationSpec = spring(
+////                    dampingRatio = Spring.DampingRatioHighBouncy,
+////                    stiffness = Spring.StiffnessHigh
+////                )
+////            )
+//        , scaffoldState = scaffoldState,
+////        topBar = {
+////            MyTopAppBar {
+////                coroutineScope.launch {
+//////                    scaffoldState.drawerState.open()
+////                }
+////            }
+////        },
+////        drawerContent = {
+////            DrawerContent { itemLabel ->
+////
+////                coroutineScope.launch {
+////                    // delay for the ripple effect
+////                    delay(timeMillis = 250)
+////                    scaffoldState.drawerState.close()
+////                }
+////            }
+////        }
+//
+////        drawerContent = {
+////            Text("Drawer title", modifier = Modifier.padding(16.dp))
+////            Divider()
+////
+////            // Drawer items
+////        }
+//        drawerGesturesEnabled = false
+//    ) {
+    Row(
+        modifier = modifier
+            .fillMaxSize()
+//            .background(Color.LightGray)
+//                .scrollable(scrollState, Orientation.Horizontal)
+    ) {
+
+        lateinit var viewModel: MainViewModel
+        lateinit var loginViewModel: LoginViewModel
+
+        HomeContent(
+            name = userAuthSate.username,
+            modifier = modifier.weight(0.8f),
+//            Modifier.weight(4f)
+        )
+        NavMenu(
+            modifier = modifier.weight(0.2f),
+            //            modifier= Modifier.weight(1f),
+            isMenuPressed = isMenuPressed,
+            viewModel = viewModel,
+            loginViewModel = loginViewModel
+        ) {
+            coroutineScope.launch {
+//                    scaffoldState.drawerState.open()
+                isMenuPressed = !isMenuPressed
+
+
+            }
+        }
+
+
+    }
+
+//    }
+
+}
+
+
+@Composable
 @Preview
 fun FavoriteCollectionCardPreview() {
     val darkTheme by remember { mutableStateOf(false) }
     HrAppVTheme(darkTheme) {
-//        MainScreen2()
+        Maintest()
 
     }
 }
-
 
