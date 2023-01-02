@@ -19,7 +19,7 @@ class LoginComponent(
     lateinit var viewModel: LoginViewModel
 
     init {
-        appComponent.inject(this)
+//        appComponent.inject(this)
     }
 
     @Composable

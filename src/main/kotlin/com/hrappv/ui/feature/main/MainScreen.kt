@@ -95,8 +95,8 @@ fun MainScreen(
 @Composable
 fun MainScreen2(
     viewModel: MainViewModel,
-    loginViewModel: LoginViewModel,
-    userAuthSate: UserAuthSate,
+//    loginViewModel: LoginViewModel,
+    userAuthSate: UserAuthSate= UserAuthSate(false, username = "mahmoud"),
     modifier: Modifier = Modifier
 ) {
     val scrollState = rememberScrollState(0)
@@ -146,46 +146,33 @@ fun MainScreen2(
 ////        }
 //        drawerGesturesEnabled = false
 //    ) {
+
     Row(
-        modifier = Modifier
-            .fillMaxSize()
-//            .background(Color.LightGray)
-//                .scrollable(scrollState, Orientation.Horizontal)
-    ) {
-        Box(
-            modifier = modifier
-                .weight(0.15f)
+            modifier = Modifier.fillMaxSize()
         ) {
-            NavMenu(
-//                modifier = modifier.width(150.dp).fillMaxHeight(),
-                //            modifier= Modifier.weight(1f),
-                isMenuPressed = isMenuPressed,
-                viewModel = viewModel,
-                loginViewModel = loginViewModel
-            ) {
-                coroutineScope.launch {
+        NavMenu(
+                modifier = Modifier
+                    .weight(0.15f),
+            viewModel= viewModel,
+            isMenuPressed = isMenuPressed
+//                navController
+            ){
+            coroutineScope.launch {
 //                    scaffoldState.drawerState.open()
-                    isMenuPressed = !isMenuPressed
+                isMenuPressed = !isMenuPressed
 
 
-                }
             }
-
         }
-
-        Box(
-            modifier = modifier.fillMaxHeight()
-                .weight(0.85f)
-        ) {
-            HomeContent(
-                name = userAuthSate.username,
-//            modifier = modifier.weight(0.8f),
-//            Modifier.weight(4f)
-            )
+            Box(
+                modifier = Modifier.fillMaxHeight()
+                    .weight(0.85f)
+            ) {
+                HomeContent(
+                    name = userAuthSate.username,
+                )
+            }
         }
-
-
-    }
 
 //    }
 
@@ -623,7 +610,7 @@ private fun NavMenu(
     modifier: Modifier = Modifier,
     viewModel: MainViewModel,
     isMenuPressed: Boolean,
-    loginViewModel: LoginViewModel,
+//    loginViewModel: LoginViewModel,
     onNavIconClick: () -> Unit
 ) {
 //    var isMenuPressed by remember { mutableStateOf(true) }
@@ -719,7 +706,7 @@ private fun NavMenu(
                 name = "Log Out",
                 isMenuPressed = isMenuPressed
             ) {
-                loginViewModel.logOut()
+//                loginViewModel.logOut()
             }
 
 
@@ -842,7 +829,7 @@ fun Maintest(
             //            modifier= Modifier.weight(1f),
             isMenuPressed = isMenuPressed,
             viewModel = viewModel,
-            loginViewModel = loginViewModel
+//            loginViewModel = loginViewModel
         ) {
             coroutineScope.launch {
 //                    scaffoldState.drawerState.open()

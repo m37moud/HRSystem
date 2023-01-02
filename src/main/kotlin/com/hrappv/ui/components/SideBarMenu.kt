@@ -12,19 +12,21 @@ import androidx.compose.runtime.remember
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.unit.dp
-import com.hrappv.ui.navigation.Config
+import com.hrappv.ui.feature.main.MainViewModel
+import com.hrappv.ui.navigation.Screens
 
 @Composable
 fun SideBarMenu(modifier: Modifier = Modifier,
-//                navController: NavController
+//                mainViewModel: MainViewModel
 ) {
     val screens = listOf(
-        Config.Main,
-        Config.AddEmployee,
-        Config.RegisterAttends,
-        Config.Settings,
-        Config.About,
-        Config.LogOut,
+        Screens.Main,
+        Screens.EmployeResult,
+//        Config.AddEmployee,
+//        Config.RegisterAttends,
+//        Config.Settings,
+//        Config.About,
+//        Config.LogOut,
 //        Config.NewWindow,
     )
 //    val currentScreen by remember {

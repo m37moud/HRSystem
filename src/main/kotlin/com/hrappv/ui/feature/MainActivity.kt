@@ -26,7 +26,6 @@ import com.hrappv.di.AppComponent
 import com.hrappv.di.DaggerAppComponent
 import com.hrappv.ui.components.AppWindowTitleBar
 import com.hrappv.ui.components.SideBarMenu
-//import com.hrappv.ui.feature.login.AppLoginWindow
 import com.hrappv.ui.feature.login.LoginScreen
 import com.hrappv.ui.feature.login.LoginViewModel
 import com.hrappv.ui.navigation.NavHostComponent
@@ -86,28 +85,28 @@ class MainActivity : Activity() {
 
 
         setContent {
-            var authState by remember { mutableStateOf(UserAuthSate()) }
-            val themeState = rememberAppThemeState()
+            val loginViewModel = appComponent.getmodel()
+            val scope = rememberCoroutineScope()
+
+
 
 //
 //            CompositionLocalProvider( LocalLayoutDirection provides LayoutDirection.Ltr,
 //                LocalViewConfiguration provides LocalViewConfiguration.current ) {
 
-            val loginViewModel = appComponent.getmodel()
-            val scope = rememberCoroutineScope()
 
             LaunchedEffect(loginViewModel) {
                 loginViewModel.init(scope)
             }
+            val themeState = rememberAppThemeState()
             val authenticated by loginViewModel.userAuthSate.collectAsState()
-            authState = authenticated
 
-                HrAppVTheme(themeState.isDarkTheme) {
-                    if (!authState.auth) {
+            HrAppVTheme(themeState.isDarkTheme) {
+                    if (!authenticated.auth) {
                         AppLoginWindow(loginViewModel)
 
                     } else {
-                        AppMainWindow(themeState,authState)
+                        AppMainWindow(themeState,authenticated)
 
                     }
                 }
@@ -177,11 +176,7 @@ class MainActivity : Activity() {
             title = R.string.LOGIN,
             icon = painterResource("drawables/logo.png")
         ) {
-            Surface(
-                modifier = Modifier.background(color = MaterialTheme.colors.background)
-            ) {
                 LoginScreen(loginViewModel)
-            }
 //            CompositionLocalProvider(
 //                LocalLayoutDirection provides LayoutDirection.Ltr
 //            ) {
@@ -198,8 +193,8 @@ class MainActivity : Activity() {
         val globalWindowState = rememberWindowState(
             placement = WindowPlacement.Maximized,
             position = WindowPosition(Alignment.Center),
-            width = 1024.dp,
-            height = 600.dp,
+//            width = 1024.dp,
+//            height = 600.dp,
         )
         Window(
             onCloseRequest = {
@@ -235,6 +230,7 @@ class MainActivity : Activity() {
 
     @Composable
     fun AppMainContainer() {
+
         Row(
             modifier = Modifier.fillMaxSize()
         ) {

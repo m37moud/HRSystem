@@ -63,7 +63,7 @@ fun WindowScope.AppWindowTitleBar(
                         horizontalArrangement = Arrangement.Center
                     ) {
                         Text(
-                            text = "$userName",
+                            text = userName,
                         )
                         Spacer(modifier = Modifier.width(4.dp))
                         Icon(

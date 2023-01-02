@@ -11,8 +11,7 @@ import javax.inject.Inject
 class MainScreenComponent(
     appComponent: AppComponent,
     private val componentContext: ComponentContext,
-    private val userAuthState: UserAuthSate,
-    private val onClickAddEmployee: () ->Unit,
+//    private val userAuthState: UserAuthSate,
     private val onClickEmpResult: () ->Unit,
 ) : Component, ComponentContext by componentContext {
     @Inject
@@ -39,8 +38,8 @@ class MainScreenComponent(
         }
 //        onUserLogOut(authenticated)
 
-        MainScreen2(viewModel,loginViewModel
-            ,userAuthState
-        )
+//        MainScreen2(viewModel,loginViewModel,userAuthState)
+//        MainScreen2(viewModel,userAuthState)
+        MainScreen2(viewModel)
     }
 }

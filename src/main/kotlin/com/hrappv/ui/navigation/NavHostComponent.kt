@@ -12,17 +12,16 @@ import com.arkivanov.decompose.extensions.compose.jetbrains.animation.child.cros
 //import com.arkivanov.decompose.extensions.compose.jetbrains.stack.animation.stackAnimation
 //import com.arkivanov.decompose.router.stack.StackNavigation
 //import com.arkivanov.decompose.router.stack.childStack
-import com.arkivanov.decompose.statekeeper.Parcelable
 //import com.arkivanov.essenty.parcelable.Parcelable
 import com.hrappv.di.AppComponent
 import com.arkivanov.decompose.ComponentContext
 import com.hrappv.di.DaggerAppComponent
 import com.hrappv.ui.feature.EmployeResult.EmployResultScreenComponent
 import com.hrappv.ui.feature.main.MainScreenComponent
-import com.hrappv.ui.feature.splash.SplashScreenComponent
 import com.arkivanov.decompose.*
-import com.hrappv.ui.feature.add_employe.AddEmployeScreenComponent
+import com.arkivanov.decompose.statekeeper.Parcelable
 import com.hrappv.ui.feature.login.LoginComponent
+import com.hrappv.ui.feature.splash.SplashScreenComponent
 import com.hrappv.ui.security.UserAuthSate
 
 /**
@@ -35,6 +34,14 @@ class NavHostComponent(
     /**
      * Available screensSelectApp
      */
+    private sealed class Config : Parcelable {
+//        object Splash : Config()
+
+        //        object Login : Config()
+//        data class Main(val userAuthState: UserAuthSate) : Config()
+        object Main : Config()
+        object EmployeResult : Config()
+    }
 
     private val appComponent: AppComponent = DaggerAppComponent
         .create()
@@ -62,11 +69,11 @@ class NavHostComponent(
      */
     private fun createScreenComponent(config: Config, componentContext: ComponentContext): Component {
         return when (config) {
-            is Config.Splash -> SplashScreenComponent(
-                appComponent = appComponent,
-                componentContext = componentContext,
-                onSplashFinished = ::onSplashFinished,
-            )
+//            is Config.Splash -> SplashScreenComponent(
+//                appComponent = appComponent,
+//                componentContext = componentContext,
+//                onSplashFinished = ::onSplashFinished,
+//            )
 
 
             is Config.EmployeResult -> EmployResultScreenComponent(
@@ -79,69 +86,61 @@ class NavHostComponent(
                 appComponent = appComponent,
                 componentContext = componentContext,
 //                userAuthState = config.userAuthState,
-                onClickAddEmployee = ::addEmployeScreenStart,
+//                onClickAddEmployee = ::addEmployeScreenStart,
                 onClickEmpResult = ::employScreenStart
 
             )
-            is Config.AddEmployee -> AddEmployeScreenComponent(
-                appComponent = appComponent,
-                componentContext = componentContext,
-//                userAuthState = config.userAuthState,
 
 
-            )
-
-
-            Config.Login -> LoginComponent(
-                appComponent = appComponent,
-                componentContext = componentContext,
-                onUserAuthentcated = ::onUserAuthentcated,
-            )
-
-
-        }
-    }
-
-    private fun createScreenComponent2(config: Config, componentContext: ComponentContext): Component {
-        return when (config) {
-            is Config.Main -> SplashScreenComponent(
-                appComponent = appComponent,
-                componentContext = componentContext,
-                onSplashFinished = ::onSplashFinished,
-            )
-
-
-            is Config.EmployeResult -> EmployResultScreenComponent(
-                appComponent = appComponent,
-                componentContext = componentContext,
-                onBackClickEmpResult = ::employScreenStartBackPress
-            )
-
-//
-//            is Config.Login -> LoginComponent(
+//            Config.Login -> LoginComponent(
 //                appComponent = appComponent,
 //                componentContext = componentContext,
 //                onUserAuthentcated = ::onUserAuthentcated,
 //            )
 
 
-            Config.Main -> MainScreenComponent(
-                appComponent = appComponent,
-                componentContext = componentContext,
-//                userAuthState = config.userAuthState,
-                onClickEmpResult = ::employScreenStart
-
-            )
-
-
         }
     }
+
+//    private fun createScreenComponent2(config: Screens, componentContext: ComponentContext): Component {
+//        return when (config) {
+////            is Config.Main -> SplashScreenComponent(
+////                appComponent = appComponent,
+////                componentContext = componentContext,
+////                onSplashFinished = ::onSplashFinished,
+////            )
+//
+//
+//            is Screens.EmployeResult -> EmployResultScreenComponent(
+//                appComponent = appComponent,
+//                componentContext = componentContext,
+//                onBackClickEmpResult = ::employScreenStartBackPress
+//            )
+//
+//////
+////            is Config.Login -> LoginComponent(
+////                appComponent = appComponent,
+////                componentContext = componentContext,
+////                onUserAuthentcated = ::onUserAuthentcated,
+////            )
+//
+//
+//           is Screens.Main -> MainScreenComponent(
+//                appComponent = appComponent,
+//                componentContext = componentContext,
+////                userAuthState = config.userAuthState,
+//                onClickEmpResult = ::employScreenStart
+//
+//            )
+//
+//
+//        }
+//    }
 
     @OptIn(ExperimentalDecomposeApi::class)
     @Composable
     override fun render() {
         Children(
-
             routerState = router.state,
             animation = crossfadeScale()
         ) { child ->
@@ -158,20 +157,23 @@ class NavHostComponent(
     /**
      * Invoked when splash finish data sync
      */
-    private fun onSplashFinished() {
-        router.replaceCurrent(Config.Login)
-//        navigation.push(Config.Login)
-    }
+//    private fun onSplashFinished() {
+//        router.replaceCurrent(Config.Main)
+////        navigation.push(Config.Login)
+//    }
 
-    private fun onUserAuthentcated() {
-        router.replaceCurrent(Config.Main())
+    private fun onUserAuthentcated(
+        userAuthState: UserAuthSate
+    ) {
+//        router.replaceCurrent(Config.Main(userAuthState))
+        router.replaceCurrent(Config.Main)
 //        navigation.push(Config.Main(userAuthState))
     }
 
-    private fun addEmployeScreenStart() {
-        router.replaceCurrent(Config.AddEmployee)
-//        navigation.push(Config.EmployeResult)
-    }
+    //    private fun addEmployeScreenStart() {
+//        router.replaceCurrent(Config.AddEmployee)
+////        navigation.push(Config.EmployeResult)
+//    }
     private fun employScreenStart() {
         router.replaceCurrent(Config.EmployeResult)
 //        navigation.push(Config.EmployeResult)
