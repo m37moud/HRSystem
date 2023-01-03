@@ -1,5 +1,6 @@
 package com.hrappv.ui.value
 
+import androidx.compose.foundation.isSystemInDarkTheme
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.ColumnScope
 import androidx.compose.material.MaterialTheme
@@ -34,7 +35,7 @@ val DarkTheme = darkColors(
 
 @Composable
 fun HrAppVTheme(
-    isDark: Boolean = true, // TODO: If you want to support both light theme and dark theme, you'll need to implement it manually.
+    isDark: Boolean =  isSystemInDarkTheme(), // TODO: If you want to support both light theme and dark theme, you'll need to implement it manually.
 //    content: @Composable ColumnScope.() -> Unit,
     content: @Composable () -> Unit,
 ) {

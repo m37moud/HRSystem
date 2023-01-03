@@ -20,14 +20,14 @@ import com.hrappv.ui.feature.EmployeResult.EmployResultScreenComponent
 import com.hrappv.ui.feature.main.MainScreenComponent
 import com.arkivanov.decompose.*
 import com.arkivanov.decompose.statekeeper.Parcelable
-import com.hrappv.ui.feature.login.LoginComponent
-import com.hrappv.ui.feature.splash.SplashScreenComponent
+import com.hrappv.ui.feature.home_screen.HomeComponent
 import com.hrappv.ui.security.UserAuthSate
 
 /**
  * All navigation decisions are made from here
  */
 class NavHostComponent(
+    private val authenticated: UserAuthSate,
     private val componentContext: ComponentContext,
 ) : Component, ComponentContext by componentContext {
 
@@ -38,8 +38,9 @@ class NavHostComponent(
 //        object Splash : Config()
 
         //        object Login : Config()
-//        data class Main(val userAuthState: UserAuthSate) : Config()
-        object Main : Config()
+                object Home : Config()
+        data class Main(val userAuthState: UserAuthSate) : Config()
+//        object Main : Config()
         object EmployeResult : Config()
     }
 
@@ -50,7 +51,7 @@ class NavHostComponent(
      * Router configuration
      */
     private val router = router<Config, Component>(
-        initialConfiguration = Config.Main,
+        initialConfiguration = Config.Home,
         childFactory = ::createScreenComponent
     )
 
@@ -75,19 +76,27 @@ class NavHostComponent(
 //                onSplashFinished = ::onSplashFinished,
 //            )
 
+            is Config.Home -> HomeComponent(
+                appComponent = appComponent,
+                componentContext = componentContext,
+//                userAuthState = config.userAuthState,
+//                onClickAddEmployee = ::addEmployeScreenStart,
+                onBackPress = ::onBackPress
 
+            )
             is Config.EmployeResult -> EmployResultScreenComponent(
                 appComponent = appComponent,
                 componentContext = componentContext,
-                onBackClickEmpResult = ::employScreenStartBackPress
+                onBackClickEmpResult = ::onBackPress
             )
 
             is Config.Main -> MainScreenComponent(
                 appComponent = appComponent,
                 componentContext = componentContext,
-//                userAuthState = config.userAuthState,
+                userAuthState = config.userAuthState,
 //                onClickAddEmployee = ::addEmployeScreenStart,
-                onClickEmpResult = ::employScreenStart
+                onClickHome = ::startHomeScreen,
+                onClickEmpResult = ::startEmployScreen
 
             )
 
@@ -102,40 +111,6 @@ class NavHostComponent(
         }
     }
 
-//    private fun createScreenComponent2(config: Screens, componentContext: ComponentContext): Component {
-//        return when (config) {
-////            is Config.Main -> SplashScreenComponent(
-////                appComponent = appComponent,
-////                componentContext = componentContext,
-////                onSplashFinished = ::onSplashFinished,
-////            )
-//
-//
-//            is Screens.EmployeResult -> EmployResultScreenComponent(
-//                appComponent = appComponent,
-//                componentContext = componentContext,
-//                onBackClickEmpResult = ::employScreenStartBackPress
-//            )
-//
-//////
-////            is Config.Login -> LoginComponent(
-////                appComponent = appComponent,
-////                componentContext = componentContext,
-////                onUserAuthentcated = ::onUserAuthentcated,
-////            )
-//
-//
-//           is Screens.Main -> MainScreenComponent(
-//                appComponent = appComponent,
-//                componentContext = componentContext,
-////                userAuthState = config.userAuthState,
-//                onClickEmpResult = ::employScreenStart
-//
-//            )
-//
-//
-//        }
-//    }
 
     @OptIn(ExperimentalDecomposeApi::class)
     @Composable
@@ -162,26 +137,39 @@ class NavHostComponent(
 ////        navigation.push(Config.Login)
 //    }
 
-    private fun onUserAuthentcated(
-        userAuthState: UserAuthSate
-    ) {
-//        router.replaceCurrent(Config.Main(userAuthState))
-        router.replaceCurrent(Config.Main)
-//        navigation.push(Config.Main(userAuthState))
-    }
+//    private fun onUserAuthentcated(
+//        userAuthState: UserAuthSate
+//    ) {
+////        router.replaceCurrent(Config.Main(userAuthState))
+//        router.replaceCurrent(Config.Main())
+////        navigation.push(Config.Main(userAuthState))
+//    }
 
     //    private fun addEmployeScreenStart() {
 //        router.replaceCurrent(Config.AddEmployee)
 ////        navigation.push(Config.EmployeResult)
 //    }
-    private fun employScreenStart() {
+    private fun startHomeScreen() {
+        router.replaceCurrent(Config.Home)
+//        navigation.push(Config.EmployeResult)
+    }
+    private fun startEmployScreen() {
         router.replaceCurrent(Config.EmployeResult)
 //        navigation.push(Config.EmployeResult)
     }
 
-    private fun employScreenStartBackPress() {
+    private fun onBackPress() {
 //        navigation.pop()
 //        router.replaceCurrent(Config.Main)
 
     }
 }
+//
+//@Composable
+//fun rememberNavController(
+//    context: ApplicationContext,
+//    startDestination: Screens,
+//    backStackScreens: MutableSet<Screens> = mutableSetOf()
+//): MutableState<NavController> = rememberSaveable {
+//    mutableStateOf(NavController(context, startDestination, backStackScreens))
+//}

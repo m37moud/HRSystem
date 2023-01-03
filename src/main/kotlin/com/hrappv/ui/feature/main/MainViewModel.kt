@@ -1,6 +1,7 @@
 package com.hrappv.ui.feature.main
 
 import com.hrappv.data.repo.MyRepo
+import com.hrappv.ui.value.R
 import com.hrappv.util.ViewModel
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
@@ -20,7 +21,7 @@ class MainViewModel @Inject constructor(
 
 
     private val _window = MutableStateFlow(WindowState())
-    val window: StateFlow<WindowState> = _window.asStateFlow()
+    val window: StateFlow<WindowState> = _window
 
 
     private val _isStartEmpResult = MutableStateFlow(false)
@@ -29,9 +30,13 @@ class MainViewModel @Inject constructor(
     fun onClickMeClicked() {
         _welcomeText.value = myRepo.getClickedWelcomeText()
     }
-    fun startEmpResultScreen() {
+    fun startHomeScreen() {
+        _window.value = WindowState(R.string.HOME,)
+    }fun startEmpResultScreen() {
+        _window.value = WindowState(R.string.HOME,)
         _isStartEmpResult.value = true
     }
+
     fun onBackPress() {
         _isStartEmpResult.value = false
     }

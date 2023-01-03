@@ -12,7 +12,7 @@ class LoginViewModel @Inject constructor(
     // Inject your repos here...
 ) : ViewModel() {
     private val _userAuthSate = MutableStateFlow(UserAuthSate())
-    val userAuthSate: StateFlow<UserAuthSate> = _userAuthSate.asStateFlow()
+    val userAuthSate: StateFlow<UserAuthSate> = _userAuthSate
 
     private val _isUserAuthenticated = MutableStateFlow(false)
     val userAuthenticated: StateFlow<Boolean> = _isUserAuthenticated
