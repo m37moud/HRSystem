@@ -19,9 +19,11 @@ import javax.inject.Singleton
 
 import com.hrappv.data.local.datastore.UserDataSource
 import com.hrappv.data.local.datastoreimp.UserDataSourceImpl
+import com.hrappv.ui.feature.about.AboutComponent
 import com.hrappv.ui.feature.home_screen.HomeComponent
 import com.hrappv.ui.feature.login.LoginViewModel
 import com.hrappv.ui.feature.main.MainViewModel
+import com.hrappv.ui.feature.settings.SettingsComponent
 
 @Singleton
 @Component(
@@ -38,6 +40,8 @@ interface AppComponent {
     fun inject(employResultScreenComponent: EmployResultScreenComponent)
     fun inject(addEmployeScreenComponent: AddEmployeScreenComponent)
     fun inject(editEmployeScreenComponent: EditEmployeScreenComponent)
+    fun inject(settingsComponent: SettingsComponent)
+    fun inject(aboutComponent: AboutComponent)
 
     fun getImporter() :ImportExcelFile
 

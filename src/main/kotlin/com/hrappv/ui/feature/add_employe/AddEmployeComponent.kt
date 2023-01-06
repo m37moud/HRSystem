@@ -11,7 +11,7 @@ import javax.inject.Inject
 class AddEmployeScreenComponent(
     appComponent: AppComponent,
     private val componentContext: ComponentContext,
-    private val onBackClickEmpResult: () ->Unit
+    private val onBackPress: () ->Unit
 ): Component, ComponentContext by componentContext {
 
     @Inject
@@ -42,7 +42,7 @@ class AddEmployeScreenComponent(
         if (backToMain)
         {
             println("startEmpResult is $backToMain")
-            onBackClickEmpResult()
+            onBackPress()
 
         }
 

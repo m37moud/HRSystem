@@ -7,13 +7,7 @@ import androidx.compose.material.Surface
 import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.graphics.BlendMode.Companion.Screen
-import androidx.compose.ui.platform.LocalLayoutDirection
-import androidx.compose.ui.platform.LocalViewConfiguration
-import androidx.compose.ui.platform.ViewConfiguration
 import androidx.compose.ui.res.painterResource
-import androidx.compose.ui.unit.Dp
-import androidx.compose.ui.unit.LayoutDirection
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.window.*
 //import androidx.compose.ui.platform.LocalConfiguration
@@ -22,12 +16,13 @@ import androidx.compose.ui.window.*
 //import com.arkivanov.essenty.lifecycle.LifecycleRegistry
 import com.arkivanov.decompose.DefaultComponentContext
 import com.arkivanov.decompose.ExperimentalDecomposeApi
-import com.arkivanov.decompose.extensions.compose.jetbrains.rememberRootComponent
+import com.arkivanov.decompose.extensions.compose.jetbrains.lifecycle.LifecycleController
+import com.arkivanov.essenty.lifecycle.LifecycleRegistry
+//import com.arkivanov.decompose.extensions.compose.jetbrains.rememberRootComponent
 import com.hrappv.App
 import com.hrappv.di.AppComponent
 import com.hrappv.di.DaggerAppComponent
 import com.hrappv.ui.components.AppWindowTitleBar
-import com.hrappv.ui.components.SideBarMenu
 import com.hrappv.ui.feature.login.LoginScreen
 import com.hrappv.ui.feature.login.LoginViewModel
 import com.hrappv.ui.feature.main.MainScreen2
@@ -40,8 +35,6 @@ import com.hrappv.ui.value.R
 import com.hrappv.ui.value.rememberAppThemeState
 import com.theapache64.cyclone.core.Activity
 import com.theapache64.cyclone.core.Intent
-import java.util.*
-import javax.inject.Inject
 import javax.swing.SwingUtilities
 import androidx.compose.ui.window.application as setContent
 
@@ -69,9 +62,9 @@ class MainActivity : Activity() {
 //val app = DaggerAppComponent.
 
 //    val windowState = WindowState()
-//    val lifecycle = LifecycleRegistry()
+    val lifecycle = LifecycleRegistry()
 ////    val root = runOnMainThreadBlocking { NavHostComponent(DefaultComponentContext(lifecycle)) }
-//    val root =  NavHostComponent(DefaultComponentContext(lifecycle))
+    val root =  NavHostComponent(DefaultComponentContext(lifecycle))
 
     @OptIn(ExperimentalDecomposeApi::class)
     override fun onCreate() { //decompose-desktop-example-master
@@ -220,7 +213,7 @@ class MainActivity : Activity() {
                     ) {
                         exitApplication()
                     }
-                    AppMainContainer(userState)
+                    AppMainContainer(userState,globalWindowState)
                 }
             }
 //            }
@@ -229,8 +222,8 @@ class MainActivity : Activity() {
 
 
     @Composable
-    fun AppMainContainer(authenticated: UserAuthSate) {
-        AppNavigationHost(authenticated)
+    fun AppMainContainer(authenticated: UserAuthSate, globalWindowState: WindowState) {
+        AppNavigationHost(authenticated,globalWindowState)
 
 //
 //        Row(
@@ -253,14 +246,18 @@ class MainActivity : Activity() {
 //            .render()
 //        root.render()
 
+    @OptIn(ExperimentalDecomposeApi::class)
     @Composable
-    fun AppNavigationHost(authenticated: UserAuthSate) {
+    fun AppNavigationHost(authenticated: UserAuthSate, globalWindowState: WindowState) {
         val mainViewModel = appComponent.getMainViewModel()
-
-        MainScreen2(viewModel = mainViewModel, userAuthSate = authenticated, content = {
-            rememberRootComponent(factory = { NavHostComponent(authenticated, it) })
-                .render()
-        })
+        LifecycleController(lifecycle, globalWindowState)
+//        root.render()
+//        MainScreen2(//component = root,
+//             userAuthSate = authenticated, content = {
+////            rememberRootComponent(factory = { NavHostComponent(authenticated, it) })
+//        root.render()
+//        })
+        root.render()
 
     }
 

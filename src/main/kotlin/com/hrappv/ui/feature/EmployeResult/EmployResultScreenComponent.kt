@@ -10,7 +10,7 @@ import javax.inject.Inject
 class EmployResultScreenComponent(
     appComponent: AppComponent,
     private val componentContext: ComponentContext,
-    private val onBackClickEmpResult: () ->Unit
+    private val onBackPress: () ->Unit
 ): Component, ComponentContext by componentContext {
     @Inject
     lateinit var viewModel: EmployeeResultViewModel
@@ -40,7 +40,7 @@ class EmployResultScreenComponent(
         if (backToMain)
         {
             println("startEmpResult is $backToMain")
-            onBackClickEmpResult()
+            onBackPress()
 
         }
 

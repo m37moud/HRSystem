@@ -12,7 +12,7 @@ import javax.inject.Inject
 class EditEmployeScreenComponent(
     appComponent: AppComponent,
     private val componentContext: ComponentContext,
-    private val onBackClickEmpResult: () ->Unit
+//    private val onBackPress = ::onBackPress
 ): Component, ComponentContext by componentContext {
 
     @Inject
@@ -43,7 +43,7 @@ class EditEmployeScreenComponent(
         if (backToMain)
         {
             println("startEmpResult is $backToMain")
-            onBackClickEmpResult()
+//            onBackPress()
 
         }
 

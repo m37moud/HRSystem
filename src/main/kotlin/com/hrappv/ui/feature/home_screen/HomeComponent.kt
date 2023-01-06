@@ -3,10 +3,7 @@ package com.hrappv.ui.feature.home_screen
 import androidx.compose.runtime.*
 import com.arkivanov.decompose.ComponentContext
 import com.hrappv.di.AppComponent
-import com.hrappv.ui.feature.main.MainScreen2
-import com.hrappv.ui.feature.main.MainViewModel
 import com.hrappv.ui.navigation.Component
-import com.hrappv.ui.security.UserAuthSate
 import javax.inject.Inject
 
 class HomeComponent(
@@ -15,6 +12,7 @@ class HomeComponent(
 //    private val userAuthState: UserAuthSate,
     private val onBackPress: () ->Unit,
 ) : Component, ComponentContext by componentContext {
+
     @Inject
     lateinit var homeViewModel: HomeViewModel
     init {

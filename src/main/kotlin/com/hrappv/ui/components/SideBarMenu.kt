@@ -7,27 +7,23 @@ import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.material.NavigationRail
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.getValue
-import androidx.compose.runtime.remember
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.unit.dp
-import com.hrappv.ui.feature.main.MainViewModel
-import com.hrappv.ui.navigation.Screens
+import com.hrappv.ui.navigation.Config
 
 @Composable
 fun SideBarMenu(modifier: Modifier = Modifier,
 //                mainViewModel: MainViewModel
 ) {
     val screens = listOf(
-        Screens.Main,
-        Screens.EmployeResult,
-//        Config.AddEmployee,
-//        Config.RegisterAttends,
-//        Config.Settings,
-//        Config.About,
-//        Config.LogOut,
-//        Config.NewWindow,
+        Config.Home,
+        Config.AddEmployee,
+//        Screens.RegisterAttends,
+//        Screens.Settings,
+//        Screens.About,
+//        Screens.LogOut,
+//        Screens.NewWindow,
     )
 //    val currentScreen by remember {
 //        navController.currentScreen

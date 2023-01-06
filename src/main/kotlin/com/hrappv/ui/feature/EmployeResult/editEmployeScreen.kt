@@ -30,7 +30,7 @@ fun EmployeeResultScreen(
 //                         ,mainViewModel: MainViewModel
 ) {
 
-    var path by remember { mutableStateOf("E:\\8") }
+    var path by remember { mutableStateOf("F:\\8") }
     // 1
 //    var importState by remember { mutableStateOf<LCE<List<EmployeeResult>>?>(null) }
     val importState = viewModel.empResults.collectAsState()
@@ -42,7 +42,7 @@ fun EmployeeResultScreen(
     Scaffold(
         modifier = Modifier.fillMaxSize(),
         scaffoldState = scaffoldState, topBar = {
-            TopAppBar(
+            TopAppBar(backgroundColor = MaterialTheme.colors.onSecondary,
                 title = {
                     Text(text = "Register Attends")
                 }, navigationIcon = {
@@ -96,6 +96,7 @@ fun EmployeeResultScreen(
                 is LCE.LOADING -> LoadingUI()
                 is LCE.CONTENT -> ContentUI(state.data)
                 is LCE.ERROR -> ErrorUI(state.error)
+                else -> {}
             }
         }
     }
