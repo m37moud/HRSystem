@@ -10,6 +10,7 @@ import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import com.hrappv.App
 
 @Composable
 fun AppMenuHeader() {
@@ -26,7 +27,7 @@ fun AppMenuHeader() {
         Spacer(modifier = Modifier.height(8.dp))
         Text(
 //            text = stringResource("global.app.name"),
-            text = "test",
+            text = "${App.appArgs.appName}",
             fontWeight = FontWeight.Bold,
             fontSize = 20.sp
         )

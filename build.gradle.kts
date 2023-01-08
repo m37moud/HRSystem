@@ -5,23 +5,18 @@ import org.jetbrains.kotlin.gradle.tasks.KotlinCompile
 //https://medium.com/@theendik00/sqldelight-for-postgresql-on-kotlin-jvm-b95d14d96134
 
 plugins {
-    val kotlinVersion = "1.6.10"
+//    val kotlinVersion = "1.6.10"
+//    kotlin("jvm") version kotlinVersion
+//    kotlin("kapt") version kotlinVersion
+//    id("org.jetbrains.compose") version "1.1.0"
+    val kotlinVersion = "1.7.10"
     kotlin("jvm") version kotlinVersion
     kotlin("kapt") version kotlinVersion
-    id("org.jetbrains.compose") version "1.1.0"
+    id("org.jetbrains.compose") version "1.2.0-alpha01-dev764"
 //    kotlin("jvm") version "1.7.10"
 //    id("org.jetbrains.compose") version "1.2.0-alpha01-dev774"
 //    id("com.squareup.sqldelight") version "1.5.4"
 }
-//
-//sqldelight {
-//   database("HrAppDb")  { // This will be the name of the generated database class.
-////   HrAppDb  { // This will be the name of the generated database class.
-//        packageName = "com.hrappv"
-////        dependency project(":data")
-////        implementation(project(":data"))
-//    }
-//}
 
 group = "com.hrappv"
 version = "1.0.0"
@@ -34,30 +29,32 @@ repositories {
     maven { url = uri("https://maven.pkg.jetbrains.space/public/p/compose/dev") }
 }
 
-val daggerVersion by extra("2.39.1")
+val daggerVersion by extra("2.44.2")
 
 dependencies {
-    implementation(kotlin("stdlib-jdk8"))
+    implementation("org.jetbrains.kotlin:kotlin-stdlib-jdk8:1.7.22")
     implementation(compose.desktop.currentOs)
 
     // Module dependencies
     implementation(project(":data"))
 
     // Dagger : A fast dependency injector for Android and Java.
+
     kapt("com.google.dagger:dagger-compiler:$daggerVersion")
     kaptTest("com.google.dagger:dagger-compiler:$daggerVersion")
+//    kapt ("org.jetbrains.kotlinx:kotlinx-metadata-jvm:0.4.2")
 
     // Cyclone : https://github.com/theapache64/cyclone
     implementation("com.theapache64:cyclone:1.0.0-alpha01")
 
     // Decompose : Decompose
-    val decomposeVersion = "0.2.5"
-    implementation("com.arkivanov.decompose:decompose-jvm:$decomposeVersion")
-    implementation("com.arkivanov.decompose:extensions-compose-jetbrains-jvm:$decomposeVersion")
+//    val decomposeVersion = "0.2.5"
+//    implementation("com.arkivanov.decompose:decompose-jvm:$decomposeVersion")
+//    implementation("com.arkivanov.decompose:extensions-compose-jetbrains-jvm:$decomposeVersion")
 
-    // Decompose : Decompose
-//    implementation("com.arkivanov.decompose:decompose:1.0.0-alpha-04")
-//    implementation("com.arkivanov.decompose:extensions-compose-jetbrains:1.0.0-alpha-04")
+//     Decompose : Decompose
+    implementation("com.arkivanov.decompose:decompose:1.0.0-alpha-04")
+    implementation("com.arkivanov.decompose:extensions-compose-jetbrains:1.0.0-alpha-04")
 //    implementation("com.arkivanov.decompose:extensions-compose-jetbrains:1.0.0-beta-01")
 
 
@@ -103,11 +100,30 @@ dependencies {
     testImplementation(compose("org.jetbrains.compose.ui:ui-test-junit4"))
 
     // JUnit : JUnit is a unit testing framework for Java, created by Erich Gamma and Kent Beck.
-    testImplementation(kotlin("test-junit5"))
+    testImplementation("org.jetbrains.kotlin:kotlin-test-junit5:1.7.22")
 }
 
 tasks.withType<KotlinCompile>() {
     kotlinOptions.jvmTarget = "11"
+}
+//tasks.withType<KotlinCompile> {
+//    kotlinOptions {
+//        jvmTarget = "1.8"
+//    }
+//}
+//
+//tasks.withType<JavaCompile> {
+//    sourceCompatibility = JavaVersion.VERSION_1_8
+//    targetCompatibility = JavaVersion.VERSION_1_8
+//}
+
+val compileKotlin: KotlinCompile by tasks
+compileKotlin.kotlinOptions {
+    jvmTarget = "1.8"
+}
+val compileTestKotlin: KotlinCompile by tasks
+compileTestKotlin.kotlinOptions {
+    jvmTarget = "1.8"
 }
 
 compose.desktop {
@@ -136,11 +152,3 @@ compose.desktop {
     }
 }
 //
-//val compileKotlin: KotlinCompile by tasks
-//compileKotlin.kotlinOptions {
-//    jvmTarget = "1.8"
-//}
-//val compileTestKotlin: KotlinCompile by tasks
-//compileTestKotlin.kotlinOptions {
-//    jvmTarget = "1.8"
-//}

@@ -1,49 +1,50 @@
 package com.hrappv.ui.feature.main
 
 import androidx.compose.animation.animateContentSize
-import androidx.compose.animation.core.Spring
-import androidx.compose.animation.core.spring
 import androidx.compose.desktop.ui.tooling.preview.Preview
-import androidx.compose.foundation.Image
-import androidx.compose.foundation.clickable
+import androidx.compose.foundation.*
 import androidx.compose.foundation.layout.*
+import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.material.*
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.*
-import androidx.compose.material.icons.twotone.Favorite
+import androidx.compose.material.icons.twotone.AccountCircle
 import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.draw.clip
+import androidx.compose.ui.graphics.Brush
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.graphics.ColorFilter
 import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.unit.dp
+import androidx.compose.ui.unit.sp
 import com.hrappv.App
+import com.hrappv.ui.security.UserAuthSate
 import com.hrappv.ui.value.HrAppVTheme
 import com.hrappv.ui.value.R
-import androidx.compose.foundation.*
-import androidx.compose.foundation.gestures.Orientation
-import androidx.compose.foundation.gestures.scrollable
-import androidx.compose.foundation.lazy.LazyColumn
-import androidx.compose.foundation.lazy.items
-import androidx.compose.foundation.shape.CircleShape
-import androidx.compose.material.icons.twotone.AccountCircle
-import androidx.compose.ui.draw.clip
-import androidx.compose.ui.graphics.Brush
-import androidx.compose.ui.graphics.ColorFilter
-import androidx.compose.ui.graphics.RectangleShape
-import androidx.compose.ui.graphics.painter.Painter
-import androidx.compose.ui.text.font.FontWeight
-import androidx.compose.ui.unit.sp
-import com.hrappv.ui.feature.login.LoginViewModel
-import com.hrappv.ui.security.UserAuthSate
 import compose.icons.FontAwesomeIcons
 import compose.icons.fontawesomeicons.Solid
-import compose.icons.fontawesomeicons.solid.DoorOpen
-import compose.icons.fontawesomeicons.solid.Key
 import compose.icons.fontawesomeicons.solid.SignOutAlt
-import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
+import androidx.compose.foundation.lazy.LazyColumn
+import androidx.compose.foundation.lazy.items
+import androidx.compose.ui.graphics.RectangleShape
+import androidx.compose.ui.text.font.FontWeight
+import com.arkivanov.decompose.Child
+import com.hrappv.ui.components.AppMenuHeader
+import com.hrappv.ui.components.NavItem
+import com.hrappv.ui.components.NavigationMenuItem
+import com.hrappv.ui.feature.EmployeResult.EmployResultScreenComponent
+import com.hrappv.ui.feature.about.AboutComponent
+import com.hrappv.ui.feature.add_employe.AddEmployeScreenComponent
+import com.hrappv.ui.feature.home_screen.HomeComponent
+import com.hrappv.ui.feature.settings.SettingsComponent
+import com.hrappv.ui.navigation.Component
+import com.hrappv.ui.navigation.Config
+import com.hrappv.ui.navigation.NavHostComponent
+import com.hrappv.ui.navigation.RootComponent
 
 
 @Composable
@@ -95,16 +96,26 @@ fun MainScreen(
 @Composable
 fun MainScreen2(
     modifier: Modifier = Modifier,
-    viewModel: MainViewModel,
+//    viewModel: MainViewModel,
+//    component: RootComponent,
 //    loginViewModel: LoginViewModel,
-    userAuthSate: UserAuthSate,
-    content : @Composable ()->Unit
+    userAuthSate: UserAuthSate = UserAuthSate(),
+    activeComponent: Component,
+    onNavIconClick: () -> Unit,
+    onHomeClick: () -> Unit,
+    onAddEmployeeClick: () -> Unit,
+    onEmployeeResultClick: () -> Unit,
+    onSettingsClick: () -> Unit,
+    onAboutClick: () -> Unit,
+    content: @Composable () -> Unit
 ) {
     val scrollState = rememberScrollState(0)
     val scaffoldState = rememberScaffoldState(rememberDrawerState(DrawerValue.Closed))
 //    val navController = rememberNavController()
     val coroutineScope = rememberCoroutineScope()
     var isMenuPressed by remember { mutableStateOf(false) }
+//    val navMenu = modifier.weight(0.2f)
+//    val navContent = modifier.weight(0.8f)
 //    Surface(
 //        modifier = modifier
 //            .fillMaxSize()
@@ -154,25 +165,30 @@ fun MainScreen2(
         NavMenu(
 //                modifier = Modifier
 //                    .weight(0.15f),
-            viewModel = viewModel,
-            isMenuPressed = isMenuPressed
-//                navController
-        ) {
-            coroutineScope.launch {
+            isMenuPressed = isMenuPressed,
+            activeComponent = activeComponent,
+            onNavIconClick = {
+                coroutineScope.launch {
 //                    scaffoldState.drawerState.open()
-                isMenuPressed = !isMenuPressed
+                    isMenuPressed = !isMenuPressed
 
 
-            }
-        }
+                }
+            },
+            onHomeClick = onHomeClick,
+            onAddEmployeeClick = onAddEmployeeClick,
+            onEmployeeResultClick = onEmployeeResultClick,
+            onSettingsClick = onSettingsClick,
+            onAboutClick = onAboutClick,
+        )
         Box(
 //                modifier = Modifier.fillMaxHeight()
 //                    .weight(0.85f)
         ) {
-            content()
-//            HomeContent(
-//                name = userAuthSate.username,
-//            )
+            Surface {
+
+                content()
+            }
         }
     }
 
@@ -232,7 +248,7 @@ private fun DrawerContent(
                     .padding(top = 12.dp),
                 text = "Hermione",
                 fontSize = 26.sp,
-                fontWeight = FontWeight.Bold,
+//                fontWeight = FontWeight.Bold,
                 color = Color.White
             )
 
@@ -240,7 +256,7 @@ private fun DrawerContent(
             Text(
                 modifier = Modifier.padding(top = 8.dp, bottom = 30.dp),
                 text = "hermione@email.com",
-                fontWeight = FontWeight.Normal,
+//                fontWeight = FontWeight.Normal,
                 fontSize = 16.sp,
                 color = Color.White
             )
@@ -299,7 +315,7 @@ private fun NavigationListItem(
             modifier = Modifier.padding(start = 16.dp),
             text = item.label,
             fontSize = 20.sp,
-            fontWeight = FontWeight.Medium,
+//            fontWeight = FontWeight.Medium,
             color = Color.White
         )
     }
@@ -367,28 +383,30 @@ data class NavigationDrawerItem(
 
 
 @Composable
-private fun NavMenu(
+fun NavMenu(
     modifier: Modifier = Modifier,
-    viewModel: MainViewModel,
+//    component: Component,
     isMenuPressed: Boolean,
+    activeComponent: Component,
 //    loginViewModel: LoginViewModel,
-    onNavIconClick: () -> Unit
-) {
-//    var isMenuPressed by remember { mutableStateOf(true) }
+    onNavIconClick: () -> Unit,
+    onHomeClick: () -> Unit,
+    onAddEmployeeClick: () -> Unit,
+    onEmployeeResultClick: () -> Unit,
+    onSettingsClick: () -> Unit,
+    onAboutClick: () -> Unit,
 
-    Card(
-        modifier
-            .animateContentSize(),
-        elevation = 6.dp,
     ) {
+//    var isMenuPressed by remember { mutableStateOf(true) }
+    NavigationRail(
+        modifier = modifier
+//            .border(shape = RectangleShape, border = BorderStroke(2.dp, MaterialTheme.colors.onPrimary)).padding(4.dp)
 
-        Column(
-            modifier = modifier
-                .fillMaxHeight()
-                .padding(top = 20.dp)
-//                .border(shape = RectangleShape, border = BorderStroke(2.dp, MaterialTheme.colors.onPrimary))
-
-        ) {
+            .fillMaxHeight().padding(end = 6.dp)
+//            .animateContentSize()
+        ,
+        elevation = 10.dp,
+        header = {
             Row(
                 modifier = modifier
 //                    .fillMaxWidth()
@@ -400,117 +418,124 @@ private fun NavMenu(
                 if (isMenuPressed) {
                     Text(
                         "${App.appArgs.appName} ",
+                        fontWeight = FontWeight.Bold,
                         style = MaterialTheme.typography.subtitle1,
                     )
 
-                    Spacer(modifier = modifier.width(150.dp))
+                    Spacer(modifier = modifier.width(120.dp))
                 } else {
                     Spacer(modifier = modifier.width(8.dp))
                 }
 
-                Image(
+                Icon(
                     imageVector = Icons.Default.Menu,
                     modifier = Modifier.size(25.dp).clickable {
                         onNavIconClick()
                     },
                     contentDescription = null,
-                    colorFilter = ColorFilter.tint(MaterialTheme.colors.onPrimary)
+//                colorFilter = ColorFilter.tint(MaterialTheme.colors.onPrimary)
+                    tint = MaterialTheme.colors.onPrimary
 
+                )
+                Spacer(modifier = Modifier.width(8.dp))
+
+
+            }
+        },
+        content = {
+//        Card(
+//            modifier
+//                .animateContentSize(),
+//            elevation = 6.dp,
+//        ) {
+
+            AppMenuHeader()
+
+            Spacer(
+                modifier = Modifier
+                    .height(10.dp)
+//                .fillMaxWidth()
+                    .background(color = Color.DarkGray)
+            )
+
+            Column(
+                modifier = modifier
+                    .fillMaxHeight()
+//                    .padding(top = 16.dp)
+//                .border(shape = RectangleShape, border = BorderStroke(2.dp, MaterialTheme.colors.onPrimary))
+
+            ) {
+
+
+//                Spacer(modifier = modifier.height(16.dp))
+                NavigationMenuItem(
+                    selected = activeComponent is HomeComponent,
+                    modifier = modifier,
+                    icon = Icons.Default.Home,
+                    label = "Home",
+                    isMenuPressed = isMenuPressed
+//                component.onHomeTabClicked()
+                    ,
+                    onClick = { onHomeClick() }
+                )
+
+
+                Spacer(modifier = modifier.height(8.dp))
+                NavigationMenuItem(
+                    selected = activeComponent is AddEmployeScreenComponent,
+
+                    modifier = modifier,
+                    icon = Icons.Default.Person,
+                    label = "Add Employee",
+                    isMenuPressed = isMenuPressed,
+                    onClick = { onAddEmployeeClick() }
+                )
+                Spacer(modifier = modifier.height(8.dp))
+                NavigationMenuItem(
+                    selected = activeComponent is EmployResultScreenComponent,
+
+                    modifier = modifier,
+                    icon = Icons.Default.Edit,
+                    label = "Register Attends",
+                    isMenuPressed = isMenuPressed,
+                    onClick = { onEmployeeResultClick() }
+
+                )
+
+                Spacer(modifier = modifier.height(8.dp))
+                NavigationMenuItem(
+                    selected = activeComponent is SettingsComponent,
+
+                    modifier = modifier,
+                    icon = Icons.Default.Settings,
+                    label = "Settings",
+                    isMenuPressed = isMenuPressed,
+                    onClick = { onSettingsClick() }
+                )
+                Spacer(modifier = modifier.height(8.dp))
+                NavigationMenuItem(
+                    selected = activeComponent is AboutComponent,
+
+                    modifier = modifier,
+                    icon = Icons.Default.Info,
+                    label = "About",
+                    isMenuPressed = isMenuPressed,
+                    onClick = { onAboutClick() })
+
+                Spacer(modifier = modifier.height(8.dp))
+                NavigationMenuItem(
+                    modifier = modifier,
+                    icon = FontAwesomeIcons.Solid.SignOutAlt,
+                    label = "Log Out",
+                    isMenuPressed = isMenuPressed, onClick = {}
                 )
 
 
             }
-
-            Spacer(modifier = modifier.height(16.dp))
-            NavItem(modifier = modifier, icon = Icons.Default.Home, name = "Home", isMenuPressed = isMenuPressed) {
-                viewModel.startHomeScreen()
-
-            }
-
-            Spacer(modifier = modifier.height(8.dp))
-            NavItem(
-                modifier = modifier,
-                icon = Icons.Default.Person,
-                name = "Add Employee",
-                isMenuPressed = isMenuPressed
-            ) {
-
-            }
-
-            Spacer(modifier = modifier.height(8.dp))
-            NavItem(
-                modifier = modifier,
-                icon = Icons.Default.Edit,
-                name = "Register Attends",
-                isMenuPressed = isMenuPressed
-            ) {
-                viewModel.startEmpResultScreen()
-            }
-
-            Spacer(modifier = modifier.height(8.dp))
-            NavItem(
-                modifier = modifier,
-                icon = Icons.Default.Settings,
-                name = "Settings",
-                isMenuPressed = isMenuPressed
-            ) {
-
-            }
-            Spacer(modifier = modifier.height(8.dp))
-            NavItem(modifier = modifier, icon = Icons.Default.Info, name = "About", isMenuPressed = isMenuPressed) {
-
-            }
-
-            Spacer(modifier = modifier.height(8.dp))
-            NavItem(
-                modifier = modifier,
-                icon = FontAwesomeIcons.Solid.SignOutAlt,
-                name = "Log Out",
-                isMenuPressed = isMenuPressed
-            ) {
-//                loginViewModel.logOut()
-            }
-
+//        }
 
         }
-    }
-
-
-}
-
-@Composable
-private fun NavItem(
-    modifier: Modifier = Modifier,
-    icon: ImageVector,
-    name: String,
-    isMenuPressed: Boolean,
-    click: () -> Unit
-) {
-    Row(
-        modifier = modifier
-            .padding(4.dp)
-            .clickable { click() },
-        verticalAlignment = Alignment.CenterVertically
-
-    ) {
-        Spacer(modifier = modifier.width(8.dp))
-        Image(
-            imageVector = icon,
-            modifier = Modifier.size(25.dp),
-            contentDescription = null,
-            colorFilter = ColorFilter.tint(MaterialTheme.colors.onPrimary)
-        )
-        Spacer(modifier = modifier.width(8.dp))
-
-        if (isMenuPressed) {
-            Text(
-                name, style = MaterialTheme.typography.subtitle2,
-            )
-            Spacer(modifier = modifier.weight(1f, false))
-        }
-
-
-    }
+    )
 
 }
 
@@ -518,7 +543,6 @@ private fun NavItem(
 //@Composable
 //fun spotifyGradient() = LinearGradient(spotifyGradient, startX = 0f, endX = 0f, startY = 0f, endY = 100f)
 //
-
 
 
 @Composable
