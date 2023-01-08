@@ -13,8 +13,6 @@ plugins {
     kotlin("jvm") version kotlinVersion
     kotlin("kapt") version kotlinVersion
     id("org.jetbrains.compose") version "1.2.0-alpha01-dev764"
-//    kotlin("jvm") version "1.7.10"
-//    id("org.jetbrains.compose") version "1.2.0-alpha01-dev774"
 //    id("com.squareup.sqldelight") version "1.5.4"
 }
 
@@ -32,7 +30,6 @@ repositories {
 val daggerVersion by extra("2.44.2")
 
 dependencies {
-    implementation("org.jetbrains.kotlin:kotlin-stdlib-jdk8:1.7.22")
     implementation(compose.desktop.currentOs)
 
     // Module dependencies
@@ -46,6 +43,7 @@ dependencies {
 
     // Cyclone : https://github.com/theapache64/cyclone
     implementation("com.theapache64:cyclone:1.0.0-alpha01")
+    // Build, Execution, Deployment | Compiler | Kotlin Compiler | Kotlin Compiler version'
 
     // Decompose : Decompose
 //    val decomposeVersion = "0.2.5"
@@ -55,7 +53,6 @@ dependencies {
 //     Decompose : Decompose
     implementation("com.arkivanov.decompose:decompose:1.0.0-alpha-04")
     implementation("com.arkivanov.decompose:extensions-compose-jetbrains:1.0.0-alpha-04")
-//    implementation("com.arkivanov.decompose:extensions-compose-jetbrains:1.0.0-beta-01")
 
 
     //corotunie swing
@@ -68,12 +65,6 @@ dependencies {
     //date
     implementation("com.github.lgooddatepicker:LGoodDatePicker:11.2.1")
 
-
-    // sqlDelight
-//    val  sqlDelight  = "1.5.4"
-//    implementation("com.squareup.sqldelight:sqlite-driver:$sqlDelight")
-////    implementation("com.squareup.sqldelight:native-driver:$sqlDelight")
-//    implementation("com.squareup.sqldelight:coroutines-extensions-jvm:$sqlDelight")
 //
 
 

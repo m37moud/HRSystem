@@ -3,7 +3,6 @@ package com.hrappv.ui.feature.add_employe
 import androidx.compose.runtime.*
 import com.arkivanov.decompose.ComponentContext
 import com.hrappv.di.AppComponent
-import com.hrappv.ui.feature.edit_employe.EditEmployeScreen
 import com.hrappv.ui.navigation.Component
 import javax.inject.Inject
 
@@ -46,7 +45,7 @@ class AddEmployeScreenComponent(
 
         }
 
-        AddEmployeScreen(
+        AddEmployeeScreen(
             viewModel
         )
     }

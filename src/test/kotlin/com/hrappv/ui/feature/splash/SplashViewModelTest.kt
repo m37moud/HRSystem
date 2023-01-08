@@ -27,7 +27,7 @@ class SplashViewModelTest {
     @Test
     fun `Splash finished after delay`() {
         splashViewModel.isSplashFinished.value.should.`false` // Flag should be false before delay
-        coroutineRule.advanceTimeBy(SplashViewModel.SPLASH_DELAY)
+//        coroutineRule.advanceTimeBy(SplashViewModel.SPLASH_DELAY)
         splashViewModel.isSplashFinished.value.should.`true` // Flag should be true after delay
     }
 }
