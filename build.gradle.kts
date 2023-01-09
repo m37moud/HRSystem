@@ -95,7 +95,7 @@ dependencies {
 }
 
 tasks.withType<KotlinCompile>() {
-    kotlinOptions.jvmTarget = "11"
+    kotlinOptions.jvmTarget = "1.8"//"11"
 }
 //tasks.withType<KotlinCompile> {
 //    kotlinOptions {
@@ -107,6 +107,17 @@ tasks.withType<KotlinCompile>() {
 //    sourceCompatibility = JavaVersion.VERSION_1_8
 //    targetCompatibility = JavaVersion.VERSION_1_8
 //}
+
+
+/*
+tasks.withType(JavaCompile) {
+    options.compilerArgs << "-Xlint:unchecked" << "-Xlint:deprecation"
+    options.encoding = 'UTF-8'
+    options.fork = true
+    options.compilerArgs << "-parameters"
+    options.targetCompatibility = '1.8'
+}
+*/
 
 val compileKotlin: KotlinCompile by tasks
 compileKotlin.kotlinOptions {

@@ -1,18 +1,49 @@
-
-
-
 CREATE TABLE IF NOT EXISTS employe (
     id INTEGER PRIMARY KEY UNIQUE,
     emp_id INTEGER NOT NULL DEFAULT 1,
     fname TEXT NOT NULL,
     totaldays INTEGER NOT NULL,
-    bith_day TEXT     NOT NULL, --AS DATE
+    bith_day TEXT     NOT NULL, --AS DATE // INTEGER AS Date NOT NULL
     salary REAL AS Float   NOT NULL,
     vacanition INTEGER NOT NULL,
     vbalance  INTEGER NOT NULL,
     bdl_balance INTEGER,
     depart_id INTEGER REFERENCES Department (depart_id) ON DELETE RESTRICT ON UPDATE CASCADE
 );
+
+
+getAllEmployees:
+SELECT employe.emp_id,employe.fname, Department.department AS department_name,employe.totaldays,employe.bith_day,employe.salary,employe.vacanition,employe.vbalance,employe.bdl_balance
+FROM employe
+JOIN Department ON employe.depart_id = Department.depart_id;
+
+getEmployeeByName:
+SELECT * FROM employe WHERE fname LIKE '%?%';
+
+
+
+
+getEmployeesByDepartment:
+SELECT *
+FROM employe
+WHERE depart_id = :depart_id;
+
+
+
+upsertUSer: INSERT OR REPLACE INTO employe
+VALUES (?,?,?,?,?,?,?,?,?,(SELECT id FROM Department WHERE department = ?));
+
+
+
+deleteEmployee: DELETE FROM employe
+WHERE id = :id;
+
+
+--
+--  selectAllLaunchesInfo:
+--  SELECT Launch.*, Rocket.*
+--  FROM Launch
+--  LEFT JOIN Rocket ON Rocket.id == Launch.rocketId;
 
 -- --
 -- CREATE TABLE hockeyPlayer (
@@ -21,6 +52,9 @@ CREATE TABLE IF NOT EXISTS employe (
 --   ma TEXT
 --
 -- );
+--  example refrence
+--  https://kotlinlang.org/docs/multiplatform-mobile-ktor-sqldelight.html#implement-an-api-service
+
 
 --
 --

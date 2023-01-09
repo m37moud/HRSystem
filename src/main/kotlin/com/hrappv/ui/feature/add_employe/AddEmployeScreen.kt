@@ -3,12 +3,14 @@ package com.hrappv.ui.feature.add_employe
 import androidx.compose.desktop.ui.tooling.preview.Preview
 import androidx.compose.foundation.layout.Column
 import androidx.compose.material.Button
+import androidx.compose.material.DropdownMenu
 import androidx.compose.material.Text
 import androidx.compose.material.TextField
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
+import com.github.lgooddatepicker.components.DatePicker
 import com.hrappv.ui.value.HrAppVTheme
 
 
@@ -39,6 +41,10 @@ fun AddEmployeeScreen(
             onValueChange = { formState.value.bith_day = it },
             label = { Text("Birth Day") }
         )
+//           DatePicker(
+//            selectedDate = formState.value.bith_day,
+//            onDateSelected = { formState.value.bith_day = it }
+//        )
         TextField(
             value = formState.value.salary,
             onValueChange = { formState.value.salary = it },
@@ -64,6 +70,13 @@ fun AddEmployeeScreen(
             onValueChange = { formState.value.depart_id = it },
             label = { Text("Department ID") }
         )
+
+//         DropdownMenu(
+//            selectedOption = formState.value.depart_id,
+//            onSelectedOptionChange = { formState.value.depart_id = it },
+//            options = listOf("Option 1", "Option 2", "Option 3")
+//        )
+
         Button(onClick = {
             // Insert the new employee into the database here
         }) {

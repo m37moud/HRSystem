@@ -9,3 +9,11 @@ CREATE TABLE IF NOT EXISTS Department (
     commetion_type  TEXT DEFAULT "fixed",
     commetion_month TEXT --AS DATE
 );
+
+
+
+getAllDepartments:
+SELECT department FROM Department ORDER BY department DESC;
+
+
+
