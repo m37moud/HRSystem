@@ -2,7 +2,9 @@ package com.hrappv.data.di.module
 
 import com.hrappv.HrAppDb
 import com.hrappv.data.local.datastore.UserDataSource
+import com.hrappv.data.local.datastore.ViewEmpDataSource
 import com.hrappv.data.local.datastoreimp.UserDataSourceImpl
+import com.hrappv.data.local.datastoreimp.ViewEmpDataSourceImpl
 import com.squareup.sqldelight.db.SqlDriver
 import com.squareup.sqldelight.sqlite.driver.JdbcSqliteDriver
 import dagger.Module
@@ -90,11 +92,21 @@ class DatabaseModule {
     @Provides
     @Singleton
     fun provideUsersDataSource(
-//        sqliteDriver: SqlDriver,
         hrDb: HrAppDb,
         dispatcher: CoroutineDispatcher
     ): UserDataSource {
         return UserDataSourceImpl(
+            hrDb, dispatcher
+        )
+    }
+
+    @Provides
+    @Singleton
+    fun provideViewEmpDataSource(
+        hrDb: HrAppDb,
+        dispatcher: CoroutineDispatcher
+    ): ViewEmpDataSource {
+        return ViewEmpDataSourceImpl(
             hrDb, dispatcher
         )
     }

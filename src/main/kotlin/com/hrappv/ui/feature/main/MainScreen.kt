@@ -104,6 +104,7 @@ fun MainScreen2(
     onNavIconClick: () -> Unit,
     onHomeClick: () -> Unit,
     onAddEmployeeClick: () -> Unit,
+    onViewEmployeesClick: () -> Unit,
     onEmployeeResultClick: () -> Unit,
     onSettingsClick: () -> Unit,
     onAboutClick: () -> Unit,
@@ -177,10 +178,12 @@ fun MainScreen2(
             },
             onHomeClick = onHomeClick,
             onAddEmployeeClick = onAddEmployeeClick,
+            onViewEmployeesClick = onViewEmployeesClick,
             onEmployeeResultClick = onEmployeeResultClick,
             onSettingsClick = onSettingsClick,
             onAboutClick = onAboutClick,
         )
+
         Box(
 //                modifier = Modifier.fillMaxHeight()
 //                    .weight(0.85f)
@@ -392,6 +395,8 @@ fun NavMenu(
     onNavIconClick: () -> Unit,
     onHomeClick: () -> Unit,
     onAddEmployeeClick: () -> Unit,
+    onViewEmployeesClick: () -> Unit,
+
     onEmployeeResultClick: () -> Unit,
     onSettingsClick: () -> Unit,
     onAboutClick: () -> Unit,
@@ -490,6 +495,18 @@ fun NavMenu(
                     isMenuPressed = isMenuPressed,
                     onClick = { onAddEmployeeClick() }
                 )
+
+                Spacer(modifier = modifier.height(8.dp))
+                NavigationMenuItem(
+                    selected = activeComponent is AddEmployeScreenComponent,
+
+                    modifier = modifier,
+                    icon = Icons.Default.Person,
+                    label = "Employees",
+                    isMenuPressed = isMenuPressed,
+                    onClick = { onViewEmployeesClick() }
+                )
+
                 Spacer(modifier = modifier.height(8.dp))
                 NavigationMenuItem(
                     selected = activeComponent is EmployResultScreenComponent,

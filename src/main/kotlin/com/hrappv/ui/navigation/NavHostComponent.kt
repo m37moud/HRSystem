@@ -19,6 +19,7 @@ import com.hrappv.ui.feature.home_screen.HomeComponent
 import com.hrappv.ui.feature.main.MainScreen2
 import com.hrappv.ui.feature.main.NavMenu
 import com.hrappv.ui.feature.settings.SettingsComponent
+import com.hrappv.ui.feature.view_employees.ViewEmployeesComponent
 import kotlinx.coroutines.launch
 
 /**
@@ -94,6 +95,14 @@ class NavHostComponent(
                 onBackPress = ::onBackPress
 
             )
+            is Config.ViewEmployee -> ViewEmployeesComponent(
+                appComponent = appComponent,
+                componentContext = componentContext,
+//                userAuthState = config.userAuthState,
+//                onClickAddEmployee = ::addEmployeScreenStart,
+                onBackPress = ::onBackPress
+
+            )
 
             is Config.RegisterAttends -> EmployResultScreenComponent(
                 appComponent = appComponent,
@@ -161,6 +170,7 @@ class NavHostComponent(
             },
             onHomeClick = { startHomeScreen() },
             onAddEmployeeClick = ::startAddEmployeeScreen,
+            onViewEmployeesClick = ::startViewEmployeeScreen,
             onEmployeeResultClick = ::startRegisterAttendsScreen,
             onSettingsClick = ::startSettingsScreen,
             onAboutClick = ::startAboutScreen,
@@ -205,6 +215,10 @@ class NavHostComponent(
     private fun startAddEmployeeScreen() {
 //        router.replaceCurrent(Config.Home)
         navigation.bringToFront(Config.AddEmployee)
+    }
+    private fun startViewEmployeeScreen() {
+//        router.replaceCurrent(Config.Home)
+        navigation.bringToFront(Config.ViewEmployee)
     }
 
     private fun startRegisterAttendsScreen() {

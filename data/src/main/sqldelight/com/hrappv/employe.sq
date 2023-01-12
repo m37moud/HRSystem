@@ -17,8 +17,13 @@ SELECT employe.emp_id,employe.fname, Department.department AS department_name,em
 FROM employe
 JOIN Department ON employe.depart_id = Department.depart_id;
 
+--make thos funcation in search to get all employee and searsched funcation
 getEmployeeByName:
-SELECT * FROM employe WHERE fname LIKE '%?%';
+SELECT employe.emp_id,employe.fname, Department.department AS department_name,employe.totaldays,employe.bith_day,employe.salary,employe.vacanition,employe.vbalance,employe.bdl_balance
+FROM employe
+JOIN Department ON employe.depart_id = Department.depart_id
+WHERE fname LIKE '%'+:name+'%';
+
 
 
 
@@ -35,7 +40,8 @@ VALUES (?,?,?,?,?,?,?,?,?,(SELECT id FROM Department WHERE department = ?));
 
 
 
-deleteEmployee: DELETE FROM employe
+deleteEmployee:
+DELETE FROM employe
 WHERE id = :id;
 
 

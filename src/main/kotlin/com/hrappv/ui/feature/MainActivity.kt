@@ -105,7 +105,7 @@ class MainActivity : Activity() {
                     AppLoginWindow(loginViewModel)
 
                 } else {
-                    AppMainWindow(themeState, authenticated)
+                    AppMainWindow(themeState, authenticated , onLogOut = {loginViewModel.logOut()})
 
                 }
             }
@@ -183,11 +183,17 @@ class MainActivity : Activity() {
         themeState: AppThemeState,
         userState: UserAuthSate
     ) {
+        val screenSize = Toolkit.getDefaultToolkit().screenSize
         val globalWindowState = rememberWindowState(
-            placement = WindowPlacement.Maximized,
-            position = WindowPosition(Alignment.Center),
+          //  placement = WindowPlacement.Maximized,
+           // position = WindowPosition(Alignment.Center),
 //            width = Dp.screenWidth// Dp.toPx(Screen.width.toDp())//1024.dp,
 //            height =Dp.screenHeight // Dp.toPx(Screen.height.toDp())//600.dp,
+            width = (screenSize.width*.40).dp,
+            height = (screenSize.height*.95).dp,
+              position = WindowPosition(
+                y = 0.dp,
+                x = 0.dp
         )
         Window(
             onCloseRequest = {

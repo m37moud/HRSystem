@@ -24,6 +24,7 @@ import com.hrappv.ui.feature.home_screen.HomeComponent
 import com.hrappv.ui.feature.login.LoginViewModel
 import com.hrappv.ui.feature.main.MainViewModel
 import com.hrappv.ui.feature.settings.SettingsComponent
+import com.hrappv.ui.feature.view_employees.ViewEmployeesComponent
 
 @Singleton
 @Component(
@@ -39,6 +40,7 @@ interface AppComponent {
     fun inject(homeComponent: HomeComponent)
     fun inject(employResultScreenComponent: EmployResultScreenComponent)
     fun inject(addEmployeScreenComponent: AddEmployeScreenComponent)
+    fun inject(viewEmployeesComponent: ViewEmployeesComponent)
     fun inject(editEmployeScreenComponent: EditEmployeScreenComponent)
     fun inject(settingsComponent: SettingsComponent)
     fun inject(aboutComponent: AboutComponent)

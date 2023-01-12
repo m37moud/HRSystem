@@ -32,6 +32,10 @@ sealed class Config(
         label = R.string.ADD_EMPLOYE,
         icon = Icons.Rounded.Home
     )
+    object ViewEmployee : Config(
+        label = R.string.ADD_EMPLOYE,
+        icon = Icons.Rounded.Home
+    )
 
     //    object EmployeResult : Screens(
 //        label = R.string.EMPLOYE_RESULT,
