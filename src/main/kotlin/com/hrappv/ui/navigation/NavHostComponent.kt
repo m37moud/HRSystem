@@ -1,6 +1,5 @@
 package com.hrappv.ui.navigation
 
-import androidx.compose.foundation.layout.Row
 import androidx.compose.runtime.*
 import com.arkivanov.decompose.extensions.compose.jetbrains.stack.Children
 import com.arkivanov.decompose.extensions.compose.jetbrains.stack.animation.stackAnimation
@@ -17,7 +16,6 @@ import com.hrappv.ui.feature.about.AboutComponent
 import com.hrappv.ui.feature.add_employe.AddEmployeScreenComponent
 import com.hrappv.ui.feature.home_screen.HomeComponent
 import com.hrappv.ui.feature.main.MainScreen2
-import com.hrappv.ui.feature.main.NavMenu
 import com.hrappv.ui.feature.settings.SettingsComponent
 import com.hrappv.ui.feature.view_employees.ViewEmployeesComponent
 import kotlinx.coroutines.launch
@@ -30,21 +28,6 @@ class NavHostComponent(
     private val componentContext: ComponentContext,
 ) : Component, ComponentContext by componentContext {
 
-    /**
-     * Available screensSelectApp
-     */
-//    private sealed class Config : Parcelable {
-////        object Splash : Config()
-//
-//        //        object Login : Config()
-//        object Home : Config()
-//        object AddEmployee : Config()
-//        object RegisterAttends : Config()
-//        object Settings : Config()
-//        object About : Config()
-//        data class Main(val userAuthState: UserAuthSate) : Config()
-//
-//    }
 
     private val appComponent: AppComponent = DaggerAppComponent
         .create()
@@ -56,8 +39,6 @@ class NavHostComponent(
 //        initialConfiguration = Config.Home,
 //        childFactory = ::createScreenComponent
 //    )
-
-
     private val navigation = StackNavigation<Config>()
     private val stack = childStack(
         source = navigation,
@@ -174,6 +155,7 @@ class NavHostComponent(
             onEmployeeResultClick = ::startRegisterAttendsScreen,
             onSettingsClick = ::startSettingsScreen,
             onAboutClick = ::startAboutScreen,
+            onLogoutClick = {},
         ){
             Children(
                 stack = stack,
@@ -240,6 +222,11 @@ class NavHostComponent(
         navigation.pop()
 //        router.replaceCurrent(Config.Main)
 
+    }
+    lateinit var m : () ->Unit
+
+    fun logout(onLogOut: () -> Unit) {
+         m = onLogOut
     }
 }
 //

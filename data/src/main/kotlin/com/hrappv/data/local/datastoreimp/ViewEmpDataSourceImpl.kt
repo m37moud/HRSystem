@@ -1,9 +1,6 @@
 package com.hrappv.data.local.datastoreimp
 
-import com.hrappv.Employe
-import com.hrappv.GetEmployeeByName
-import com.hrappv.HrAppDb
-import com.hrappv.User
+import com.hrappv.*
 import com.hrappv.data.local.datastore.ViewEmpDataSource
 import com.hrappv.data.models.Employee
 import com.hrappv.data.models.Employees
@@ -21,6 +18,10 @@ private val dispatcher : CoroutineDispatcher
         return withContext(dispatcher){
             queries.getEmployeeByName(name).executeAsList()
         }
+    }
+
+    override fun getAllEmployees(): List<GetAllEmployees> {
+       return queries.getAllEmployees().executeAsList()
     }
 
 }

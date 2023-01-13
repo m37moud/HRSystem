@@ -6,8 +6,10 @@ import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.ColumnScope
+import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.material.*
 import androidx.compose.runtime.*
+import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.alpha
 import androidx.compose.ui.graphics.painter.Painter
@@ -26,7 +28,7 @@ fun AddEmployeeScreen(
 ) {
     val formState = remember { mutableStateOf(EmployeeFormState()) }
 
-    Column {
+    Column(modifier = Modifier.fillMaxSize(), horizontalAlignment = Alignment.CenterHorizontally) {
         TextField(
             value = formState.value.emp_id,
             onValueChange = { formState.value.emp_id = it },
@@ -93,7 +95,6 @@ fun AddEmployeeScreen(
 }
 
 
-
 @Composable
 @Preview
 fun FavoriteCollectionCardPreview() {
@@ -102,7 +103,6 @@ fun FavoriteCollectionCardPreview() {
 //        AddEmployeeScreen()
     }
 }
-
 
 
 //

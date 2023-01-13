@@ -1,7 +1,8 @@
 CREATE TABLE IF NOT EXISTS employe (
-    id INTEGER PRIMARY KEY UNIQUE,
     emp_id INTEGER NOT NULL DEFAULT 1,
+    id INTEGER PRIMARY KEY UNIQUE,
     fname TEXT NOT NULL,
+--     image TEXT ,--AS ICON NOT NULL,
     totaldays INTEGER NOT NULL,
     bith_day TEXT     NOT NULL, --AS DATE // INTEGER AS Date NOT NULL
     salary REAL AS Float   NOT NULL,
@@ -22,7 +23,7 @@ getEmployeeByName:
 SELECT employe.emp_id,employe.fname, Department.department AS department_name,employe.totaldays,employe.bith_day,employe.salary,employe.vacanition,employe.vbalance,employe.bdl_balance
 FROM employe
 JOIN Department ON employe.depart_id = Department.depart_id
-WHERE fname LIKE '%'+:name+'%';
+WHERE fname LIKE ?  ; --'%'+:name+'%'
 
 
 
@@ -66,5 +67,5 @@ WHERE id = :id;
 --
 -- CREATE INDEX hockeyPlayer_full_name ON hockeyPlayer(full_name);
 --
--- INSERT INTO hockeyPlayer (player_number, full_name)
+-- INSERT INTO employe emp_id = "1", "1","mahmoud","21","1990-11-16","10000","",""
 -- VALUES (15, 'Ryan Getzlaf');

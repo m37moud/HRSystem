@@ -1,6 +1,5 @@
 package com.hrappv.ui.feature.main
 
-import androidx.compose.animation.animateContentSize
 import androidx.compose.desktop.ui.tooling.preview.Preview
 import androidx.compose.foundation.*
 import androidx.compose.foundation.layout.*
@@ -15,7 +14,6 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Brush
 import androidx.compose.ui.graphics.Color
-import androidx.compose.ui.graphics.ColorFilter
 import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.unit.dp
@@ -30,21 +28,19 @@ import compose.icons.fontawesomeicons.solid.SignOutAlt
 import kotlinx.coroutines.launch
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
-import androidx.compose.ui.graphics.RectangleShape
 import androidx.compose.ui.text.font.FontWeight
-import com.arkivanov.decompose.Child
 import com.hrappv.ui.components.AppMenuHeader
-import com.hrappv.ui.components.NavItem
 import com.hrappv.ui.components.NavigationMenuItem
 import com.hrappv.ui.feature.EmployeResult.EmployResultScreenComponent
 import com.hrappv.ui.feature.about.AboutComponent
 import com.hrappv.ui.feature.add_employe.AddEmployeScreenComponent
 import com.hrappv.ui.feature.home_screen.HomeComponent
 import com.hrappv.ui.feature.settings.SettingsComponent
+import com.hrappv.ui.feature.view_employees.ViewEmployeesComponent
 import com.hrappv.ui.navigation.Component
-import com.hrappv.ui.navigation.Config
 import com.hrappv.ui.navigation.NavHostComponent
 import com.hrappv.ui.navigation.RootComponent
+import kotlin.reflect.KMutableProperty0
 
 
 @Composable
@@ -96,9 +92,6 @@ fun MainScreen(
 @Composable
 fun MainScreen2(
     modifier: Modifier = Modifier,
-//    viewModel: MainViewModel,
-//    component: RootComponent,
-//    loginViewModel: LoginViewModel,
     userAuthSate: UserAuthSate = UserAuthSate(),
     activeComponent: Component,
     onNavIconClick: () -> Unit,
@@ -108,6 +101,8 @@ fun MainScreen2(
     onEmployeeResultClick: () -> Unit,
     onSettingsClick: () -> Unit,
     onAboutClick: () -> Unit,
+    onLogoutClick: () -> Unit,
+
     content: @Composable () -> Unit
 ) {
     val scrollState = rememberScrollState(0)
@@ -182,6 +177,7 @@ fun MainScreen2(
             onEmployeeResultClick = onEmployeeResultClick,
             onSettingsClick = onSettingsClick,
             onAboutClick = onAboutClick,
+            onLogoutClick = onLogoutClick
         )
 
         Box(
@@ -400,6 +396,7 @@ fun NavMenu(
     onEmployeeResultClick: () -> Unit,
     onSettingsClick: () -> Unit,
     onAboutClick: () -> Unit,
+    onLogoutClick: () -> Unit,
 
     ) {
 //    var isMenuPressed by remember { mutableStateOf(true) }
@@ -473,7 +470,7 @@ fun NavMenu(
 
 
 //                Spacer(modifier = modifier.height(16.dp))
-                NavigationMenuItem(
+                  NavigationMenuItem(
                     selected = activeComponent is HomeComponent,
                     modifier = modifier,
                     icon = Icons.Default.Home,
@@ -485,12 +482,13 @@ fun NavMenu(
                 )
 
 
+
                 Spacer(modifier = modifier.height(8.dp))
                 NavigationMenuItem(
                     selected = activeComponent is AddEmployeScreenComponent,
 
                     modifier = modifier,
-                    icon = Icons.Default.Person,
+                    icon = Icons.Default.AddCircle,
                     label = "Add Employee",
                     isMenuPressed = isMenuPressed,
                     onClick = { onAddEmployeeClick() }
@@ -498,7 +496,7 @@ fun NavMenu(
 
                 Spacer(modifier = modifier.height(8.dp))
                 NavigationMenuItem(
-                    selected = activeComponent is AddEmployeScreenComponent,
+                    selected = activeComponent is ViewEmployeesComponent,
 
                     modifier = modifier,
                     icon = Icons.Default.Person,
@@ -544,7 +542,7 @@ fun NavMenu(
                     modifier = modifier,
                     icon = FontAwesomeIcons.Solid.SignOutAlt,
                     label = "Log Out",
-                    isMenuPressed = isMenuPressed, onClick = {}
+                    isMenuPressed = isMenuPressed, onClick = { onLogoutClick() }
                 )
 
 

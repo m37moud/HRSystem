@@ -34,39 +34,40 @@ fun NavigationMenuItem(
         bounded = true,
         color = selectedContentColor
     )
-    Row(
-        modifier = modifier
-            .selectable(
-                selected = selected,
-                onClick = onClick,
-                enabled = enabled,
-                role = Role.Button,
-                interactionSource = interactionSource,
-                indication = ripple
-            ).padding(4.dp),
-        verticalAlignment = Alignment.CenterVertically
+        Row(
+            modifier = modifier
+                .selectable(
+                    selected = selected,
+                    onClick = onClick,
+                    enabled = enabled,
+                    role = Role.Button,
+                    interactionSource = interactionSource,
+                    indication = ripple
+                ).padding(4.dp),
+            verticalAlignment = Alignment.CenterVertically
 
-    ) {
+        ) {
 //        Spacer(modifier = modifier.width(8.dp))
-        Icon(
-            imageVector = icon,
-            contentDescription = label,
-            tint = if (selected) selectedContentColor else unselectedContentColor,
-            modifier = Modifier.size(25.dp)
-        )
-        Spacer(modifier = Modifier.width(8.dp))
-        if (isMenuPressed) {
-            Text(
-                text = label,
-                style = MaterialTheme.typography.subtitle1,
-                fontWeight = FontWeight.Bold,
-                color = if (selected) selectedContentColor else unselectedContentColor
+            Icon(
+                imageVector = icon,
+                contentDescription = label,
+                tint = if (selected) selectedContentColor else unselectedContentColor,
+                modifier = Modifier.size(25.dp)
             )
+            Spacer(modifier = Modifier.width(8.dp))
+            if (isMenuPressed) {
+                Text(
+                    text = label,
+                    style = MaterialTheme.typography.subtitle1,
+                    fontWeight = FontWeight.Bold,
+                    color = if (selected) selectedContentColor else unselectedContentColor
+                )
 
-            Spacer(modifier = Modifier.weight(1f, false))
+                Spacer(modifier = Modifier.weight(1f, false))
 //            Spacer(modifier = modifier.width(150.dp))
 
 
+            }
         }
-    }
+
 }

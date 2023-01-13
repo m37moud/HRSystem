@@ -27,6 +27,8 @@ class ViewEmployeesComponent (
         val scope = rememberCoroutineScope()
         LaunchedEffect(viewModel) {
             viewModel.init(scope)
+            viewModel.getEmployees("")
+//            viewModel.getAllEmployees()
 //            mainViewModel.init(scope)
         }
 //        val folderPath by viewModel.folderPath.collectAsState()

@@ -25,7 +25,6 @@ import com.hrappv.di.DaggerAppComponent
 import com.hrappv.ui.components.AppWindowTitleBar
 import com.hrappv.ui.feature.login.LoginScreen
 import com.hrappv.ui.feature.login.LoginViewModel
-import com.hrappv.ui.feature.main.MainScreen2
 import com.hrappv.ui.feature.main.MainViewModel
 import com.hrappv.ui.navigation.NavHostComponent
 import com.hrappv.ui.security.UserAuthSate
@@ -35,6 +34,7 @@ import com.hrappv.ui.value.R
 import com.hrappv.ui.value.rememberAppThemeState
 import com.theapache64.cyclone.core.Activity
 import com.theapache64.cyclone.core.Intent
+import java.awt.Toolkit
 import javax.swing.SwingUtilities
 import androidx.compose.ui.window.application as setContent
 
@@ -105,7 +105,7 @@ class MainActivity : Activity() {
                     AppLoginWindow(loginViewModel)
 
                 } else {
-                    AppMainWindow(themeState, authenticated , onLogOut = {loginViewModel.logOut()})
+                    AppMainWindow(themeState, authenticated) { loginViewModel.logOut() }
 
                 }
             }
@@ -181,7 +181,8 @@ class MainActivity : Activity() {
     @Composable
     private fun ApplicationScope.AppMainWindow(
         themeState: AppThemeState,
-        userState: UserAuthSate
+        userState: UserAuthSate,
+        onLogOut: () -> Unit
     ) {
         val screenSize = Toolkit.getDefaultToolkit().screenSize
         val globalWindowState = rememberWindowState(
@@ -189,12 +190,12 @@ class MainActivity : Activity() {
            // position = WindowPosition(Alignment.Center),
 //            width = Dp.screenWidth// Dp.toPx(Screen.width.toDp())//1024.dp,
 //            height =Dp.screenHeight // Dp.toPx(Screen.height.toDp())//600.dp,
-            width = (screenSize.width*.40).dp,
-            height = (screenSize.height*.95).dp,
+            width = (screenSize.width).dp, //*.90
+            height = (screenSize.height*.96).dp,
               position = WindowPosition(
                 y = 0.dp,
                 x = 0.dp
-        )
+        ))
         Window(
             onCloseRequest = {
 //                SpringApplication.exit(applicationContext)
@@ -219,7 +220,7 @@ class MainActivity : Activity() {
                     ) {
                         exitApplication()
                     }
-                    AppMainContainer(userState,globalWindowState)
+                    AppMainContainer(userState,globalWindowState , onLogOut)
                 }
             }
 //            }
@@ -228,33 +229,14 @@ class MainActivity : Activity() {
 
 
     @Composable
-    fun AppMainContainer(authenticated: UserAuthSate, globalWindowState: WindowState) {
-        AppNavigationHost(authenticated,globalWindowState)
+    fun AppMainContainer(authenticated: UserAuthSate, globalWindowState: WindowState, onLogOut: () -> Unit) {
+        AppNavigationHost(authenticated,globalWindowState,onLogOut)
 
-//
-//        Row(
-//            modifier = Modifier.fillMaxSize()
-//        ) {
-//            SideBarMenu(
-//                modifier = Modifier
-//                    .weight(0.15f),
-////                navController
-//            )
-//            Box(
-//                modifier = Modifier.fillMaxHeight()
-//                    .weight(0.85f)
-//            ) {
-//            }
-//        }
     }
-    // Igniting navigation
-//        private val navController = rememberRootComponent(factory = ::NavHostComponent)
-//            .render()
-//        root.render()
 
     @OptIn(ExperimentalDecomposeApi::class)
     @Composable
-    fun AppNavigationHost(authenticated: UserAuthSate, globalWindowState: WindowState) {
+    fun AppNavigationHost(authenticated: UserAuthSate, globalWindowState: WindowState, onLogOut: () -> Unit) {
         val mainViewModel = appComponent.getMainViewModel()
         LifecycleController(lifecycle, globalWindowState)
 //        root.render()
@@ -264,6 +246,7 @@ class MainActivity : Activity() {
 //        root.render()
 //        })
         root.render()
+        root.logout(onLogOut)
 
     }
 

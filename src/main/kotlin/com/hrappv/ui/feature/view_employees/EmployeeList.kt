@@ -23,22 +23,23 @@ import androidx.compose.ui.unit.sp
 import com.hrappv.GetEmployeeByName
 import com.hrappv.ui.feature.view_employees.ViewEmpViewModel
 import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.Job
 import kotlinx.coroutines.launch
 import utils.LCE
 
 //https://johncodeos.com/how-to-add-search-in-list-with-jetpack-compose/
 @Composable
- fun ViewEmpScreen(viewEmployee: ViewEmpViewModel) {
+fun ViewEmpScreen(viewEmployee: ViewEmpViewModel) {
     val scope = rememberCoroutineScope()
     val textState = remember { mutableStateOf(TextFieldValue("")) }
 
+
     val empName = textState.value.text
-
+    viewEmployee.getQueries(empName)
     val employees = viewEmployee.empResults.collectAsState()
+    val quires = viewEmployee.queries.collectAsState()
 
-
-
-    Column {
+    Column(horizontalAlignment = Alignment.CenterHorizontally) {
         Row(
             modifier = Modifier
                 .fillMaxWidth()
@@ -50,7 +51,13 @@ import utils.LCE
             horizontalArrangement = Arrangement.Center      // this can change for Arrangement.spacedBy()
 
         ) {
-            SearchView(textState)
+            SearchView(state = textState) {
+                scope.launch(Dispatchers.IO) {
+                    viewEmployee.getEmployees("")
+//                        scaffoldState.snackbarHostState.showSnackbar("Button Clicked ")
+//                        importState = repository.getEmployReport(path)
+                }
+            }
 
             Button(onClick = {
 //                    importState = LCE.LOADING
@@ -66,10 +73,15 @@ import utils.LCE
 
 
         }
+        val quires = viewEmployee.queries.collectAsState()
 
         when (val state = employees.value) {
             is LCE.LOADING -> LoadingUI()
-            is LCE.CONTENT -> ContentUI(state.data)
+            is LCE.CONTENT -> {
+                ContentUI(state.data)
+
+            }
+
             is LCE.ERROR -> ErrorUI(state.error)
             else -> {}
         }
@@ -79,13 +91,14 @@ import utils.LCE
 }
 
 @Composable
-fun SearchView(state: MutableState<TextFieldValue>) {
+fun SearchView(modifier: Modifier = Modifier, state: MutableState<TextFieldValue>, onCloseSearch: () -> Unit) {
     TextField(
         value = state.value,
         onValueChange = { value ->
             state.value = value
         },
-        modifier = Modifier.fillMaxWidth(),
+        modifier = modifier.padding(end = 16.dp),
+
         textStyle = TextStyle(color = Color.White, fontSize = 18.sp),
         leadingIcon = {
             Icon(
@@ -100,6 +113,8 @@ fun SearchView(state: MutableState<TextFieldValue>) {
             if (state.value != TextFieldValue("")) {
                 IconButton(
                     onClick = {
+                        onCloseSearch()
+
                         state.value =
                             TextFieldValue("") // Remove text from TextField when you press the 'X' icon
                     }
@@ -242,7 +257,12 @@ fun EmployeeCard(employee: GetEmployeeByName) {
         modifier = Modifier.padding(vertical = 4.dp, horizontal = 8.dp),
     ) {
         EmployeeItem(employee)
+        EmployeeItem2(employee)
     }
+
+}
+@Composable
+fun EmployeeItem2(employee: GetEmployeeByName) {
 
 }
 

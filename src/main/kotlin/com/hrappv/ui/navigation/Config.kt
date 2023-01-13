@@ -7,6 +7,10 @@ import com.arkivanov.essenty.parcelable.Parcelable
 import com.hrappv.ui.security.UserAuthSate
 import com.hrappv.ui.value.R
 
+/**
+ * Available screensSelectApp
+ */
+
 sealed class Config(
     val label: String,
     val icon: ImageVector? = null
