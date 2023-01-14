@@ -229,6 +229,51 @@ fun ContentUI(data: List<GetEmployeeByName>) {
                 Spacer(Modifier.weight(1f).fillMaxWidth())
             }
         }
+        
+        /*
+        
+        LazyVerticalGrid(
+    modifier = Modifier
+        .fillMaxWidth()
+        .systemBarsPadding(),
+    columns = GridCells.Fixed(7),
+    contentPadding = PaddingValues(horizontal = 16.dp, vertical = 16.dp),
+    verticalArrangement = Arrangement.spacedBy(8.dp),
+    horizontalArrangement = Arrangement.spacedBy(8.dp)
+) {
+    items(dates) {
+        Box(contentAlignment = Alignment.Center) {
+            Text(text = "${it + 1}")
+        }
+    }
+}
+
+
+// another 
+val dates = MutableList(35) { if (it + 1 > 31) -1 else it + 1 }
+val chunks = dates.chunked(7)
+
+LazyColumn(
+    Modifier
+        .fillMaxSize()
+        .systemBarsPadding()
+) {
+    items(chunks) {
+        Row(
+            Modifier
+                .fillMaxWidth()
+                .padding(vertical = 8.dp),
+            horizontalArrangement = Arrangement.SpaceEvenly
+        ) {
+            it.forEach { date ->
+                Box(Modifier.size(24.dp), contentAlignment = Alignment.Center) {
+                    if (date != -1) Text(text = "$date")
+                }
+            }
+        }
+    }
+}
+        */
 
 
         LazyColumn(
