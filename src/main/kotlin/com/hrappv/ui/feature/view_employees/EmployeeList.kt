@@ -2,27 +2,35 @@
 
 import androidx.compose.animation.core.tween
 import androidx.compose.desktop.ui.tooling.preview.Preview
+import androidx.compose.foundation.BorderStroke
 import androidx.compose.foundation.ExperimentalFoundationApi
+import androidx.compose.foundation.Image
+import androidx.compose.foundation.border
 import androidx.compose.foundation.layout.*
+import androidx.compose.foundation.lazy.grid.GridCells
 import androidx.compose.foundation.lazy.LazyColumn
+import androidx.compose.foundation.lazy.grid.LazyVerticalGrid
+import androidx.compose.foundation.lazy.grid.items
 import androidx.compose.foundation.lazy.items
-import androidx.compose.foundation.selection.selectable
+import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.material.*
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.*
+import androidx.compose.material.icons.outlined.MoreVert
 import androidx.compose.material.icons.outlined.Search
 import androidx.compose.material.ripple.rememberRipple
 import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.ExperimentalComposeUiApi
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
-import androidx.compose.ui.graphics.RectangleShape
+import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.compose.ui.input.key.Key
 import androidx.compose.ui.input.key.key
 import androidx.compose.ui.input.key.onKeyEvent
 import androidx.compose.ui.platform.testTag
-import androidx.compose.ui.semantics.Role
+import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.input.TextFieldValue
@@ -33,14 +41,15 @@ import androidx.compose.ui.unit.sp
 import com.hrappv.GetEmployeeByName
 import com.hrappv.ui.feature.view_employees.ViewEmpViewModel
 import compose.icons.FontAwesomeIcons
-import compose.icons.fontawesomeicons.Regular
 import compose.icons.fontawesomeicons.Solid
+import compose.icons.fontawesomeicons.solid.CashRegister
 import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.Job
 import kotlinx.coroutines.launch
 import utils.LCE
 
 //https://johncodeos.com/how-to-add-search-in-list-with-jetpack-compose/
+var empNumber = 0
+
 @Composable
 fun ViewEmpScreen(viewEmployee: ViewEmpViewModel) {
     val scope = rememberCoroutineScope()
@@ -51,78 +60,67 @@ fun ViewEmpScreen(viewEmployee: ViewEmpViewModel) {
     viewEmployee.getQueries(empName)
     val employees = viewEmployee.empResults.collectAsState()
 
-    Column(horizontalAlignment = Alignment.CenterHorizontally) {
-        Box(){
-            Row(
-                modifier = Modifier
-                    .fillMaxWidth()
-                    .padding(
-                        horizontal = 16.dp,
-                        vertical = 16.dp
-                    ).align(Alignment.CenterStart), // this can change for contentPadding = PaddingValues(horizontal = 16.dp)
-                verticalAlignment = Alignment.CenterVertically, // this modifier for column
-//            horizontalArrangement = Arrangement.Center      // this can change for Arrangement.spacedBy()
+    var selectedGrid by remember { mutableStateOf(true) }
+    var selectedMenu by remember { mutableStateOf(false) }
 
-            ) {
-                SearchView(state = textState, onpressEnterSearch = {
+    Column(modifier = Modifier.padding(6.dp), horizontalAlignment = Alignment.CenterHorizontally) {
+        Card(
+            modifier = Modifier.fillMaxWidth().padding(top = 12.dp, bottom = 12.dp),
+            elevation = 10.dp,
+            backgroundColor = MaterialTheme.colors.onBackground
+        ) {
+            Row {
+                Spacer(Modifier.width(12.dp))
+                Card(
+                    modifier = Modifier.padding(  8.dp),
+                    elevation = 10.dp,
+//                    backgroundColor = MaterialTheme.colors.onBackground
+                )
+                {
+                    Text(text = "Employees Number : ${empNumber.toString()}", modifier = Modifier.padding(10.dp))
+                }
+
+            }
+
+        }
+        Box(
+            modifier = Modifier
+                .fillMaxWidth()
+                .padding(start = 8.dp , end = 8.dp)
+        ) {
+
+
+            SearchView(modifier = Modifier.align(Alignment.CenterStart),
+                state = textState, onpressEnterSearch = {
 //                search(viewEmployee, empName)
                     scope.launch(Dispatchers.IO) {
                         viewEmployee.getEmployees(empName)
                     }
                 }) {
 //                search(viewEmployee, "")
-                    scope.launch(Dispatchers.IO) {
-                        viewEmployee.getEmployees("")
-                    }
-                }
-
-                Button(onClick = {
-//                    importState = LCE.LOADING
-
-//                search(viewEmployee, empName)
-                    scope.launch(Dispatchers.IO) {
-                        viewEmployee.getEmployees(empName)
-                    }
-                }) {
-                    Icon(Icons.Outlined.Search, "Search")
-                }
-
-
-            }
-
-            Row(
-                modifier = Modifier
-                    .fillMaxWidth()
-                    .padding(
-                        horizontal = 16.dp,
-                        vertical = 16.dp
-                    ).align(Alignment.CenterEnd), // this can change for contentPadding = PaddingValues(horizontal = 16.dp)
-                verticalAlignment = Alignment.CenterVertically, // this modifier for column
-//            horizontalArrangement = Arrangement.Center      // this can change for Arrangement.spacedBy()
-
-            ){
-                val selectedContentColor: Color = MaterialTheme.colors.primary
-                val unselectedContentColor: Color = LocalContentColor.current.copy(alpha = ContentAlpha.medium)
-                val ripple = rememberRipple(
-                    bounded = true,
-                    color = selectedContentColor
-                )
-
-                IconButton(modifier = Modifier ,onClick = {}){
-                    Icon(imageVector = Icons.Default.Menu,
-                    contentDescription = null,
-                        )
-
-                }
-
-                IconButton(onClick = {}){
-                    Icon(imageVector = Icons.Default.Menu,
-                        contentDescription = null,
-                        modifier = Modifier.size(24.dp)
-                    )
-
+                scope.launch(Dispatchers.IO) {
+                    viewEmployee.getEmployees("")
                 }
             }
+
+
+
+
+
+
+            selectPreviewBtn(
+                Modifier.align(Alignment.CenterEnd),
+                selectGrid = selectedGrid,
+                selectMenu = selectedMenu,
+                selectedGrid = {
+                    selectedGrid = true
+                    selectedMenu = false
+                },
+                selectedMenu = {
+                    selectedMenu = true
+                    selectedGrid = false
+                }
+            )
 
         }
 
@@ -131,8 +129,9 @@ fun ViewEmpScreen(viewEmployee: ViewEmpViewModel) {
         when (val state = employees.value) {
             is LCE.LOADING -> LoadingUI()
             is LCE.CONTENT -> {
-                ContentUI(state.data)
+                ContentUI(state.data, selectedGrid = selectedGrid, selectedMenu = selectedMenu)
             }
+
             is LCE.ERROR -> ErrorUI(state.error)
             else -> {}
         }
@@ -142,61 +141,190 @@ fun ViewEmpScreen(viewEmployee: ViewEmpViewModel) {
 }
 
 @Composable
+fun selectPreviewBtn(
+    modifier: Modifier = Modifier,
+    selectGrid: Boolean,
+    selectMenu: Boolean,
+    selectedGrid: () -> Unit,
+    selectedMenu: () -> Unit
+) {
+    Row(
+        modifier = modifier,
+//            .fillMaxWidth()
+//            .padding(
+//                horizontal = 16.dp,
+//                vertical = 16.dp
+//            ), // this can change for contentPadding = PaddingValues(horizontal = 16.dp)
+        verticalAlignment = Alignment.CenterVertically, // this modifier for column
+//            horizontalArrangement = Arrangement.Center      // this can change for Arrangement.spacedBy()
+
+    ) {
+        val selectedContentColor: Color = MaterialTheme.colors.primary
+        val unselectedContentColor: Color = LocalContentColor.current.copy(alpha = ContentAlpha.medium)
+        val ripple = rememberRipple(
+            bounded = true,
+            color = selectedContentColor
+        )
+
+
+        IconButton(onClick = {
+
+            selectedGrid()
+        }) {
+            Icon(
+//                imageVector = Icons.Outlined.Menu,
+                painter = painterResource("drawables/grid.svg"),
+                modifier = Modifier.size(24.dp),
+                contentDescription = null,
+                tint = if (selectGrid) selectedContentColor else unselectedContentColor,
+            )
+
+        }
+
+        IconButton(onClick = {
+            selectedMenu()
+
+        }) {
+            Icon(
+                imageVector = Icons.Default.Menu,
+                contentDescription = null,
+                modifier = Modifier.size(24.dp),
+                tint = if (selectMenu) selectedContentColor else unselectedContentColor,
+
+
+                )
+
+        }
+    }
+}
+
+@Composable
 fun SearchView(
     modifier: Modifier = Modifier, state: MutableState<TextFieldValue>,
     onpressEnterSearch: () -> Unit,
     onCloseSearch: () -> Unit,
 ) {
+    Row(
+        modifier = modifier
+//                    .fillMaxWidth()
+            .padding(
+                horizontal = 16.dp,
+                vertical = 16.dp
+            ), // this can change for contentPadding = PaddingValues(horizontal = 16.dp)
+        verticalAlignment = Alignment.CenterVertically, // this modifier for column
+//            horizontalArrangement = Arrangement.Center      // this can change for Arrangement.spacedBy()
 
-    OutlinedTextField(
-        value = state.value,
-        onValueChange = { value ->
-            state.value = value
-        },
-        modifier = modifier.padding(end = 16.dp)
-            .onKeyEvent {
-            if (it.key == Key.Enter) {
-                onpressEnterSearch()
-                true
-            } else {
-                false
-            }
-        }.testTag("password"),
-        textStyle = TextStyle(color = Color.White, fontSize = 18.sp),
-        placeholder = { Text("put url excel folder") },
-        label = { Text(text = "Search by name or ID") },
-        leadingIcon = {
-            Icon(
-                Icons.Default.Search,
-                contentDescription = "",
-                modifier = Modifier
-                    .padding(15.dp)
-                    .size(24.dp)
-            )
-        },
-        trailingIcon = {
-            if (state.value != TextFieldValue("")) {
-                IconButton(
-                    onClick = {
-                        onCloseSearch()
-
-                        state.value =
-                            TextFieldValue("") // Remove text from TextField when you press the 'X' icon
+    ) {
+        OutlinedTextField(
+            value = state.value,
+            onValueChange = { value ->
+                state.value = value
+            },
+            modifier = modifier.padding(end = 16.dp)
+                .onKeyEvent {
+                    if (it.key == Key.Enter) {
+                        onpressEnterSearch()
+                        true
+                    } else {
+                        false
                     }
-                ) {
-                    Icon(
-                        Icons.Default.Close,
-                        contentDescription = "",
-                        modifier = Modifier
-                            .padding(15.dp)
-                            .size(24.dp)
-                    )
-                }
-            }
-        },
-        singleLine = true,
+                }.testTag("password"),
+            textStyle = TextStyle(fontSize = 18.sp),
+            placeholder = { Text("Search by name or ID") },
+            label = { Text(text = "Search") },
+            leadingIcon = {
+                Icon(
+                    Icons.Default.Search,
+                    contentDescription = "",
+                    modifier = Modifier
+                        .padding(15.dp)
+                        .size(24.dp)
+                )
+            },
+            trailingIcon = {
+                if (state.value != TextFieldValue("")) {
+                    IconButton(
+                        onClick = {
+                            onCloseSearch()
 
-        )
+                            state.value =
+                                TextFieldValue("") // Remove text from TextField when you press the 'X' icon
+                        }
+                    ) {
+                        Icon(
+                            Icons.Default.Close,
+                            contentDescription = "",
+                            modifier = Modifier
+                                .padding(15.dp)
+                                .size(24.dp)
+                        )
+                    }
+                }
+            },
+            singleLine = true,
+
+            )
+
+        OutlinedTextField(
+            value = state.value,
+            onValueChange = { value ->
+                state.value = value
+            },
+            modifier = modifier.padding(end = 16.dp)
+                .onKeyEvent {
+                    if (it.key == Key.Enter) {
+                        onpressEnterSearch()
+                        true
+                    } else {
+                        false
+                    }
+                }.testTag("password"),
+            textStyle = TextStyle(fontSize = 18.sp),
+            placeholder = { Text("Department") },
+            label = { Text(text = "Department") },
+            leadingIcon = {
+                Icon(
+                    Icons.Default.Search,
+                    contentDescription = "",
+                    modifier = Modifier
+                        .padding(15.dp)
+                        .size(24.dp)
+                )
+            },
+            trailingIcon = {
+                if (state.value != TextFieldValue("")) {
+                    IconButton(
+                        onClick = {
+                            onCloseSearch()
+
+                            state.value =
+                                TextFieldValue("") // Remove text from TextField when you press the 'X' icon
+                        }
+                    ) {
+                        Icon(
+                            Icons.Default.Close,
+                            contentDescription = "",
+                            modifier = Modifier
+                                .padding(15.dp)
+                                .size(24.dp)
+                        )
+                    }
+                }
+            },
+            singleLine = true,
+
+            )
+
+//        Button(onClick = {
+////                    importState = LCE.LOADING
+//
+////                search(viewEmployee, empName)
+//            onpressEnterSearch()
+//        }) {
+//            Icon(Icons.Outlined.Search, "Search")
+//        }
+
+    }
 
 //    TextField(
 //        value = state.value,
@@ -307,84 +435,95 @@ fun SearchView(
 @OptIn(ExperimentalFoundationApi::class)
 @Composable
 @Preview
-fun ContentUI(data: List<GetEmployeeByName>) {
-
-    Column(
-        modifier = Modifier.fillMaxSize()
-//            .horizontalScroll(rememberScrollState())
-        ,
-        horizontalAlignment = Alignment.CenterHorizontally // this can change for verticalAlignment
-    ) {
-        Header()
-
-        /*
-        
-        LazyVerticalGrid(
-    modifier = Modifier
-        .fillMaxWidth()
-        .systemBarsPadding(),
-    columns = GridCells.Fixed(7),
-    //columns = GridCells.Adaptive(minSize = 128.dp)
-    contentPadding = PaddingValues(horizontal = 16.dp, vertical = 16.dp),
-    verticalArrangement = Arrangement.spacedBy(8.dp),
-    horizontalArrangement = Arrangement.spacedBy(8.dp)
+fun ContentUI(
+    data: List<GetEmployeeByName>,
+    selectedGrid: Boolean,
+    selectedMenu: Boolean
 ) {
-    items(dates) {
-        Box(contentAlignment = Alignment.Center) {
-            Text(text = "${it + 1}")
+    empNumber = data.size
+
+    if (selectedGrid) {
+        LazyVerticalGrid(
+            modifier = Modifier
+                .fillMaxWidth()
+//        .systemBarsPadding()
+            ,
+            columns = GridCells.Fixed(4),
+            //columns = GridCells.Adaptive(minSize = 128.dp)
+            contentPadding = PaddingValues(horizontal = 16.dp, vertical = 16.dp),
+            verticalArrangement = Arrangement.spacedBy(8.dp),
+            horizontalArrangement = Arrangement.spacedBy(8.dp)
+        ) {
+            items(data) { employee ->
+                EmployeeCardGrid(
+                    Modifier.animateItemPlacement(
+                        tween(durationMillis = 250)
+                    ),
+                    employee
+                )
+
+            }
         }
     }
-}
 
+    /*
 
 // another 
 val dates = MutableList(35) { if (it + 1 > 31) -1 else it + 1 }
 val chunks = dates.chunked(7)
 
 LazyColumn(
-    Modifier
-        .fillMaxSize()
-        .systemBarsPadding()
+Modifier
+    .fillMaxSize()
+    .systemBarsPadding()
 ) {
-    items(chunks) {
-        Row(
-            Modifier
-                .fillMaxWidth()
-                .padding(vertical = 8.dp),
-            horizontalArrangement = Arrangement.SpaceEvenly
-        ) {
-            it.forEach { date ->
-                Box(Modifier.size(24.dp), contentAlignment = Alignment.Center) {
-                    if (date != -1) Text(text = "$date")
-                }
+items(chunks) {
+    Row(
+        Modifier
+            .fillMaxWidth()
+            .padding(vertical = 8.dp),
+        horizontalArrangement = Arrangement.SpaceEvenly
+    ) {
+        it.forEach { date ->
+            Box(Modifier.size(24.dp), contentAlignment = Alignment.Center) {
+                if (date != -1) Text(text = "$date")
             }
         }
     }
 }
-        */
+}
+    */
 
-
-        LazyColumn(
+    if (selectedMenu) {
+        Column(
             modifier = Modifier.fillMaxSize()
-//                .padding(vertical = 4.dp) // this can change for contentPadding = PaddingValues(horizontal = 16.dp)
-            , contentPadding = PaddingValues(vertical = 4.dp)
+//            .horizontalScroll(rememberScrollState())
+            ,
+            horizontalAlignment = Alignment.CenterHorizontally // this can change for verticalAlignment
         ) {
-            items(items = data) { employee ->
-                Row(
-                    Modifier.animateItemPlacement(
-                        tween(durationMillis = 250)
+            Header()
+
+            LazyColumn(
+                modifier = Modifier.fillMaxSize()
+//                .padding(vertical = 4.dp) // this can change for contentPadding = PaddingValues(horizontal = 16.dp)
+                , contentPadding = PaddingValues(vertical = 4.dp)
+            ) {
+                items(items = data) { employee ->
+                    EmployeeCardMenu(
+                        Modifier.animateItemPlacement(
+                            tween(durationMillis = 250)
+                        ),
+                        employee,
                     )
-                ) {
-                    EmployeeCard(employee)
+
 
                 }
-
             }
+
+
         }
 
-
     }
-
 }
 
 @Composable
@@ -413,28 +552,116 @@ private fun Header(modifier: Modifier = Modifier) {
 }
 
 @Composable
-@Preview
-fun EmployeeCard(employee: GetEmployeeByName) {
+fun EmployeeCardGrid(
+    modifier: Modifier = Modifier,
+    employee: GetEmployeeByName,
+) {
     Card(
-        backgroundColor =
-        Color.LightGray,
-//        .cardColors(containerColor = MaterialTheme.colors.primary)
-        modifier = Modifier.padding(vertical = 4.dp, horizontal = 8.dp),
+        modifier = modifier.size(width = 150.dp, height = 350.dp)
+            .padding(vertical = 4.dp, horizontal = 8.dp)
+
     ) {
-        EmployeeItem(employee)
-        EmployeeItem2(employee)
+        EmployeeItemGrid(employee)
     }
 
 }
 
 @Composable
-fun EmployeeItem2(employee: GetEmployeeByName) {
+@Preview
+fun EmployeeCardMenu(
+    modifier: Modifier = Modifier,
+    employee: GetEmployeeByName,
+) {
+    Card(
+        backgroundColor =
+        Color.LightGray,
+//        .cardColors(containerColor = MaterialTheme.colors.primary)
+        modifier = modifier.padding(vertical = 4.dp, horizontal = 8.dp),
+    ) {
+        EmployeeItemMenu(employee)
+    }
+
+}
+
+@Composable
+fun EmployeeItemGrid(employee: GetEmployeeByName) {
+
+    Column(
+        verticalArrangement = Arrangement.SpaceEvenly,
+        horizontalAlignment = Alignment.CenterHorizontally
+    ) {
+        Spacer(modifier = Modifier.height(8.dp))
+
+        Row() {
+            Spacer(modifier = Modifier.weight(1f))
+
+            Icon(imageVector = Icons.Outlined.MoreVert, contentDescription = null, modifier = Modifier.size(25.dp))
+        }
+        Spacer(modifier = Modifier.height(8.dp))
+
+        Row(horizontalArrangement = Arrangement.Center) {
+            Spacer(modifier = Modifier.width(8.dp))
+
+            Image(
+                painter = painterResource("drawables/ic_user_placeholder.png"),
+                modifier = Modifier.size(100.dp)
+                    .clip(CircleShape)
+                    .border(
+                        shape = CircleShape,
+                        border = BorderStroke(2.dp, MaterialTheme.colors.onPrimary)
+                    ),
+                contentDescription = "User Logo",
+//                    colorFilter = ColorFilter.tint(MaterialTheme.colors.onPrimary)
+            )
+            Spacer(modifier = Modifier.width(8.dp))
+
+
+        }
+        Spacer(modifier = Modifier.height(8.dp))
+
+        Card() { Text(text = employee.fname , style = MaterialTheme.typography.h5) }
+        Spacer(modifier = Modifier.height(8.dp))
+
+        Card() { Text(text = employee.department_name) }
+        Spacer(modifier = Modifier.height(8.dp))
+
+        Row(
+            modifier = Modifier.fillMaxWidth()
+                .padding(8.dp),
+            horizontalArrangement = Arrangement.SpaceEvenly
+        ) {
+            ItemGrid(icon = FontAwesomeIcons.Solid.CashRegister, txt = employee.salary.toString())
+            ItemGrid(icon = FontAwesomeIcons.Solid.CashRegister, txt = employee.vacanition.toString())
+            ItemGrid(icon = FontAwesomeIcons.Solid.CashRegister, txt = employee.vbalance.toString())
+            ItemGrid(icon = FontAwesomeIcons.Solid.CashRegister, txt = employee.bdl_balance.toString())
+
+
+        }
+
+    }
+
+
+}
+
+@Composable
+private fun ItemGrid(modifier: Modifier = Modifier, icon: ImageVector, txt: String) {
+    Column(modifier, horizontalAlignment = Alignment.CenterHorizontally) {
+        Icon(
+            imageVector = icon,
+            contentDescription = null,
+            modifier = Modifier.size(25.dp)
+        )
+        Spacer(modifier = Modifier.height(8.dp))
+
+        Text(text = txt)
+
+    }
 
 }
 
 @Composable
 @Preview
-fun EmployeeItem(employee: GetEmployeeByName) {
+fun EmployeeItemMenu(employee: GetEmployeeByName) {
 
 
     Row(

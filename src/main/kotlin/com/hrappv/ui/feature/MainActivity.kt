@@ -63,31 +63,16 @@ class MainActivity : Activity() {
     //    val windowState = WindowState()
     ////    val root = runOnMainThreadBlocking { NavHostComponent(DefaultComponentContext(lifecycle)) }
 
-//            val root =  runOnMainThreadBlocking {NavHostComponent(DefaultComponentContext(lifecycle))}
-val lifecycle = LifecycleRegistry()
+    //            val root =  runOnMainThreadBlocking {NavHostComponent(DefaultComponentContext(lifecycle))}
+    private lateinit var  lifecycle: LifecycleRegistry
+    private lateinit var root  :NavHostComponent
+
 
     @OptIn(ExperimentalDecomposeApi::class)
     override fun onCreate() { //decompose-desktop-example-master
         super.onCreate()
         loginViewModel = appComponent.getLoginViewModel()
 
-//        val configuration = LocalConfiguration.current
-//        val screenHeight = configuration.screenHeightDp.dp
-//        val screenWidth = configuration.screenWidthDp.dp
-
-//        val displayMetrics = DisplayMetrics()
-//        windowManager.defaultDisplay.getMetrics(displayMetrics)
-//        val widthPixels = displayMetrics.widthPixels
-//        val heightPixels = displayMetrics.heightPixels
-////
-
-//        val LocalComponentContext: ProvidableCompositionLocal<ComponentContext> =
-//            staticCompositionLocalOf { error("Root component context was not provided") }
-//
-//        @Composable
-//        fun ProvideComponentContext(componentContext: ComponentContext, content: @Composable () -> Unit) {
-//            CompositionLocalProvider(LocalComponentContext provides componentContext, content = content)
-//        }
 
 
         setContent {
@@ -103,11 +88,10 @@ val lifecycle = LifecycleRegistry()
 
 
             HrAppVTheme(themeState.isDarkTheme) {
-                if (!authenticated.auth) {
+                if (authenticated.auth) {
                     AppLoginWindow(loginViewModel)
 
                 } else {
-//                    LifecycleController(lifecycle, globalWindowState)
 
                     AppMainWindow(themeState, authenticated) { loginViewModel.logOut() }
 
@@ -255,7 +239,8 @@ val lifecycle = LifecycleRegistry()
 ////            rememberRootComponent(factory = { NavHostComponent(authenticated, it) })
 //        root.render()
 //        })
-        val root = NavHostComponent(DefaultComponentContext(lifecycle))
+        lifecycle = LifecycleRegistry()
+        root  = NavHostComponent(DefaultComponentContext(lifecycle))
         LifecycleController(lifecycle, globalWindowState)
 
         root.render()

@@ -1,5 +1,6 @@
 package com.hrappv.ui.feature.main
 
+import androidx.compose.animation.animateContentSize
 import androidx.compose.desktop.ui.tooling.preview.Preview
 import androidx.compose.foundation.*
 import androidx.compose.foundation.layout.*
@@ -404,15 +405,17 @@ fun NavMenu(
         modifier = modifier
 //            .border(shape = RectangleShape, border = BorderStroke(2.dp, MaterialTheme.colors.onPrimary)).padding(4.dp)
 
-            .fillMaxHeight().padding(end = 6.dp)
-//            .animateContentSize()
+            .fillMaxHeight()
+//            .padding(end = 6.dp)
+            .animateContentSize()
         ,
         elevation = 10.dp,
         header = {
             Row(
                 modifier = modifier
 //                    .fillMaxWidth()
-                    .padding(4.dp),
+                    .padding(4.dp)
+                ,
                 verticalAlignment = Alignment.CenterVertically
 
             ) {
@@ -461,7 +464,7 @@ fun NavMenu(
             )
 
             Column(
-                modifier = modifier
+                modifier = modifier.width(IntrinsicSize.Max)
                     .fillMaxHeight()
 //                    .padding(top = 16.dp)
 //                .border(shape = RectangleShape, border = BorderStroke(2.dp, MaterialTheme.colors.onPrimary))
@@ -472,7 +475,7 @@ fun NavMenu(
 //                Spacer(modifier = modifier.height(16.dp))
                   NavigationMenuItem(
                     selected = activeComponent is HomeComponent,
-                    modifier = modifier.width(IntrinsicSize.Max),
+                    modifier = modifier.fillMaxWidth(),
                     icon = Icons.Default.Home,
                     label = "Home",
                     isMenuPressed = isMenuPressed
@@ -487,7 +490,7 @@ fun NavMenu(
                 NavigationMenuItem(
                     selected = activeComponent is AddEmployeScreenComponent,
 
-                    modifier = modifier,
+                    modifier = modifier.fillMaxWidth(),
                     icon = Icons.Default.AddCircle,
                     label = "Add Employee",
                     isMenuPressed = isMenuPressed,
@@ -498,7 +501,7 @@ fun NavMenu(
                 NavigationMenuItem(
                     selected = activeComponent is ViewEmployeesComponent,
 
-                    modifier = modifier,
+                    modifier = modifier.fillMaxWidth(),
                     icon = Icons.Default.Person,
                     label = "Employees",
                     isMenuPressed = isMenuPressed,
@@ -509,7 +512,7 @@ fun NavMenu(
                 NavigationMenuItem(
                     selected = activeComponent is EmployResultScreenComponent,
 
-                    modifier = modifier,
+                    modifier = modifier.fillMaxWidth(),
                     icon = Icons.Default.Edit,
                     label = "Register Attends",
                     isMenuPressed = isMenuPressed,
@@ -521,7 +524,7 @@ fun NavMenu(
                 NavigationMenuItem(
                     selected = activeComponent is SettingsComponent,
 
-                    modifier = modifier,
+                    modifier = modifier.fillMaxWidth(),
                     icon = Icons.Default.Settings,
                     label = "Settings",
                     isMenuPressed = isMenuPressed,
@@ -531,19 +534,19 @@ fun NavMenu(
                 NavigationMenuItem(
                     selected = activeComponent is AboutComponent,
 
-                    modifier = modifier,
+                    modifier = modifier.fillMaxWidth(),
                     icon = Icons.Default.Info,
                     label = "About",
                     isMenuPressed = isMenuPressed,
                     onClick = { onAboutClick() })
 
-                Spacer(modifier = modifier.height(8.dp))
-                NavigationMenuItem(
-                    modifier = modifier,
-                    icon = FontAwesomeIcons.Solid.SignOutAlt,
-                    label = "Log Out",
-                    isMenuPressed = isMenuPressed, onClick = { onLogoutClick() }
-                )
+//                Spacer(modifier = modifier.height(8.dp))
+//                NavigationMenuItem(
+//                    modifier = modifier,
+//                    icon = FontAwesomeIcons.Solid.SignOutAlt,
+//                    label = "Log Out",
+//                    isMenuPressed = isMenuPressed, onClick = { onLogoutClick() }
+//                )
 
 
             }
