@@ -55,16 +55,16 @@ class MainActivity : Activity() {
 
 
     lateinit var loginViewModel: LoginViewModel
-     var mainViewModel: MainViewModel = appComponent.getMainViewModel()
-
+    var mainViewModel: MainViewModel = appComponent.getMainViewModel()
 
 
 //val app = DaggerAppComponent.
 
-//    val windowState = WindowState()
-    val lifecycle = LifecycleRegistry()
-////    val root = runOnMainThreadBlocking { NavHostComponent(DefaultComponentContext(lifecycle)) }
-    val root =  NavHostComponent(DefaultComponentContext(lifecycle))
+    //    val windowState = WindowState()
+    ////    val root = runOnMainThreadBlocking { NavHostComponent(DefaultComponentContext(lifecycle)) }
+
+//            val root =  runOnMainThreadBlocking {NavHostComponent(DefaultComponentContext(lifecycle))}
+val lifecycle = LifecycleRegistry()
 
     @OptIn(ExperimentalDecomposeApi::class)
     override fun onCreate() { //decompose-desktop-example-master
@@ -99,12 +99,16 @@ class MainActivity : Activity() {
             val themeState = rememberAppThemeState()
 
             val authenticated by loginViewModel.userAuthSate.collectAsState()
+//            val userAuthState by remember { mutableStateOf(authenticated) }
+
 
             HrAppVTheme(themeState.isDarkTheme) {
-                if (authenticated.auth) {
+                if (!authenticated.auth) {
                     AppLoginWindow(loginViewModel)
 
                 } else {
+//                    LifecycleController(lifecycle, globalWindowState)
+
                     AppMainWindow(themeState, authenticated) { loginViewModel.logOut() }
 
                 }
@@ -174,7 +178,11 @@ class MainActivity : Activity() {
             title = R.string.LOGIN,
             icon = painterResource("drawables/logo.png")
         ) {
-            LoginScreen(loginViewModel)
+            Surface(
+                modifier = Modifier.background(color = MaterialTheme.colors.background)
+            ) {
+                LoginScreen(loginViewModel)
+            }
         }
     }
 
@@ -186,16 +194,13 @@ class MainActivity : Activity() {
     ) {
         val screenSize = Toolkit.getDefaultToolkit().screenSize
         val globalWindowState = rememberWindowState(
-          //  placement = WindowPlacement.Maximized,
-           // position = WindowPosition(Alignment.Center),
-//            width = Dp.screenWidth// Dp.toPx(Screen.width.toDp())//1024.dp,
-//            height =Dp.screenHeight // Dp.toPx(Screen.height.toDp())//600.dp,
             width = (screenSize.width).dp, //*.90
-            height = (screenSize.height*.96).dp,
-              position = WindowPosition(
+            height = (screenSize.height * .96).dp,
+            position = WindowPosition(
                 y = 0.dp,
                 x = 0.dp
-        ))
+            )
+        )
         Window(
             onCloseRequest = {
 //                SpringApplication.exit(applicationContext)
@@ -216,11 +221,16 @@ class MainActivity : Activity() {
                     AppWindowTitleBar(
                         userState.username,
                         globalWindowState,
-                        themeState
-                    ) {
-                        exitApplication()
-                    }
-                    AppMainContainer(userState,globalWindowState , onLogOut)
+                        themeState,
+                        onLogout = {
+                            onLogOut()
+//                            exitApplication()
+                        },
+                        onClose = {
+                            exitApplication()
+                        }
+                    )
+                    AppMainContainer(userState, globalWindowState, onLogOut)
                 }
             }
 //            }
@@ -230,29 +240,30 @@ class MainActivity : Activity() {
 
     @Composable
     fun AppMainContainer(authenticated: UserAuthSate, globalWindowState: WindowState, onLogOut: () -> Unit) {
-        AppNavigationHost(authenticated,globalWindowState,onLogOut)
+        AppNavigationHost(authenticated, globalWindowState, onLogOut)
 
     }
 
     @OptIn(ExperimentalDecomposeApi::class)
     @Composable
     fun AppNavigationHost(authenticated: UserAuthSate, globalWindowState: WindowState, onLogOut: () -> Unit) {
-        val mainViewModel = appComponent.getMainViewModel()
-        LifecycleController(lifecycle, globalWindowState)
+//        val mainViewModel = appComponent.getMainViewModel()
+
 //        root.render()
 //        MainScreen2(//component = root,
 //             userAuthSate = authenticated, content = {
 ////            rememberRootComponent(factory = { NavHostComponent(authenticated, it) })
 //        root.render()
 //        })
+        val root = NavHostComponent(DefaultComponentContext(lifecycle))
+        LifecycleController(lifecycle, globalWindowState)
+
         root.render()
-        root.logout(onLogOut)
+//        root.logout(onLogOut)
 
     }
 
 }
-
-
 
 
 private inline fun <T : Any> runOnMainThreadBlocking(crossinline block: () -> T): T {

@@ -22,6 +22,7 @@ import compose.icons.fontawesomeicons.Regular
 import compose.icons.fontawesomeicons.Solid
 import compose.icons.fontawesomeicons.regular.WindowClose
 import compose.icons.fontawesomeicons.regular.WindowMaximize
+import compose.icons.fontawesomeicons.solid.DoorOpen
 import compose.icons.fontawesomeicons.solid.Moon
 import compose.icons.fontawesomeicons.solid.Sun
 import compose.icons.fontawesomeicons.solid.UserCircle
@@ -29,10 +30,10 @@ import compose.icons.fontawesomeicons.solid.UserCircle
 @Composable
 fun WindowScope.AppWindowTitleBar(
     userName: String,
-
     windowState: WindowState,
     themeState: AppThemeState,
-    onClose: () -> Unit
+    onLogout: () -> Unit,
+    onClose: () -> Unit,
 ) {
     WindowDraggableArea(
         modifier = Modifier.fillMaxWidth()
@@ -50,6 +51,7 @@ fun WindowScope.AppWindowTitleBar(
 
                 DarkModeButton(themeState)
                 Spacer(modifier = Modifier.width(8.dp))
+
                 Card(
                     shape = RoundedCornerShape(10.dp),
                     modifier = Modifier.padding(5.dp)
@@ -75,6 +77,8 @@ fun WindowScope.AppWindowTitleBar(
                         )
                     }
                 }
+                LogoutButton(onLogout)
+                Spacer(modifier = Modifier.width(8.dp))
 
             }
         }
@@ -120,6 +124,44 @@ private fun DarkModeButton(themeState: AppThemeState) {
 //
 //    }
 }
+
+@OptIn(ExperimentalMaterialApi::class)
+@Composable
+private fun LogoutButton(onLogout: () -> Unit) {
+
+    Card(
+        onClick = {
+            onLogout()
+        },
+        modifier = Modifier
+
+            .fillMaxHeight()
+            .aspectRatio(1f)
+            .padding(5.dp),
+        shape = CircleShape
+    ) {
+        Icon(
+            imageVector = FontAwesomeIcons.Solid.DoorOpen ,
+            contentDescription = null,
+            modifier = Modifier
+                .padding(4.dp)
+                .size(24.dp),
+//            tint = Color.DarkGray,
+        )
+    }
+//    IconButton(
+//        onClick = {
+//            themeState.isDarkTheme = !themeState.isDarkTheme
+//        },
+//        modifier = Modifier.background(
+//            MaterialTheme.colors.onPrimary,
+//            CircleShape
+//        ).size(26.dp)
+//    ) {
+//
+//    }
+}
+
 
 @Composable
 private fun WindowOptions(

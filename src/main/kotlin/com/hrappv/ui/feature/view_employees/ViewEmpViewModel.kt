@@ -37,16 +37,15 @@ class ViewEmpViewModel @Inject constructor(
 
 
 
-    suspend fun getEmployees(name: String) {
+     fun getEmployees(name: String) {
         launchOnIO{
             _EmpResults.value = LCE.LOADING
-//        var n = ""
-//        val queries = queries.collect{
-//            n = it
-//            println(it.toString())
+        var n = ""
+         queries.collect{
+            n = it
+            println(it.toString())
 //            myRepo.viewEmployees.getEmployeeByName("%$n%")
-//        }
-            val data = myRepo.viewEmployees.getEmployeeByName("%$name%")
+            val data = myRepo.viewEmployees.getEmployeeByName("%$n%")
             println(data.toString())
 
             if (data.isEmpty()) {
@@ -54,6 +53,8 @@ class ViewEmpViewModel @Inject constructor(
 
             } else
                 _EmpResults.value = LCE.CONTENT(data)
+        }
+
 //        println(data.toString())
         }
     }

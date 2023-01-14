@@ -3,10 +3,7 @@ package com.hrappv.ui.feature.add_employe
 import androidx.compose.desktop.ui.tooling.preview.Preview
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.clickable
-import androidx.compose.foundation.layout.Box
-import androidx.compose.foundation.layout.Column
-import androidx.compose.foundation.layout.ColumnScope
-import androidx.compose.foundation.layout.fillMaxSize
+import androidx.compose.foundation.layout.*
 import androidx.compose.material.*
 import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
@@ -15,11 +12,13 @@ import androidx.compose.ui.draw.alpha
 import androidx.compose.ui.graphics.painter.Painter
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.text.input.TextFieldValue
+import androidx.compose.ui.unit.dp
 import com.github.lgooddatepicker.components.DatePicker
 import com.hrappv.ui.value.HrAppVTheme
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.withContext
 import java.io.IOException
+import java.time.format.DateTimeFormatter
 
 
 @Composable
@@ -28,27 +27,41 @@ fun AddEmployeeScreen(
 ) {
     val formState = remember { mutableStateOf(EmployeeFormState()) }
 
-    Column(modifier = Modifier.fillMaxSize(), horizontalAlignment = Alignment.CenterHorizontally) {
+    Column(
+        modifier = Modifier.fillMaxSize(),
+        horizontalAlignment = Alignment.CenterHorizontally,
+        verticalArrangement = Arrangement.Center
+    ) {
+        Spacer(modifier = Modifier.height(8.dp))
+
         TextField(
             value = formState.value.emp_id,
             onValueChange = { formState.value.emp_id = it },
             label = { Text("Employee ID") }
         )
+        Spacer(modifier = Modifier.height(8.dp))
+
         TextField(
             value = formState.value.fname,
             onValueChange = { formState.value.fname = it },
             label = { Text("First Name") }
         )
+        Spacer(modifier = Modifier.height(8.dp))
+
         TextField(
             value = formState.value.totaldays,
             onValueChange = { formState.value.totaldays = it },
             label = { Text("Total Days") }
         )
+        Spacer(modifier = Modifier.height(8.dp))
+
         TextField(
             value = formState.value.bith_day,
             onValueChange = { formState.value.bith_day = it },
             label = { Text("Birth Day") }
         )
+        Spacer(modifier = Modifier.height(8.dp))
+
 //           DatePicker(
 //            selectedDate = formState.value.bith_day,
 //            onDateSelected = { formState.value.bith_day = it }
@@ -58,32 +71,43 @@ fun AddEmployeeScreen(
             onValueChange = { formState.value.salary = it },
             label = { Text("Salary") }
         )
+        Spacer(modifier = Modifier.height(8.dp))
+
         TextField(
             value = formState.value.vacanition,
             onValueChange = { formState.value.vacanition = it },
             label = { Text("Vacation Days") }
         )
+        Spacer(modifier = Modifier.height(8.dp))
+
         TextField(
             value = formState.value.vbalance,
             onValueChange = { formState.value.vbalance = it },
             label = { Text("Vacation Balance") }
         )
+        Spacer(modifier = Modifier.height(8.dp))
+
         TextField(
             value = formState.value.bdl_balance,
             onValueChange = { formState.value.bdl_balance = it },
             label = { Text("Borrowed Leave Balance") }
         )
+        Spacer(modifier = Modifier.height(8.dp))
+
         TextField(
             value = formState.value.depart_id,
             onValueChange = { formState.value.depart_id = it },
             label = { Text("Department ID") }
         )
+        Spacer(modifier = Modifier.height(8.dp))
+
 
 //         DropdownMenu(
 //            selectedOption = formState.value.depart_id,
 //            onSelectedOptionChange = { formState.value.depart_id = it },
 //            options = listOf("Option 1", "Option 2", "Option 3")
 //        )
+        Spacer(modifier = Modifier.height(8.dp))
 
         Button(onClick = {
             // Insert the new employee into the database here
@@ -143,6 +167,7 @@ fun FavoriteCollectionCardPreview() {
 //            textState.value = TextFieldValue(formattedDate)
 //        }
 //    }
+//
 //    Column(modifier = Modifier.padding(16.dp)) {
 //        ReadonlyTextField(
 //            value = textState.value,
@@ -156,6 +181,7 @@ fun FavoriteCollectionCardPreview() {
 //        )
 //    }
 //}
+
 //
 //
 ////

@@ -472,7 +472,7 @@ fun NavMenu(
 //                Spacer(modifier = modifier.height(16.dp))
                   NavigationMenuItem(
                     selected = activeComponent is HomeComponent,
-                    modifier = modifier,
+                    modifier = modifier.width(IntrinsicSize.Max),
                     icon = Icons.Default.Home,
                     label = "Home",
                     isMenuPressed = isMenuPressed
