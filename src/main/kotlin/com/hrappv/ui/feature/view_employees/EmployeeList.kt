@@ -237,6 +237,7 @@ fun ContentUI(data: List<GetEmployeeByName>) {
         .fillMaxWidth()
         .systemBarsPadding(),
     columns = GridCells.Fixed(7),
+    //columns = GridCells.Adaptive(minSize = 128.dp)
     contentPadding = PaddingValues(horizontal = 16.dp, vertical = 16.dp),
     verticalArrangement = Arrangement.spacedBy(8.dp),
     horizontalArrangement = Arrangement.spacedBy(8.dp)
@@ -299,7 +300,8 @@ fun EmployeeCard(employee: GetEmployeeByName) {
         backgroundColor =
         Color.LightGray,
 //        .cardColors(containerColor = MaterialTheme.colors.primary)
-        modifier = Modifier.padding(vertical = 4.dp, horizontal = 8.dp),
+        modifier = Modifier.padding(vertical = 4.dp, horizontal = 8.dp).animateItemPlacement(tween(durationMillis = 250)
+),
     ) {
         EmployeeItem(employee)
         EmployeeItem2(employee)
