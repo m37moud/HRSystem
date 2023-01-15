@@ -15,6 +15,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.semantics.Role.Companion.Image
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.layout.*
+import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.material.*
 import androidx.compose.runtime.*
 import androidx.compose.ui.ExperimentalComposeUiApi
@@ -31,12 +32,13 @@ import androidx.compose.ui.text.input.PasswordVisualTransformation
 //import compose.icons.fontawesomeicons.solid.Key
 //import compose.icons.fontawesomeicons.solid.User
 import androidx.compose.ui.input.key.key
+import androidx.compose.ui.text.input.ImeAction
+import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.window.application
 import compose.icons.FontAwesomeIcons
 import compose.icons.fontawesomeicons.Solid
 import compose.icons.fontawesomeicons.solid.Key
 import compose.icons.fontawesomeicons.solid.User
-
 
 
 @Composable
@@ -66,7 +68,7 @@ fun LoginScreen(viewModel: LoginViewModel) {
         LoginForm(viewModel)
 
 //        val error by viewModel.userAuthSate.collectAsState()
-        val error= viewModel.userAuthSate.value.error
+        val error = viewModel.userAuthSate.value.error
         if (!error.isNullOrEmpty()) {
             Spacer(modifier = Modifier.height(15.dp))
             Text(
@@ -101,7 +103,12 @@ private fun LoginForm(viewModel: LoginViewModel) {
                 contentDescription = null
             )
         },
-        modifier = Modifier.testTag("username")
+        modifier = Modifier.testTag("username"),
+        keyboardOptions = KeyboardOptions(
+            autoCorrect = true,
+            keyboardType = KeyboardType.Email,
+            imeAction = ImeAction.Next
+        )
     )
     Spacer(modifier = Modifier.height(8.dp))
     OutlinedTextField(
@@ -121,6 +128,7 @@ private fun LoginForm(viewModel: LoginViewModel) {
                 contentDescription = null
             )
         },
+
         visualTransformation = PasswordVisualTransformation(),
         modifier = Modifier.onKeyEvent {
             if (it.key == Key.Enter) {
@@ -129,8 +137,14 @@ private fun LoginForm(viewModel: LoginViewModel) {
             } else {
                 false
             }
-        }.testTag("password")
-    )
+        }.testTag("password"),
+        keyboardOptions = KeyboardOptions(
+            autoCorrect = false,
+            keyboardType = KeyboardType.Password,
+            imeAction = ImeAction.Next
+        ),
+
+        )
     Spacer(modifier = Modifier.height(8.dp))
 
     Button(

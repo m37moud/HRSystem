@@ -26,7 +26,11 @@ JOIN Department ON employe.depart_id = Department.depart_id
 WHERE fname LIKE ?  ; --'%'+:name+'%'
 
 
-
+getEmployeeByID:
+SELECT employe.emp_id,employe.fname, Department.department AS department_name,employe.totaldays,employe.bith_day,employe.salary,employe.vacanition,employe.vbalance,employe.bdl_balance
+FROM employe
+JOIN Department ON employe.depart_id = Department.depart_id
+WHERE emp_id = :id;
 
 
 getEmployeesByDepartment:

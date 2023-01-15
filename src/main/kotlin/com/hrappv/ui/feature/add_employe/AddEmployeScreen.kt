@@ -5,6 +5,9 @@ import androidx.compose.foundation.Image
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.*
 import androidx.compose.material.*
+import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.outlined.ArrowDropDown
+import androidx.compose.material.icons.outlined.KeyboardArrowUp
 import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
@@ -47,12 +50,9 @@ fun AddEmployeeScreen(
             label = { Text("First Name") }
         )
         Spacer(modifier = Modifier.height(8.dp))
+        TextFieldMenu()
 
-        TextField(
-            value = formState.value.totaldays,
-            onValueChange = { formState.value.totaldays = it },
-            label = { Text("Total Days") }
-        )
+
         Spacer(modifier = Modifier.height(8.dp))
 
         TextField(
@@ -90,15 +90,20 @@ fun AddEmployeeScreen(
         TextField(
             value = formState.value.bdl_balance,
             onValueChange = { formState.value.bdl_balance = it },
-            label = { Text("Borrowed Leave Balance") }
+            label = { Text("bdl_balance") }
         )
         Spacer(modifier = Modifier.height(8.dp))
-
         TextField(
-            value = formState.value.depart_id,
-            onValueChange = { formState.value.depart_id = it },
-            label = { Text("Department ID") }
+            value = formState.value.totaldays,
+            onValueChange = { formState.value.totaldays = it },
+            label = { Text("Total Days") }
         )
+
+//        TextField(
+//            value = formState.value.depart_id,
+//            onValueChange = { formState.value.depart_id = it },
+//            label = { Text("Department ID") }
+//        )
         Spacer(modifier = Modifier.height(8.dp))
 
 
@@ -129,34 +134,35 @@ fun FavoriteCollectionCardPreview() {
 }
 
 
-//
-//@Composable
-//fun ReadonlyTextField(
-//    value: TextFieldValue,
-//    onValueChange: (TextFieldValue) -> Unit,
-//    modifier: Modifier = Modifier,
-//    onClick: () -> Unit,
-//    label: @Composable () -> Unit
-//) {
-//    Box {
-//        TextField(
-//            value = value,
-//            onValueChange = onValueChange,
-//            modifier = modifier,
-//            label = label
-//        )
-//        Box(
-//            modifier = Modifier
-//                .matchParentSize()
-//                .alpha(0f)
-//                .clickable(onClick = onClick),
-//        )
-//    }
-//}
-//
+
+@Composable
+fun ReadonlyTextField(
+    value: TextFieldValue,
+    onValueChange: (TextFieldValue) -> Unit,
+    modifier: Modifier = Modifier,
+    onClick: () -> Unit,
+    label: @Composable () -> Unit
+) {
+    Box {
+        TextField(
+            value = value,
+            onValueChange = onValueChange,
+            modifier = modifier,
+            label = label
+        )
+        Box(
+            modifier = Modifier
+                .matchParentSize()
+                .alpha(0f)
+                .clickable(onClick = onClick),
+        )
+    }
+}
+
 //
 //@Composable
 //fun MyDateField() {
+//    val dialogState = rememberMaterialDialogState()
 //    val dialog = MaterialDialog()
 //    val textState = remember { mutableStateOf(TextFieldValue()) }
 //    dialog.build {
@@ -299,84 +305,74 @@ fun FavoriteCollectionCardPreview() {
 //}
 ////
 //
-//
-////Replace the MyUI() with the following code:
-////OptIn(ExperimentalMaterialApi::class)
-////@Composable
-////fun MyUI() {
-////
-////    val contextForToast = LocalContext.current.applicationContext
-////
-////    val listItems = arrayOf("Favorites", "Options", "Settings", "Share")
-////
-////    var selectedItem by remember {
-////        mutableStateOf(listItems[0])
-////    }
-////
-////    var expanded by remember {
-////        mutableStateOf(false)
-////    }
-////}
-//
-//
 //// final code
-////OptIn(ExperimentalMaterialApi::class)
-////@Composable
-////fun MyUI() {
-////
-////    val contextForToast = LocalContext.current.applicationContext
-////
-////    val listItems = arrayOf("Favorites", "Options", "Settings", "Share")
-////
-////    var selectedItem by remember {
-////        mutableStateOf(listItems[0])
-////    }
-////
-////    var expanded by remember {
-////        mutableStateOf(false)
-////    }
-////
-////    // the box
-////    ExposedDropdownMenuBox(
-////        expanded = expanded,
-////        onExpandedChange = {
-////            expanded = !expanded
-////        }
-////    ) {
-////
-////        // text field
-////        TextField(
-////            value = selectedItem,
-////            onValueChange = {},
-////            readOnly = true,
-////            label = { Text(text = "Label") },
-////            trailingIcon = {
-////                ExposedDropdownMenuDefaults.TrailingIcon(
-////                    expanded = expanded
-////                )
-////            },
-////            colors = ExposedDropdownMenuDefaults.textFieldColors()
-////        )
-////
-////        // menu
-////        ExposedDropdownMenu(
-////            expanded = expanded,
-////            onDismissRequest = { expanded = false }
-////        ) {
-////            listItems.forEach { selectedOption ->
-////                // menu item
-////                DropdownMenuItem(onClick = {
-////                    selectedItem = selectedOption
-////                    Toast.makeText(contextForToast, selectedOption, Toast.LENGTH_SHORT).show()
-////                    expanded = false
-////                }) {
-////                    Text(text = selectedOption)
-////                }
-////            }
-////        }
-////    }
-////}
-////
+@Composable
+fun TextFieldMenu() {
+
+//    val contextForToast = LocalContext.current.applicationContext
+
+    val listItems = arrayOf("Favorites", "Options", "Settings", "Share")
+
+    var selectedItem by remember {
+        mutableStateOf(listItems[0])
+    }
+
+    var expanded by remember {
+        mutableStateOf(false)
+    }
+
+    // the box
+//    ExposedDropdownMenuBox(
+//        expanded = expanded,
+//        onExpandedChange = {
+//            expanded = !expanded
+//        }
+//    ) {
+
+        // text field
+        TextField(
+
+            value = selectedItem,
+            onValueChange = {},
+            readOnly = true,
+            label = { Text(text = "Department") },
+            trailingIcon = {
+               IconButton(onClick = {
+                   expanded = !expanded
+               }){
+                   Icon(imageVector =
+
+                   if (expanded) Icons.Outlined.KeyboardArrowUp else Icons.Outlined.ArrowDropDown ,
+                       contentDescription =
+
+                       if (expanded) "show less" else "show more"
+                   )
+               }
+            },
+//            colors = DropdownMenuDefaults.textFieldColors()
+        modifier = Modifier.clickable {
+            expanded = !expanded
+        }
+        )
+
+        // menu
+        DropdownMenu(
+            expanded = expanded,
+            onDismissRequest = { expanded = false }
+        ) {
+            listItems.forEach { selectedOption ->
+                // menu item
+                DropdownMenuItem(onClick = {
+                    selectedItem = selectedOption
+                    expanded = false
+                }) {
+                    Text(text = selectedOption)
+                }
+            }
+        }
+//    }
+}
+
 //
 //
 //

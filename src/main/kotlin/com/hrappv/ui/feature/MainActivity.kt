@@ -72,6 +72,8 @@ class MainActivity : Activity() {
     override fun onCreate() { //decompose-desktop-example-master
         super.onCreate()
         loginViewModel = appComponent.getLoginViewModel()
+        lifecycle = LifecycleRegistry()
+        root  = NavHostComponent(DefaultComponentContext(lifecycle))
 
 
 
@@ -84,11 +86,10 @@ class MainActivity : Activity() {
             val themeState = rememberAppThemeState()
 
             val authenticated by loginViewModel.userAuthSate.collectAsState()
-//            val userAuthState by remember { mutableStateOf(authenticated) }
 
 
             HrAppVTheme(themeState.isDarkTheme) {
-                if (authenticated.auth) {
+                if (!authenticated.auth) {
                     AppLoginWindow(loginViewModel)
 
                 } else {
@@ -239,8 +240,7 @@ class MainActivity : Activity() {
 ////            rememberRootComponent(factory = { NavHostComponent(authenticated, it) })
 //        root.render()
 //        })
-        lifecycle = LifecycleRegistry()
-        root  = NavHostComponent(DefaultComponentContext(lifecycle))
+
         LifecycleController(lifecycle, globalWindowState)
 
         root.render()

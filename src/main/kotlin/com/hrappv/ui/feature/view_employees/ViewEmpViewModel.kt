@@ -4,6 +4,7 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.collectAsState
 import com.hrappv.Employe
 import com.hrappv.GetAllEmployees
+import com.hrappv.GetEmployeeByID
 import com.hrappv.GetEmployeeByName
 import com.hrappv.data.models.Employee
 import com.hrappv.data.models.EmployeeResult
@@ -24,9 +25,17 @@ class ViewEmpViewModel @Inject constructor(
     private val _EmpResults: MutableStateFlow<LCE<List<GetEmployeeByName>>> = MutableStateFlow(LCE.NOACTION)
     val empResults: StateFlow<LCE<List<GetEmployeeByName>>> = _EmpResults
 
+    private val _employee: MutableStateFlow<GetEmployeeByID> =
+        MutableStateFlow(GetEmployeeByID(1, "", "", 1, "", 0.0f, 1, 1, 1))
+    val employee: StateFlow<GetEmployeeByID> = _employee
+
 
     private val _queries = MutableStateFlow("")
     val queries: StateFlow<String> = _queries
+
+
+    private val _delete = MutableStateFlow(false)
+    val delete: StateFlow<Boolean> = _delete
 
     private val _allEmps: MutableStateFlow<LCE<List<GetAllEmployees>>> = MutableStateFlow(LCE.NOACTION)
     val allEmployees: StateFlow<LCE<List<GetAllEmployees>>> = _allEmps
@@ -36,26 +45,38 @@ class ViewEmpViewModel @Inject constructor(
     val backToMain: StateFlow<Boolean> = _isBackPressed
 
 
-
-     fun getEmployees(name: String) {
-        launchOnIO{
+    fun getEmployees(name: String) {
+        launchOnIO {
             _EmpResults.value = LCE.LOADING
-        var n = ""
-         queries.collect{
-            n = it
-            println(it.toString())
+            var n = ""
+            queries.collect {
+                n = it
+                println(it.toString())
 //            myRepo.viewEmployees.getEmployeeByName("%$n%")
-            val data = myRepo.viewEmployees.getEmployeeByName("%$n%")
-            println(data.toString())
+                val data = myRepo.viewEmployees.getEmployeeByName("%$n%")
+                println(data.toString())
 
-            if (data.isEmpty()) {
-                _EmpResults.value = LCE.ERROR("Employee Not Found")
+                if (data.isEmpty()) {
+                    _EmpResults.value = LCE.ERROR("Employee Not Found")
 
-            } else
-                _EmpResults.value = LCE.CONTENT(data)
-        }
+                } else
+                    _EmpResults.value = LCE.CONTENT(data)
+            }
 
 //        println(data.toString())
+        }
+    }
+
+    fun deleteEmployee(id: String) {
+        launchOnIO {
+            val result = myRepo.viewEmployees.deleteEmployee(id.toLong())
+            _delete.emit(true)
+        }
+    }
+    fun getSingleEmployee(id: String) {
+        launchOnIO {
+            val result = myRepo.viewEmployees.getEmployeeByID(id.toLong())
+            _employee.emit(result!!)
         }
     }
 
@@ -65,7 +86,7 @@ class ViewEmpViewModel @Inject constructor(
         _allEmps.value = LCE.CONTENT(data)
     }
 
-    fun getQueries(queries : String){
+    fun getQueries(queries: String) {
         _queries.value = queries
     }
 

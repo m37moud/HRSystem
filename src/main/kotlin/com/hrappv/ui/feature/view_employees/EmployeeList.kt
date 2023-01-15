@@ -54,89 +54,116 @@ var empNumber = 0
 fun ViewEmpScreen(viewEmployee: ViewEmpViewModel) {
     val scope = rememberCoroutineScope()
     val textState = remember { mutableStateOf(TextFieldValue("")) }
+    var deletedEmpName = remember { mutableStateOf("-") }
 
 
     val empName = textState.value.text
     viewEmployee.getQueries(empName)
     val employees = viewEmployee.empResults.collectAsState()
+    val deleteEmployee = viewEmployee.employee.collectAsState()
+    deletedEmpName.value = deleteEmployee.value.fname
+
 
     var selectedGrid by remember { mutableStateOf(true) }
     var selectedMenu by remember { mutableStateOf(false) }
 
-    Column(modifier = Modifier.padding(6.dp), horizontalAlignment = Alignment.CenterHorizontally) {
-        Card(
-            modifier = Modifier.fillMaxWidth().padding(top = 12.dp, bottom = 12.dp),
-            elevation = 10.dp,
-            backgroundColor = MaterialTheme.colors.onBackground
-        ) {
-            Row {
-                Spacer(Modifier.width(12.dp))
-                Card(
-                    modifier = Modifier.padding(  8.dp),
-                    elevation = 10.dp,
+    val scaffoldState = rememberScaffoldState()
+
+    val deleteEmpState = viewEmployee.delete.collectAsState()
+    if(deleteEmpState.value){
+        scope.launch { scaffoldState.snackbarHostState.showSnackbar("Employee ${deletedEmpName.value} deleted Sucssessful") }
+    }
+    Scaffold(
+        modifier = Modifier.fillMaxSize(),
+        scaffoldState = scaffoldState
+    ) {
+        Column(modifier = Modifier.padding(6.dp), horizontalAlignment = Alignment.CenterHorizontally) {
+            Card(
+                modifier = Modifier.fillMaxWidth().padding(top = 12.dp, bottom = 12.dp),
+                elevation = 10.dp,
+                backgroundColor = MaterialTheme.colors.onBackground
+            ) {
+                Row {
+                    Spacer(Modifier.width(12.dp))
+                    Card(
+                        modifier = Modifier.padding(8.dp),
+                        elevation = 10.dp,
 //                    backgroundColor = MaterialTheme.colors.onBackground
-                )
-                {
-                    Text(text = "Employees Number : ${empNumber.toString()}", modifier = Modifier.padding(10.dp))
-                }
-
-            }
-
-        }
-        Box(
-            modifier = Modifier
-                .fillMaxWidth()
-                .padding(start = 8.dp , end = 8.dp)
-        ) {
-
-
-            SearchView(modifier = Modifier.align(Alignment.CenterStart),
-                state = textState, onpressEnterSearch = {
-//                search(viewEmployee, empName)
-                    scope.launch(Dispatchers.IO) {
-                        viewEmployee.getEmployees(empName)
+                    )
+                    {
+                        Text(text = "Employees Number : ${empNumber.toString()}", modifier = Modifier.padding(10.dp))
                     }
-                }) {
+
+                }
+
+            }
+            Box(
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .padding(start = 8.dp, end = 8.dp)
+            ) {
+
+
+                SearchView(modifier = Modifier.align(Alignment.CenterStart),
+                    state = textState, onpressEnterSearch = {
+//                search(viewEmployee, empName)
+                            viewEmployee.getEmployees(empName)
+                    }) {
 //                search(viewEmployee, "")
-                scope.launch(Dispatchers.IO) {
-                    viewEmployee.getEmployees("")
+                        viewEmployee.getEmployees("")
                 }
+
+
+
+
+
+
+                selectPreviewBtn(
+                    Modifier.align(Alignment.CenterEnd),
+                    selectGrid = selectedGrid,
+                    selectMenu = selectedMenu,
+                    selectedGrid = {
+                        selectedGrid = true
+                        selectedMenu = false
+                    },
+                    selectedMenu = {
+                        selectedMenu = true
+                        selectedGrid = false
+                    }
+                )
+
             }
 
 
 
+            when (val state = employees.value) {
+                is LCE.LOADING -> LoadingUI()
+                is LCE.CONTENT -> {
+                    ContentUI(
+                        state.data,
+                        selectedGrid = selectedGrid,
+                        selectedMenu = selectedMenu,
+                        onDeleteClick = { id ->
+                            try{
 
+//                                viewEmployee.getSingleEmployee(id)
+                                viewEmployee.deleteEmployee(id)
 
+                            }catch (exception : Exception){
+                                scope.launch { scaffoldState.snackbarHostState.showSnackbar("Delete failed") }
+                                println(exception.message)
 
-            selectPreviewBtn(
-                Modifier.align(Alignment.CenterEnd),
-                selectGrid = selectedGrid,
-                selectMenu = selectedMenu,
-                selectedGrid = {
-                    selectedGrid = true
-                    selectedMenu = false
-                },
-                selectedMenu = {
-                    selectedMenu = true
-                    selectedGrid = false
+                            }
+                        }
+                    )
                 }
-            )
 
-        }
-
-
-
-        when (val state = employees.value) {
-            is LCE.LOADING -> LoadingUI()
-            is LCE.CONTENT -> {
-                ContentUI(state.data, selectedGrid = selectedGrid, selectedMenu = selectedMenu)
+                is LCE.ERROR -> ErrorUI(state.error)
+                else -> {}
             }
-
-            is LCE.ERROR -> ErrorUI(state.error)
-            else -> {}
-        }
 
 //        ItemList(state = textState, viewEmployee)
+        }
     }
 }
 
@@ -438,9 +465,14 @@ fun SearchView(
 fun ContentUI(
     data: List<GetEmployeeByName>,
     selectedGrid: Boolean,
-    selectedMenu: Boolean
-) {
+    selectedMenu: Boolean,
+    onDeleteClick: (id: String) -> Unit,
+
+
+    ) {
     empNumber = data.size
+
+
 
     if (selectedGrid) {
         LazyVerticalGrid(
@@ -459,7 +491,7 @@ fun ContentUI(
                     Modifier.animateItemPlacement(
                         tween(durationMillis = 250)
                     ),
-                    employee
+                    employee, onDeleteClick
                 )
 
             }
@@ -555,13 +587,14 @@ private fun Header(modifier: Modifier = Modifier) {
 fun EmployeeCardGrid(
     modifier: Modifier = Modifier,
     employee: GetEmployeeByName,
+    onDeleteClick: (id: String) -> Unit,
 ) {
     Card(
         modifier = modifier.size(width = 150.dp, height = 350.dp)
             .padding(vertical = 4.dp, horizontal = 8.dp)
 
     ) {
-        EmployeeItemGrid(employee)
+        EmployeeItemGrid(employee, onDeleteClick)
     }
 
 }
@@ -584,7 +617,14 @@ fun EmployeeCardMenu(
 }
 
 @Composable
-fun EmployeeItemGrid(employee: GetEmployeeByName) {
+fun EmployeeItemGrid(employee: GetEmployeeByName, onDeleteClick: (id: String) -> Unit) {
+    var expanded by remember {
+        mutableStateOf(false)
+    }
+
+//    var selectedItem by remember {
+//        mutableStateOf(listItems[0])
+//    }
 
     Column(
         verticalArrangement = Arrangement.SpaceEvenly,
@@ -594,8 +634,33 @@ fun EmployeeItemGrid(employee: GetEmployeeByName) {
 
         Row() {
             Spacer(modifier = Modifier.weight(1f))
+            Column {
+                IconButton(onClick = {
+                    expanded = true
+                })
+                {
+                    Icon(imageVector = Icons.Outlined.MoreVert, contentDescription = null, modifier = Modifier.size(25.dp))
+                }
 
-            Icon(imageVector = Icons.Outlined.MoreVert, contentDescription = null, modifier = Modifier.size(25.dp))
+                Spacer(modifier = Modifier.height(4.dp))
+
+                DropdownMenu(
+                    expanded = expanded,
+                    onDismissRequest = { expanded = false }
+                ) {
+                    // menu item
+                    DropdownMenuItem(onClick = {
+                        onDeleteClick(employee.emp_id.toString())
+                        expanded = false
+                    }) {
+                        Text(text = "Delete")
+                    }
+                }
+
+            }
+
+
+
         }
         Spacer(modifier = Modifier.height(8.dp))
 
@@ -619,7 +684,7 @@ fun EmployeeItemGrid(employee: GetEmployeeByName) {
         }
         Spacer(modifier = Modifier.height(8.dp))
 
-        Card() { Text(text = employee.fname , style = MaterialTheme.typography.h5) }
+        Card() { Text(text = employee.fname, style = MaterialTheme.typography.h5) }
         Spacer(modifier = Modifier.height(8.dp))
 
         Card() { Text(text = employee.department_name) }

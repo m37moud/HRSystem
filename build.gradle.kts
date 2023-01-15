@@ -68,7 +68,8 @@ dependencies {
 
     //material date and time picker 0.2.9 // Latest Stable Library Version: 0.9.0 (Supports Compose 1.2.1)
     implementation("com.vanpra.compose-material-dialogs:datetime:0.2.9")
-
+    implementation("com.vanpra.compose-material-dialogs:core:0.2.9")
+//    implementation("io.github.vanpra.compose-material-dialogs:datetime:0.2.9")
 
 
     // implementation("com.github.ltttttttttttt.ComposeViews:maven_desktop:$version")//this, such as 1.3.4
