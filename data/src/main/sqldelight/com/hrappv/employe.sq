@@ -47,7 +47,7 @@ VALUES (?,?,?,?,?,?,?,?,?,(SELECT id FROM Department WHERE department = ?));
 
 deleteEmployee:
 DELETE FROM employe
-WHERE id = :id;
+WHERE emp_id = ?;
 
 
 --

@@ -37,13 +37,15 @@ class ViewEmpViewModel @Inject constructor(
     private val _delete = MutableStateFlow(false)
     val delete: StateFlow<Boolean> = _delete
 
-    private val _allEmps: MutableStateFlow<LCE<List<GetAllEmployees>>> = MutableStateFlow(LCE.NOACTION)
-    val allEmployees: StateFlow<LCE<List<GetAllEmployees>>> = _allEmps
+//    private val _allEmps: MutableStateFlow<LCE<List<GetAllEmployees>>> = MutableStateFlow(LCE.NOACTION)
+    val allEmployees = myRepo.viewEmployees.getAllEmployees()
 
 
     private val _isBackPressed = MutableStateFlow(false)
     val backToMain: StateFlow<Boolean> = _isBackPressed
 
+    init {
+    }
 
     fun getEmployees(name: String) {
         launchOnIO {
@@ -61,6 +63,8 @@ class ViewEmpViewModel @Inject constructor(
 
                 } else
                     _EmpResults.value = LCE.CONTENT(data)
+
+
             }
 
 //        println(data.toString())
@@ -76,6 +80,7 @@ class ViewEmpViewModel @Inject constructor(
     fun getSingleEmployee(id: String) {
         launchOnIO {
             val result = myRepo.viewEmployees.getEmployeeByID(id.toLong())
+            println(result.toString())
             _employee.emit(result!!)
         }
     }
@@ -83,7 +88,7 @@ class ViewEmpViewModel @Inject constructor(
     fun getAllEmployees() {
         val data = myRepo.viewEmployees.getAllEmployees()
         println(data.toString())
-        _allEmps.value = LCE.CONTENT(data)
+//        _allEmps.value = LCE.CONTENT(data)
     }
 
     fun getQueries(queries: String) {

@@ -7,7 +7,7 @@ import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 
 class AppThemeState {
-    private val themeState: MutableState<Boolean> = mutableStateOf(isSystemInDarkTheme())// false
+    private val themeState: MutableState<Boolean> = mutableStateOf(false)// isSystemInDarkTheme()
     var isDarkTheme: Boolean = false
         get() = themeState.value
         set(value) {

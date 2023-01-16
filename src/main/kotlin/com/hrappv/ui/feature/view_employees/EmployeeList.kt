@@ -56,12 +56,16 @@ var empNumber = 0
 fun ViewEmpScreen(viewEmployee: ViewEmpViewModel) {
     val scope = rememberCoroutineScope()
     val textState = remember { mutableStateOf(TextFieldValue("")) }
+//    val textState =viewEmployee.queries.collectAsState()
     var deletedEmpName = remember { mutableStateOf("-") }
 
 
     val empName = textState.value.text
+//    val empName = textState.value
     viewEmployee.getQueries(empName)
+
     val employees = viewEmployee.empResults.collectAsState()
+//    val allEmployee = viewEmployee.allEmployees.collectAsState(emptyList()).value
     val deleteEmployee = viewEmployee.employee.collectAsState()
     deletedEmpName.value = deleteEmployee.value.fname
 
@@ -162,6 +166,7 @@ fun ViewEmpScreen(viewEmployee: ViewEmpViewModel) {
                 is LCE.CONTENT -> {
                     ContentUI(
                         state.data,
+//                        allEmployee.value,
                         selectedGrid = selectedGrid,
                         selectedMenu = selectedMenu,
                         onDeleteClick = { id ->

@@ -4,7 +4,11 @@ import com.hrappv.*
 import com.hrappv.data.local.datastore.ViewEmpDataSource
 import com.hrappv.data.models.Employee
 import com.hrappv.data.models.Employees
+import com.squareup.sqldelight.runtime.coroutines.asFlow
+import com.squareup.sqldelight.runtime.coroutines.mapToList
 import kotlinx.coroutines.CoroutineDispatcher
+import kotlinx.coroutines.flow.Flow
+import kotlinx.coroutines.flow.asFlow
 import kotlinx.coroutines.withContext
 import javax.inject.Inject
 
@@ -16,8 +20,8 @@ class ViewEmpDataSourceImpl @Inject constructor(
     val queries = hrAppDb.employeQueries
 
 
-    override fun getAllEmployees(): List<GetAllEmployees> {
-        return queries.getAllEmployees().executeAsList()
+    override fun getAllEmployees(): Flow<List<GetAllEmployees>> {
+        return queries.getAllEmployees().asFlow().mapToList()
     }
 
     override suspend fun getEmployeeByName(name: String): List<GetEmployeeByName> {
@@ -27,9 +31,14 @@ class ViewEmpDataSourceImpl @Inject constructor(
     }
 
     override suspend fun deleteEmployee(id: Long) {
-        return withContext(dispatcher) {
+         withContext(dispatcher) {
             try {
-                queries.deleteEmployee(id)
+//              val r = queries.transaction  {
+//                 afterRollback { println("No employee were delete.") }
+//                   afterCommit { println("$ players were delete.") }
+                   queries.deleteEmployee(id)
+//               }
+
 
             } catch (e: Exception) {
                 println("${e.message}")
@@ -39,7 +48,7 @@ class ViewEmpDataSourceImpl @Inject constructor(
 
     override suspend fun getEmployeeByID(id: Long): GetEmployeeByID? {
         return withContext(dispatcher) {
-            queries.getEmployeeByID(id).executeAsOneOrNull()
+            queries. getEmployeeByID(id).executeAsOneOrNull()
 
         }
     }

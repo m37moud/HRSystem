@@ -161,7 +161,7 @@ class Constatnts {
 
                         }
 
-                        val employ = Employees(emp_id = emp[0].toLong(), fname = emp[1], department_name = emp[2])
+                        val employ = Employees(emp_id = emp[0].toLong(), id = emp[0].toLong(), fname = emp[1], department_name = emp[2].toString())
                         empList.add(employ)
 
 

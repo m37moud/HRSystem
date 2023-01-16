@@ -3,11 +3,12 @@ package com.hrappv.data.local.datastore
 import com.hrappv.*
 import com.hrappv.data.models.Employee
 import com.hrappv.data.models.Employees
+import kotlinx.coroutines.flow.Flow
 
 interface ViewEmpDataSource {
 
 
-     fun getAllEmployees(): List<GetAllEmployees>
+     fun getAllEmployees(): Flow<List<GetAllEmployees>>
 
     suspend fun getEmployeeByName(name : String): List<GetEmployeeByName>
 

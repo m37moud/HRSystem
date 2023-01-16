@@ -89,7 +89,7 @@ class MainActivity : Activity() {
 
 
             HrAppVTheme(themeState.isDarkTheme) {
-                if (!authenticated.auth) {
+                if (authenticated.auth) {
                     AppLoginWindow(loginViewModel)
 
                 } else {
