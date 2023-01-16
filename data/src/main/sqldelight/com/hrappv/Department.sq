@@ -4,16 +4,24 @@ CREATE TABLE IF NOT EXISTS Department (
                             UNIQUE,
     department      TEXT DEFAULT "mayorca"
                             NOT NULL,
-    commetion_rate  INTEGER,
-    depart_type     TEXT,
+    commetion_rate  INTEGER DEFAULT "15",
+    depart_type     TEXT DEFAULT "",
     commetion_type  TEXT DEFAULT "fixed",
-    commetion_month TEXT --AS DATE
+    commetion_month TEXT DEFAULT "" --AS DATE
 );
 
 
 
 getAllDepartments:
 SELECT department FROM Department ORDER BY department DESC;
+
+selectRocketById:
+SELECT * FROM Department
+WHERE depart_id = ?;
+
+insertDepartMent:
+INSERT INTO Department
+VALUES(?, ?, ?, ?, ?, ?);
 
 
 

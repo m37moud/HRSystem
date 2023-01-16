@@ -15,4 +15,8 @@ interface ViewEmpDataSource {
 
     suspend fun getEmployeeByID(id:Long) : GetEmployeeByID?
 
+    suspend fun insertEmployee(employee : Employees)
+
+
+
 }

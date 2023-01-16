@@ -25,6 +25,7 @@ repositories {
     google()
     maven { url = uri("https://jitpack.io") }
     maven { url = uri("https://maven.pkg.jetbrains.space/public/p/compose/dev") }
+    maven { url = uri("https://dl.bintray.com/kotlin/kotlin-eap") }
 }
 
 val daggerVersion by extra("2.44.2")
@@ -67,9 +68,16 @@ dependencies {
 
 
     //material date and time picker 0.2.9 // Latest Stable Library Version: 0.9.0 (Supports Compose 1.2.1)
-    implementation("com.vanpra.compose-material-dialogs:datetime:0.2.9")
-    implementation("com.vanpra.compose-material-dialogs:core:0.2.9")
-//    implementation("io.github.vanpra.compose-material-dialogs:datetime:0.2.9")
+//    implementation("com.vanpra.compose-material-dialogs:datetime:0.2.9")//0.8.0
+    //implementation("com.vanpra.compose-material-dialogs:core:0.8.0")
+//    implementation("io.github.vanpra.compose-material-dialogs:datetime:0.6.2")
+//    implementation("com.afollestad.material-dialogs:input:3.3.0")
+
+
+//lottie
+//val lottieVersion = "5.2.0"
+
+  //implementation("com.airbnb.android:lottie-compose:$lottieVersion")
 
 
     // implementation("com.github.ltttttttttttt.ComposeViews:maven_desktop:$version")//this, such as 1.3.4

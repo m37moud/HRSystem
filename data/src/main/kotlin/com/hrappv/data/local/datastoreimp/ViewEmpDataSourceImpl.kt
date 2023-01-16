@@ -28,10 +28,10 @@ class ViewEmpDataSourceImpl @Inject constructor(
 
     override suspend fun deleteEmployee(id: Long) {
         return withContext(dispatcher) {
-            try{
+            try {
                 queries.deleteEmployee(id)
 
-            }catch (e : Exception){
+            } catch (e: Exception) {
                 println("${e.message}")
             }
         }
@@ -44,4 +44,52 @@ class ViewEmpDataSourceImpl @Inject constructor(
         }
     }
 
+    override suspend fun insertEmployee(employee: Employees) {
+        withContext(dispatcher) {
+            queries.insertEmployee(
+                emp_id = employee.emp_id,
+                id = employee.id,
+                fname = employee.fname,
+                totaldays = employee.totaldays,
+                bith_day = employee.bith_day,
+                salary = employee.salary,
+                vacanition = employee.vacanition,
+                vbalance = employee.vbalance,
+                bdl_balance = employee.bdl_balance,
+                department = employee.department_name,
+            )
+        }
+
+    }
+
+    suspend fun InsertMultiEmployee(employees: List<Employees>) {
+        withContext(dispatcher) {
+            queries.transaction {
+                employees.forEach { emp ->
+                    val employee = queries.getEmployeeByID(emp.emp_id)?.executeAsOneOrNull()
+                    if (employee != null) {
+                        insertEmp(emp)
+                    }
+
+                }
+
+            }
+        }
+    }
+
+    private fun insertEmp(employee: Employees) {
+        queries.insertEmployee(
+            emp_id = employee.emp_id,
+            id = employee.id,
+            fname = employee.fname,
+            totaldays = employee.totaldays,
+            bith_day = employee.bith_day,
+            salary = employee.salary,
+            vacanition = employee.vacanition,
+            vbalance = employee.vbalance,
+            bdl_balance = employee.bdl_balance,
+            department = employee.department_name,
+        )
+
+    }
 }

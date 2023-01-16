@@ -1,7 +1,6 @@
 package com.hrappv.ui.feature.add_employe
 
 import androidx.compose.desktop.ui.tooling.preview.Preview
-import androidx.compose.foundation.Image
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.*
 import androidx.compose.material.*
@@ -12,16 +11,13 @@ import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.alpha
-import androidx.compose.ui.graphics.painter.Painter
-import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.text.input.TextFieldValue
 import androidx.compose.ui.unit.dp
-import com.github.lgooddatepicker.components.DatePicker
+import com.hrappv.data.models.Employees
 import com.hrappv.ui.value.HrAppVTheme
 import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.withContext
-import java.io.IOException
-import java.time.format.DateTimeFormatter
+import kotlinx.coroutines.launch
+import util.Constatnts.Companion.excelImporter
 
 
 @Composable
@@ -30,81 +26,108 @@ fun AddEmployeeScreen(
 ) {
     val formState = remember { mutableStateOf(EmployeeFormState()) }
 
-    Column(
-        modifier = Modifier.fillMaxSize(),
-        horizontalAlignment = Alignment.CenterHorizontally,
-        verticalArrangement = Arrangement.Center
-    ) {
-        Spacer(modifier = Modifier.height(8.dp))
+    val path by remember { mutableStateOf("D:\\desk\\شغل لعهد\\tutorial audting\\2022\\شهراغسطس8\\8\\8") }
+    val showPathDialog by remember { mutableStateOf(false) }
+    val scope = rememberCoroutineScope()
 
-        TextField(
-            value = formState.value.emp_id,
-            onValueChange = { formState.value.emp_id = it },
-            label = { Text("Employee ID") }
-        )
-        Spacer(modifier = Modifier.height(8.dp))
-
-        TextField(
-            value = formState.value.fname,
-            onValueChange = { formState.value.fname = it },
-            label = { Text("First Name") }
-        )
-        Spacer(modifier = Modifier.height(8.dp))
-        TextFieldMenu()
+    var employee : List<Employees> = emptyList()
 
 
-        Spacer(modifier = Modifier.height(8.dp))
+    Surface {
+        Column(
+            modifier = Modifier.fillMaxSize(),
+            horizontalAlignment = Alignment.CenterHorizontally,
+            verticalArrangement = Arrangement.Center
+        ) {
+            Card(Modifier.fillMaxWidth(), elevation = 8.dp) {
+                Row(modifier = Modifier.align(Alignment.End))
+                {
 
-        TextField(
-            value = formState.value.bith_day,
-            onValueChange = { formState.value.bith_day = it },
-            label = { Text("Birth Day") }
-        )
-        Spacer(modifier = Modifier.height(8.dp))
+//                    if (showPathDialog) {
+//                        FileDialog(title = "Select Folder", isLoad = true) {
+//                            path.value = it
+//                        }
+//                    }
+                    Button(onClick = {
+                        scope.launch(Dispatchers.IO) {
+                            employee =  excelImporter(path)
+                        }
+                    }) {
+                        Text(text = "Import From Excel")
+                    }
+                }
+            }
+
+            Spacer(modifier = Modifier.height(8.dp))
+
+            TextField(
+                value = formState.value.emp_id,
+                onValueChange = { formState.value.emp_id = it },
+                label = { Text("Employee ID") }
+            )
+            Spacer(modifier = Modifier.height(8.dp))
+
+            TextField(
+                value = formState.value.fname,
+                onValueChange = { formState.value.fname = it },
+                label = { Text("First Name") }
+            )
+            Spacer(modifier = Modifier.height(8.dp))
+            TextFieldMenu(Modifier.weight(1f))
+
+
+            Spacer(modifier = Modifier.height(8.dp))
+
+            TextField(
+                value = formState.value.bith_day,
+                onValueChange = { formState.value.bith_day = it },
+                label = { Text("Birth Day") }
+            )
+            Spacer(modifier = Modifier.height(8.dp))
 
 //           DatePicker(
 //            selectedDate = formState.value.bith_day,
 //            onDateSelected = { formState.value.bith_day = it }
 //        )
-        TextField(
-            value = formState.value.salary,
-            onValueChange = { formState.value.salary = it },
-            label = { Text("Salary") }
-        )
-        Spacer(modifier = Modifier.height(8.dp))
+            TextField(
+                value = formState.value.salary,
+                onValueChange = { formState.value.salary = it },
+                label = { Text("Salary") }
+            )
+            Spacer(modifier = Modifier.height(8.dp))
 
-        TextField(
-            value = formState.value.vacanition,
-            onValueChange = { formState.value.vacanition = it },
-            label = { Text("Vacation Days") }
-        )
-        Spacer(modifier = Modifier.height(8.dp))
+            TextField(
+                value = formState.value.vacanition,
+                onValueChange = { formState.value.vacanition = it },
+                label = { Text("Vacation Days") }
+            )
+            Spacer(modifier = Modifier.height(8.dp))
 
-        TextField(
-            value = formState.value.vbalance,
-            onValueChange = { formState.value.vbalance = it },
-            label = { Text("Vacation Balance") }
-        )
-        Spacer(modifier = Modifier.height(8.dp))
+            TextField(
+                value = formState.value.vbalance,
+                onValueChange = { formState.value.vbalance = it },
+                label = { Text("Vacation Balance") }
+            )
+            Spacer(modifier = Modifier.height(8.dp))
 
-        TextField(
-            value = formState.value.bdl_balance,
-            onValueChange = { formState.value.bdl_balance = it },
-            label = { Text("bdl_balance") }
-        )
-        Spacer(modifier = Modifier.height(8.dp))
-        TextField(
-            value = formState.value.totaldays,
-            onValueChange = { formState.value.totaldays = it },
-            label = { Text("Total Days") }
-        )
+            TextField(
+                value = formState.value.bdl_balance,
+                onValueChange = { formState.value.bdl_balance = it },
+                label = { Text("bdl_balance") }
+            )
+            Spacer(modifier = Modifier.height(8.dp))
+            TextField(
+                value = formState.value.totaldays,
+                onValueChange = { formState.value.totaldays = it },
+                label = { Text("Total Days") }
+            )
 
 //        TextField(
 //            value = formState.value.depart_id,
 //            onValueChange = { formState.value.depart_id = it },
 //            label = { Text("Department ID") }
 //        )
-        Spacer(modifier = Modifier.height(8.dp))
+            Spacer(modifier = Modifier.height(8.dp))
 
 
 //         DropdownMenu(
@@ -112,12 +135,13 @@ fun AddEmployeeScreen(
 //            onSelectedOptionChange = { formState.value.depart_id = it },
 //            options = listOf("Option 1", "Option 2", "Option 3")
 //        )
-        Spacer(modifier = Modifier.height(8.dp))
+            Spacer(modifier = Modifier.height(8.dp))
 
-        Button(onClick = {
-            // Insert the new employee into the database here
-        }) {
-            Text("Add Employee")
+            Button(onClick = {
+                // Insert the new employee into the database here
+            }) {
+                Text("Add Employee")
+            }
         }
     }
 
@@ -132,7 +156,6 @@ fun FavoriteCollectionCardPreview() {
 //        AddEmployeeScreen()
     }
 }
-
 
 
 @Composable
@@ -307,7 +330,7 @@ fun ReadonlyTextField(
 //
 //// final code
 @Composable
-fun TextFieldMenu() {
+fun TextFieldMenu(modifier: Modifier = Modifier) {
 
 //    val contextForToast = LocalContext.current.applicationContext
 
@@ -329,30 +352,31 @@ fun TextFieldMenu() {
 //        }
 //    ) {
 
+    Box(modifier = modifier) {
         // text field
         TextField(
-
             value = selectedItem,
             onValueChange = {},
             readOnly = true,
             label = { Text(text = "Department") },
             trailingIcon = {
-               IconButton(onClick = {
-                   expanded = !expanded
-               }){
-                   Icon(imageVector =
+                IconButton(onClick = {
+                    expanded = !expanded
+                }) {
+                    Icon(
+                        imageVector =
 
-                   if (expanded) Icons.Outlined.KeyboardArrowUp else Icons.Outlined.ArrowDropDown ,
-                       contentDescription =
+                        if (expanded) Icons.Outlined.KeyboardArrowUp else Icons.Outlined.ArrowDropDown,
+                        contentDescription =
 
-                       if (expanded) "show less" else "show more"
-                   )
-               }
+                        if (expanded) "show less" else "show more"
+                    )
+                }
             },
 //            colors = DropdownMenuDefaults.textFieldColors()
-        modifier = Modifier.clickable {
-            expanded = !expanded
-        }
+            // modifier = Modifier.clickable {
+            //      expanded = !expanded
+            // }
         )
 
         // menu
@@ -370,7 +394,7 @@ fun TextFieldMenu() {
                 }
             }
         }
-//    }
+    }
 }
 
 //

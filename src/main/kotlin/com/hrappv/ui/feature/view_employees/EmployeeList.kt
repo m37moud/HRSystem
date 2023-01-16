@@ -50,6 +50,8 @@ import utils.LCE
 //https://johncodeos.com/how-to-add-search-in-list-with-jetpack-compose/
 var empNumber = 0
 
+
+
 @Composable
 fun ViewEmpScreen(viewEmployee: ViewEmpViewModel) {
     val scope = rememberCoroutineScope()
@@ -73,6 +75,25 @@ fun ViewEmpScreen(viewEmployee: ViewEmpViewModel) {
     if(deleteEmpState.value){
         scope.launch { scaffoldState.snackbarHostState.showSnackbar("Employee ${deletedEmpName.value} deleted Sucssessful") }
     }
+
+    /*
+    add this to make search with short cut 
+      onKeyEvent = {
+        if (
+            it.isCtrlPressed &&
+            it.isShiftPressed &&
+            it.key == Key.C &&
+            it.type == KeyEventType.KeyDown
+        ) {
+            cleared = true
+            true
+        } else {
+            false
+        }
+    }
+    **** or tyy add shortcut 
+    shortcut = KeyShortcut(Key.C, ctrl = true)
+    */
     Scaffold(
         modifier = Modifier.fillMaxSize(),
         scaffoldState = scaffoldState

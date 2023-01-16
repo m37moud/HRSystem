@@ -1,12 +1,13 @@
 package com.hrappv.ui.value
 
+import androidx.compose.foundation.isSystemInDarkTheme
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.MutableState
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 
 class AppThemeState {
-    private val themeState: MutableState<Boolean> = mutableStateOf(false)
+    private val themeState: MutableState<Boolean> = mutableStateOf(isSystemInDarkTheme())// false
     var isDarkTheme: Boolean = false
         get() = themeState.value
         set(value) {

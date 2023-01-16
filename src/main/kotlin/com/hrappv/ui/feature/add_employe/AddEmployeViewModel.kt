@@ -1,6 +1,7 @@
 package com.hrappv.ui.feature.add_employe
 
 import com.hrappv.data.models.EmployeeResult
+import com.hrappv.data.models.Employees
 import com.hrappv.data.repo.MyRepo
 import com.hrappv.util.ViewModel
 import kotlinx.coroutines.flow.MutableStateFlow
@@ -35,6 +36,12 @@ class AddEmployeViewModel @Inject constructor(
     suspend fun getEmployeResults(folderPath: String) {
         _EmpResults.value = LCE.LOADING
         _EmpResults.value = myRepo.importer.getEmployReport(folderPath)
+    }
+
+    fun insertEmpFromImporter(emplist :List<Employees>){
+        launchOnIO {
+            myRepo.viewEmployees
+        }
     }
     fun onBackPress() {
         _isBackPressed.value = true
