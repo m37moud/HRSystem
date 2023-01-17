@@ -1,9 +1,9 @@
 package com.hrappv.data.local.datastoreimp
 
-import com.hrappv.Department
 import com.hrappv.HrAppDb
 import com.hrappv.data.local.datastore.DepartmentDataSource
 import com.hrappv.data.local.datastore.UserDataSource
+import com.hrappv.data.models.Department
 import com.hrappv.data.models.Employees
 import kotlinx.coroutines.CoroutineDispatcher
 import kotlinx.coroutines.withContext
@@ -15,36 +15,48 @@ class DepartmentDataSourceImpl @Inject constructor(
 ) : DepartmentDataSource {
     private val queries = hrDb.departmentQueries
 
-    suspend fun InsertMultiDepartment(departments: List<Department>) {
+    override suspend fun insertMultiDepartment(departments: List<Department>): Boolean {
+        var insert = false
+
         withContext(dispatcher) {
             queries.transaction {
                 departments.forEach { depart ->
-                    val department = queries.selectRocketById(depart.depart_id)?.executeAsOneOrNull()
+                    val department = depart.depart_id?.let { queries.selectRocketById(it).executeAsOneOrNull() }
+                    println(department.toString())
                     if (department != null) {
                         insertDepart(depart)
                     }
 
                 }
-
+                afterRollback {
+                    insert = false
+                    println("No department inserted.")
+                }
+                afterCommit {
+                    insert = true
+                    println("department. were inserted.")
+                }
             }
         }
+        return insert
     }
 
     override suspend fun checkDepartment(id: Long) {
         val department = queries.selectRocketById(id)
 
     }
+
     private fun insertDepart(
         department: Department
     ) {
-            queries.insertDepartMent(
-                depart_id = department.depart_id,
-                department = department.department,
-                commetion_rate = department.commetion_rate,
-                depart_type = department.depart_type,
-                commetion_type = department.commetion_type,
-                commetion_month = department.commetion_month,
-            )
+        queries.insertDepartMent(
+            depart_id = department.depart_id,
+            department = department.department,
+            commetion_rate = department.commetion_rate,
+            depart_type = department.depart_type,
+            commetion_type = department.commetion_type,
+            commetion_month = department.commetion_month,
+        )
     }
 
 

@@ -12,7 +12,7 @@ plugins {
     val kotlinVersion = "1.7.10"
     kotlin("jvm") version kotlinVersion
     kotlin("kapt") version kotlinVersion
-    id("org.jetbrains.compose") version "1.2.0-alpha01-dev764"
+    id("org.jetbrains.compose") version "1.2.0-alpha01-dev764" //"1.2.0-alpha01-dev764"
 //    id("com.squareup.sqldelight") version "1.5.4"
 }
 
@@ -22,10 +22,17 @@ version = "1.0.0"
 repositories {
     jcenter()
     mavenCentral()
+    mavenLocal()
     google()
     maven { url = uri("https://jitpack.io") }
     maven { url = uri("https://maven.pkg.jetbrains.space/public/p/compose/dev") }
     maven { url = uri("https://dl.bintray.com/kotlin/kotlin-eap") }
+    maven {
+        url = uri("https://repo.spring.io/release")
+    }
+    maven {
+        url = uri("https://repository.jboss.org/maven2")
+    }
 }
 
 val daggerVersion by extra("2.44.2")
@@ -35,6 +42,9 @@ dependencies {
 
     // Module dependencies
     implementation(project(":data"))
+
+//    implementation("androidx.compose.material3:material3:1.0.1")
+//    implementation("androidx.compose.material3:material3-window-size-class:1.0.1")
 
     // Dagger : A fast dependency injector for Android and Java.
 
@@ -70,7 +80,7 @@ dependencies {
     //material date and time picker 0.2.9 // Latest Stable Library Version: 0.9.0 (Supports Compose 1.2.1)
 //    implementation("com.vanpra.compose-material-dialogs:datetime:0.2.9")//0.8.0
     //implementation("com.vanpra.compose-material-dialogs:core:0.8.0")
-//    implementation("io.github.vanpra.compose-material-dialogs:datetime:0.6.2")
+//    implementation("io.github.vanpra.compose-material-dialogs:datetime:0.9.0")
 //    implementation("com.afollestad.material-dialogs:input:3.3.0")
 
 

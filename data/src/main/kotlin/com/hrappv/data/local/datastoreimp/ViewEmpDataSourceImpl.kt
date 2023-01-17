@@ -20,35 +20,44 @@ class ViewEmpDataSourceImpl @Inject constructor(
     val queries = hrAppDb.employeQueries
 
 
-    override fun getAllEmployees(): Flow<List<GetAllEmployees>> {
-        return queries.getAllEmployees().asFlow().mapToList()
+    override fun getAllEmployees(): List<GetAllEmployees> {
+        return queries.getAllEmployees().executeAsList()
     }
 
-    override suspend fun getEmployeeByName(name: String): List<GetEmployeeByName> {
-        return withContext(dispatcher) {
-            queries.getEmployeeByName(name).executeAsList()
-        }
+    override fun getEmployeeByName(name: String): List<GetEmployeeByName> {
+        return queries.getEmployeeByName(name).executeAsList()
+//        return withContext(dispatcher) {
+//            queries.getEmployeeByName(name).executeAsList()
+//        }
     }
 
-    override suspend fun deleteEmployee(id: Long) {
-         withContext(dispatcher) {
+    override suspend fun deleteEmployee(id: Long) :Boolean{
+        var delete = false
+        withContext(dispatcher) {
             try {
-//              val r = queries.transaction  {
-//                 afterRollback { println("No employee were delete.") }
-//                   afterCommit { println("$ players were delete.") }
-                   queries.deleteEmployee(id)
-//               }
+                queries.transactionWithResult {
+                    afterRollback {
+                        delete = false
+                        println("No employee were delete.")
+                    }
+                    afterCommit {
+                        delete = true
+                        println("$ players were delete.")
+                    }
+                    queries.deleteEmployee(id)
+                }
 
 
             } catch (e: Exception) {
                 println("${e.message}")
             }
         }
+        return delete
     }
 
     override suspend fun getEmployeeByID(id: Long): GetEmployeeByID? {
         return withContext(dispatcher) {
-            queries. getEmployeeByID(id).executeAsOneOrNull()
+            queries.getEmployeeByID(id).executeAsOneOrNull()
 
         }
     }

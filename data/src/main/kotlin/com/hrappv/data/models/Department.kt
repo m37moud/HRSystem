@@ -1,10 +1,10 @@
 package com.hrappv.data.models
 
 data class Department(
-    val depart_id: Long?,
+    val depart_id: Long? = null,
     val department: String,
-    val commetion_rate: Long?,
-    val depart_type: String?,
-    val commetion_type: String?,
-    val commetion_month: String?
+    val commetion_rate: Long?= null,
+    val depart_type: String?= null,
+    val commetion_type: String?= null,
+    val commetion_month: String?= null
 )

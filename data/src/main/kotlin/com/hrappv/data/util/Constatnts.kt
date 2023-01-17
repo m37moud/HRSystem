@@ -1,6 +1,7 @@
 package util
 
 import com.hrappv.GetAllEmployees
+import com.hrappv.data.models.Department
 import com.hrappv.data.models.Employee
 import com.hrappv.data.models.Employees
 import org.apache.poi.ss.usermodel.WorkbookFactory
@@ -65,6 +66,33 @@ class Constatnts {
             }
         }
 
+        suspend fun excelImporterDepartment(path: String): List<Department> {
+            val departList = mutableListOf<Department>()
+
+            val pathList = getPath(path)
+
+
+            try {
+
+                pathList.let {
+                    it?.forEach { path ->
+                        val tempList = readFromExcelFileDepartment(path)
+                        departList.addAll(tempList)
+                    }
+                }
+
+            } catch (e: Exception) {
+                println(e.message.toString())
+                return emptyList()
+
+
+            }
+
+            return departList
+
+        }
+
+
         suspend fun excelImporter(path: String): List<Employees> {
             val empList = mutableListOf<Employees>()
 
@@ -73,7 +101,7 @@ class Constatnts {
 
             try {
 
-                pathList.let {it->
+                pathList.let { it ->
                     it?.forEach { path ->
                         val tempList = readFromExcelFile(path)
                         empList.addAll(tempList)
@@ -91,7 +119,7 @@ class Constatnts {
 
         }
 
-        fun getPath(path: String): List<String>? {
+        private fun getPath(path: String): List<String>? {
             val pathList = mutableListOf<String>()
             try {
                 val file = File(path)
@@ -161,7 +189,12 @@ class Constatnts {
 
                         }
 
-                        val employ = Employees(emp_id = emp[0].toLong(), id = emp[0].toLong(), fname = emp[1], department_name = emp[2].toString())
+                        val employ = Employees(
+                            emp_id = emp[0].toLong(),
+                            id = emp[0].toLong(),
+                            fname = emp[1],
+                            department_name = emp[2].toString()
+                        )
                         empList.add(employ)
 
 
@@ -180,6 +213,61 @@ class Constatnts {
 
             return empList
         }
+
+
+        private suspend fun readFromExcelFileDepartment(filePath: String): List<Department> {//, inputDialog: FileDialog
+            val departList = mutableListOf<Department>()
+            try {
+                val inputStream = FileInputStream(filePath)
+//            val file = File(filePath)
+                //Instantiate Excel workbook using existing file:
+                val xlWb = WorkbookFactory.create(inputStream)
+//            val xlWb = WorkbookFactory.create(file)
+
+                //Row index specifies the row in the worksheet (starting at 0):
+                var rowNumber = 0
+                //Cell index specifies the column within the chosen row (starting at 0):
+
+                //Get reference to first sheet:
+                val xlWs = xlWb.getSheetAt(0)
+                var stop: String?
+                println(xlWs.lastRowNum)
+                xlWs.forEach { row ->
+                    val depart = mutableListOf<String>()
+                    if (row.rowNum >= 1) {
+                        for (columnNumber in 0..3) {
+                            val value = xlWs.getRow(row.rowNum).getCell(columnNumber).toString()
+                            when (columnNumber) {
+
+                                2 -> {
+                                    val ll = value.split("/")
+                                    depart.add(ll[1])
+                                }
+
+                            }
+
+                        }
+
+                        val department = Department(depart_id = 1,department = depart[0])
+                        departList.add(department)
+
+
+                    }
+
+
+                }
+
+
+            } catch (e: Exception) {
+                println("import error : ${e.message}")
+                return emptyList()
+
+            }
+
+
+            return departList
+        }
+
 
     }
 

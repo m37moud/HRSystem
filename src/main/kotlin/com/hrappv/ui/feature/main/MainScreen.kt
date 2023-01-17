@@ -34,6 +34,7 @@ import com.hrappv.ui.components.AppMenuHeader
 import com.hrappv.ui.components.NavigationMenuItem
 import com.hrappv.ui.feature.EmployeResult.EmployResultScreenComponent
 import com.hrappv.ui.feature.about.AboutComponent
+import com.hrappv.ui.feature.add_department.DepartmentComponent
 import com.hrappv.ui.feature.add_employe.AddEmployeScreenComponent
 import com.hrappv.ui.feature.home_screen.HomeComponent
 import com.hrappv.ui.feature.settings.SettingsComponent
@@ -97,6 +98,7 @@ fun MainScreen2(
     activeComponent: Component,
     onNavIconClick: () -> Unit,
     onHomeClick: () -> Unit,
+    onDepartmentClick: () -> Unit,
     onAddEmployeeClick: () -> Unit,
     onViewEmployeesClick: () -> Unit,
     onEmployeeResultClick: () -> Unit,
@@ -173,6 +175,7 @@ fun MainScreen2(
                 }
             },
             onHomeClick = onHomeClick,
+            onDepartmentClick = onDepartmentClick,
             onAddEmployeeClick = onAddEmployeeClick,
             onViewEmployeesClick = onViewEmployeesClick,
             onEmployeeResultClick = onEmployeeResultClick,
@@ -391,6 +394,7 @@ fun NavMenu(
 //    loginViewModel: LoginViewModel,
     onNavIconClick: () -> Unit,
     onHomeClick: () -> Unit,
+    onDepartmentClick: () -> Unit,
     onAddEmployeeClick: () -> Unit,
     onViewEmployeesClick: () -> Unit,
 
@@ -482,6 +486,17 @@ fun NavMenu(
 //                component.onHomeTabClicked()
                     ,
                     onClick = { onHomeClick() }
+                )
+
+                NavigationMenuItem(
+                    selected = activeComponent is DepartmentComponent,
+                    modifier = modifier.fillMaxWidth(),
+                    icon = Icons.Default.FavoriteBorder,
+                    label = "Department",
+                    isMenuPressed = isMenuPressed
+//                component.onHomeTabClicked()
+                    ,
+                    onClick = { onDepartmentClick() }
                 )
 
 

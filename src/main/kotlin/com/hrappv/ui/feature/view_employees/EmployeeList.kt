@@ -48,7 +48,6 @@ import kotlinx.coroutines.launch
 import utils.LCE
 
 //https://johncodeos.com/how-to-add-search-in-list-with-jetpack-compose/
-var empNumber = 0
 
 
 
@@ -116,7 +115,7 @@ fun ViewEmpScreen(viewEmployee: ViewEmpViewModel) {
 //                    backgroundColor = MaterialTheme.colors.onBackground
                     )
                     {
-                        Text(text = "Employees Number : ${empNumber.toString()}", modifier = Modifier.padding(10.dp))
+                        Text(text = "Employees Number : ${viewEmployee.empNumber.value.toString()}", modifier = Modifier.padding(10.dp))
                     }
 
                 }
@@ -173,6 +172,7 @@ fun ViewEmpScreen(viewEmployee: ViewEmpViewModel) {
                             try{
 
 //                                viewEmployee.getSingleEmployee(id)
+
                                 viewEmployee.deleteEmployee(id)
 
                             }catch (exception : Exception){
@@ -492,13 +492,10 @@ fun ContentUI(
     data: List<GetEmployeeByName>,
     selectedGrid: Boolean,
     selectedMenu: Boolean,
-    onDeleteClick: (id: String) -> Unit,
+    onDeleteClick: (id: Long) -> Unit,
 
 
     ) {
-    empNumber = data.size
-
-
 
     if (selectedGrid) {
         LazyVerticalGrid(
@@ -613,7 +610,7 @@ private fun Header(modifier: Modifier = Modifier) {
 fun EmployeeCardGrid(
     modifier: Modifier = Modifier,
     employee: GetEmployeeByName,
-    onDeleteClick: (id: String) -> Unit,
+    onDeleteClick: (id: Long) -> Unit,
 ) {
     Card(
         modifier = modifier.size(width = 150.dp, height = 350.dp)
@@ -643,7 +640,7 @@ fun EmployeeCardMenu(
 }
 
 @Composable
-fun EmployeeItemGrid(employee: GetEmployeeByName, onDeleteClick: (id: String) -> Unit) {
+fun EmployeeItemGrid(employee: GetEmployeeByName, onDeleteClick: (id: Long) -> Unit) {
     var expanded by remember {
         mutableStateOf(false)
     }
@@ -676,7 +673,7 @@ fun EmployeeItemGrid(employee: GetEmployeeByName, onDeleteClick: (id: String) ->
                 ) {
                     // menu item
                     DropdownMenuItem(onClick = {
-                        onDeleteClick(employee.emp_id.toString())
+                        onDeleteClick(employee.emp_id)
                         expanded = false
                     }) {
                         Text(text = "Delete")

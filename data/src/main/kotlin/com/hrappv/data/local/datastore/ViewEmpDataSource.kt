@@ -8,11 +8,10 @@ import kotlinx.coroutines.flow.Flow
 interface ViewEmpDataSource {
 
 
-     fun getAllEmployees(): Flow<List<GetAllEmployees>>
+     fun getAllEmployees(): List<GetAllEmployees>
+     fun getEmployeeByName(name : String): List<GetEmployeeByName>
 
-    suspend fun getEmployeeByName(name : String): List<GetEmployeeByName>
-
-    suspend fun deleteEmployee(id: Long)
+    suspend fun deleteEmployee(id: Long):Boolean
 
     suspend fun getEmployeeByID(id:Long) : GetEmployeeByID?
 

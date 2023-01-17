@@ -30,7 +30,7 @@ fun AddEmployeeScreen(
     val showPathDialog by remember { mutableStateOf(false) }
     val scope = rememberCoroutineScope()
 
-    var employee : List<Employees> = emptyList()
+    var employee: List<Employees> = emptyList()
 
 
     Surface {
@@ -50,7 +50,7 @@ fun AddEmployeeScreen(
 //                    }
                     Button(onClick = {
                         scope.launch(Dispatchers.IO) {
-                            employee =  excelImporter(path)
+                            employee = excelImporter(path)
                         }
                     }) {
                         Text(text = "Import From Excel")
@@ -73,7 +73,7 @@ fun AddEmployeeScreen(
                 label = { Text("First Name") }
             )
             Spacer(modifier = Modifier.height(8.dp))
-            TextFieldMenu(Modifier.weight(1f))
+            TextFieldMenu(name = "Department")
 
 
             Spacer(modifier = Modifier.height(8.dp))
@@ -330,7 +330,7 @@ fun ReadonlyTextField(
 //
 //// final code
 @Composable
-fun TextFieldMenu(modifier: Modifier = Modifier) {
+fun TextFieldMenu(modifier: Modifier = Modifier, name: String) {
 
 //    val contextForToast = LocalContext.current.applicationContext
 
@@ -352,13 +352,13 @@ fun TextFieldMenu(modifier: Modifier = Modifier) {
 //        }
 //    ) {
 
-    Box(modifier = modifier) {
+    Column(modifier = modifier) {
         // text field
         TextField(
             value = selectedItem,
             onValueChange = {},
             readOnly = true,
-            label = { Text(text = "Department") },
+            label = { Text(text = "$name") },
             trailingIcon = {
                 IconButton(onClick = {
                     expanded = !expanded

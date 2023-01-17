@@ -23,6 +23,8 @@ object R {
 
         //screens
         const val HOME = "HOME"
+        const val DEPARTMENT = "Department"
+
         const val ADD_EMPLOYE = "AddEmployee"
         const val EMPLOYE_RESULT = "EmployeResult"
         const val REGISTER_ATTENDS = "RegisterAttends"

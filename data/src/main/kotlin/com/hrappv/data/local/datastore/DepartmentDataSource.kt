@@ -1,6 +1,6 @@
 package com.hrappv.data.local.datastore
 
-import com.hrappv.Department
+import com.hrappv.data.models.Department
 import com.hrappv.data.models.Employees
 
 interface DepartmentDataSource {
@@ -10,4 +10,7 @@ interface DepartmentDataSource {
     suspend fun insertDepartment(
         department: Department
     )
+
+
+    suspend fun insertMultiDepartment(departments: List<Department>): Boolean
 }

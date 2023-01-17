@@ -6,6 +6,7 @@ import com.hrappv.Employe
 import com.hrappv.GetAllEmployees
 import com.hrappv.GetEmployeeByID
 import com.hrappv.GetEmployeeByName
+import com.hrappv.data.local.datastore.ViewEmpDataSource
 import com.hrappv.data.models.Employee
 import com.hrappv.data.models.EmployeeResult
 import com.hrappv.data.repo.MyRepo
@@ -19,6 +20,7 @@ import javax.inject.Inject
 
 class ViewEmpViewModel @Inject constructor(
     private val myRepo: MyRepo,
+    private val dataSource : ViewEmpDataSource
     // Inject your repos here...
 ) : ViewModel() {
 
@@ -37,8 +39,13 @@ class ViewEmpViewModel @Inject constructor(
     private val _delete = MutableStateFlow(false)
     val delete: StateFlow<Boolean> = _delete
 
-//    private val _allEmps: MutableStateFlow<LCE<List<GetAllEmployees>>> = MutableStateFlow(LCE.NOACTION)
-    val allEmployees = myRepo.viewEmployees.getAllEmployees()
+    private val _allEmps: MutableStateFlow<LCE<List<GetAllEmployees>>> = MutableStateFlow(LCE.NOACTION)
+    val allEmps: StateFlow<LCE<List<GetAllEmployees>>> = _allEmps
+
+//    val allEmployees = myRepo.viewEmployees.getAllEmployees()
+
+     val empNumber = MutableStateFlow(0)
+
 
 
     private val _isBackPressed = MutableStateFlow(false)
@@ -55,7 +62,8 @@ class ViewEmpViewModel @Inject constructor(
                 n = it
                 println(it.toString())
 //            myRepo.viewEmployees.getEmployeeByName("%$n%")
-                val data = myRepo.viewEmployees.getEmployeeByName("%$n%")
+                val data = dataSource.getEmployeeByName("%$n%")
+                empNumber.value = data.size
                 println(data.toString())
 
                 if (data.isEmpty()) {
@@ -66,27 +74,50 @@ class ViewEmpViewModel @Inject constructor(
 
 
             }
+////            val data = myRepo.viewEmployees.getEmployeeByName("%$name%")
+//            val data = dataSource.getEmployeeByName("%$name%")
+////            println(data.toString())
+//
+//            if (data.isEmpty()) {
+//                _EmpResults.value = LCE.ERROR("Employee Not Found")
+//
+//            } else
+//                _EmpResults.value = LCE.CONTENT(data)
 
 //        println(data.toString())
         }
     }
 
-    fun deleteEmployee(id: String) {
+    fun deleteEmployee(id: Long) {
+        println("delete press")
         launchOnIO {
-            val result = myRepo.viewEmployees.deleteEmployee(id.toLong())
-            _delete.emit(true)
+
+//         myRepo.viewEmployees.deleteEmployee(id)
+            val result = dataSource.deleteEmployee(id)
+            _delete.emit(result)
         }
+
     }
-    fun getSingleEmployee(id: String) {
+    fun getSingleEmployee(id: Long) {
         launchOnIO {
-            val result = myRepo.viewEmployees.getEmployeeByID(id.toLong())
+//            val result = myRepo.viewEmployees.getEmployeeByID(id)
+            val result = dataSource.getEmployeeByID(id)
             println(result.toString())
             _employee.emit(result!!)
         }
     }
 
     fun getAllEmployees() {
-        val data = myRepo.viewEmployees.getAllEmployees()
+//            println(data.toString())
+//        val data = myRepo.viewEmployees.getAllEmployees()
+        val data = dataSource.getAllEmployees()
+
+        if (data.isEmpty()) {
+            _allEmps.value = LCE.ERROR("Employee Not Found")
+
+        } else
+            _allEmps.value = LCE.CONTENT(data)
+
         println(data.toString())
 //        _allEmps.value = LCE.CONTENT(data)
     }

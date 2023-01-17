@@ -13,6 +13,7 @@ import com.arkivanov.decompose.extensions.compose.jetbrains.subscribeAsState
 import com.arkivanov.decompose.router.stack.*
 import com.arkivanov.decompose.value.Value
 import com.hrappv.ui.feature.about.AboutComponent
+import com.hrappv.ui.feature.add_department.DepartmentComponent
 import com.hrappv.ui.feature.add_employe.AddEmployeScreenComponent
 import com.hrappv.ui.feature.home_screen.HomeComponent
 import com.hrappv.ui.feature.main.MainScreen2
@@ -60,6 +61,14 @@ class NavHostComponent(
 //            )
 
             is Config.Home -> HomeComponent(
+                appComponent = appComponent,
+                componentContext = componentContext,
+//                userAuthState = config.userAuthState,
+//                onClickAddEmployee = ::addEmployeScreenStart,
+                onBackPress = ::onBackPress
+
+            )
+            is Config.Department -> DepartmentComponent(
                 appComponent = appComponent,
                 componentContext = componentContext,
 //                userAuthState = config.userAuthState,
@@ -150,6 +159,7 @@ class NavHostComponent(
                 }
             },
             onHomeClick = { startHomeScreen() },
+            onDepartmentClick = { startDepartmentScreen() },
             onAddEmployeeClick = ::startAddEmployeeScreen,
             onViewEmployeesClick = ::startViewEmployeeScreen,
             onEmployeeResultClick = ::startRegisterAttendsScreen,
@@ -192,6 +202,10 @@ class NavHostComponent(
     private fun startHomeScreen() {
 //        router.replaceCurrent(Config.Home)
         navigation.bringToFront(Config.Home)
+    }
+    private fun startDepartmentScreen() {
+//        router.replaceCurrent(Config.Home)
+        navigation.bringToFront(Config.Department)
     }
 
     private fun startAddEmployeeScreen() {

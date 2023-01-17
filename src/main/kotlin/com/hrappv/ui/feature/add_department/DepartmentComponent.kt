@@ -1,22 +1,29 @@
-package com.hrappv.ui.feature.view_employees
+package com.hrappv.ui.feature.add_department
 
-import ViewEmpScreen
 import androidx.compose.runtime.*
 import com.arkivanov.decompose.ComponentContext
 import com.hrappv.di.AppComponent
 import com.hrappv.ui.feature.add_employe.AddEmployeViewModel
 import com.hrappv.ui.feature.add_employe.AddEmployeeScreen
 import com.hrappv.ui.navigation.Component
+import kotlinx.coroutines.flow.MutableStateFlow
+import kotlinx.coroutines.flow.StateFlow
 import javax.inject.Inject
 
-class ViewEmployeesComponent (
+class DepartmentComponent(
     appComponent: AppComponent,
     private val componentContext: ComponentContext,
-    private val onBackPress: () ->Unit
-): Component, ComponentContext by componentContext{
+    private val onBackPress: () -> Unit
+) : Component, ComponentContext by componentContext {
+
+    private val _isBackPressed = MutableStateFlow(false)
+    val backToMain: StateFlow<Boolean> = _isBackPressed
 
     @Inject
-    lateinit var viewModel: ViewEmpViewModel
+    lateinit var viewModel: DepartmentViewModel
+//
+//    @Inject
+//    lateinit var mainViewModel: EditEmployeViewModel
 
     init {
         appComponent.inject(this)
@@ -27,28 +34,18 @@ class ViewEmployeesComponent (
         val scope = rememberCoroutineScope()
         LaunchedEffect(viewModel) {
             viewModel.init(scope)
-            viewModel.getEmployees("")
-//            viewModel.getAllEmployees()
-//            viewModel.deleteEmployee(3)
-//            mainViewModel.init(scope)
         }
-//        val folderPath by viewModel.folderPath.collectAsState()
-//        if(folderPath.isNotBlank()){
-//
-//        }
         val backToMain by viewModel.backToMain.collectAsState()
-//        val backToMain by mainViewModel.startEmpResult.collectAsState()
 
 
-
-
-        if (backToMain)
-        {
+        if (backToMain) {
             println("startEmpResult is $backToMain")
             onBackPress()
 
         }
 
-        ViewEmpScreen(viewModel)
+        DepartmentScreen(
+            viewModel
+        )
     }
 }
