@@ -119,6 +119,10 @@ dependencies {
 
     // JUnit : JUnit is a unit testing framework for Java, created by Erich Gamma and Kent Beck.
     testImplementation("org.jetbrains.kotlin:kotlin-test-junit5:1.7.22")
+    
+    //sqldelight test
+    testImplementation("com.squareup.sqldelight:sqlite-driver:1.5.4")
+      
 }
 
 tasks.withType<KotlinCompile>() {
