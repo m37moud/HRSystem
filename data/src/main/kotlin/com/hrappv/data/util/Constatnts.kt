@@ -177,12 +177,7 @@ class Constatnts {
 
                                 }
 
-                                3 -> { // for
-                                    val ll = value.split(" ")
-                                    emp.add(ll[0])
-                                    emp.add(ll[1])
 
-                                }
 
                                 else -> emp.add(value)
                             }
@@ -191,7 +186,7 @@ class Constatnts {
 
                         val employ = Employees(
                             emp_id = emp[0].toLong(),
-                            id = emp[0].toLong(),
+//                            id = emp[0].toLong(),
                             fname = emp[1],
                             department_name = emp[2].toString()
                         )
@@ -248,7 +243,7 @@ class Constatnts {
 
                         }
 
-                        val department = Department(depart_id = 1,department = depart[0])
+                        val department = Department(department = depart[0])
                         departList.add(department)
 
 

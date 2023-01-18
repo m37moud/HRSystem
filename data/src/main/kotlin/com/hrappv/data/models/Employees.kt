@@ -2,7 +2,7 @@ package com.hrappv.data.models
 
 data class Employees(
    val emp_id: Long,
-   val id: Long,
+//   val id: Long,
    val fname: String,
    val department_name: String,
    val totaldays: Long = 21,

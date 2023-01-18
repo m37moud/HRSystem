@@ -66,7 +66,7 @@ class ViewEmpDataSourceImpl @Inject constructor(
         withContext(dispatcher) {
             queries.insertEmployee(
                 emp_id = employee.emp_id,
-                id = employee.id,
+//                id = employee.id,
                 fname = employee.fname,
                 totaldays = employee.totaldays,
                 bith_day = employee.bith_day,
@@ -80,25 +80,35 @@ class ViewEmpDataSourceImpl @Inject constructor(
 
     }
 
-    suspend fun InsertMultiEmployee(employees: List<Employees>) {
+    override suspend fun insertMultiEmployee(employees: List<Employees>) : Boolean {
+        var insert = false
+
         withContext(dispatcher) {
             queries.transaction {
                 employees.forEach { emp ->
-                    val employee = queries.getEmployeeByID(emp.emp_id)?.executeAsOneOrNull()
-                    if (employee != null) {
+                    val employee = queries.getEmployeeByID(emp.emp_id).executeAsOneOrNull()
+                    if (employee == null) {
                         insertEmp(emp)
                     }
 
                 }
-
+                afterRollback {
+                    insert = false
+                    println("No employee inserted.")
+                }
+                afterCommit {
+                    insert = true
+                    println("employees. were inserted.")
+                }
             }
         }
+        return insert
     }
 
     private fun insertEmp(employee: Employees) {
         queries.insertEmployee(
             emp_id = employee.emp_id,
-            id = employee.id,
+//            id = employee.id,
             fname = employee.fname,
             totaldays = employee.totaldays,
             bith_day = employee.bith_day,

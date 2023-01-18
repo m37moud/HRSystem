@@ -40,7 +40,7 @@ class AddEmployeViewModel @Inject constructor(
 
     fun insertEmpFromImporter(emplist :List<Employees>){
         launchOnIO {
-            myRepo.viewEmployees
+            myRepo.viewEmployees.insertMultiEmployee(emplist)
         }
     }
     fun onBackPress() {

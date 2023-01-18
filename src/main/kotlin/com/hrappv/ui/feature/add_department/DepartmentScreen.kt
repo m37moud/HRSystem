@@ -56,7 +56,7 @@ fun DepartmentScreen(viewModel: DepartmentViewModel){
                         scope.launch(Dispatchers.IO) {
                             departmentList =  Constatnts.excelImporterDepartment(path).distinct()
                             println(departmentList.toString())
-                            if (!departmentList.isEmpty()){
+                            if (departmentList.isNotEmpty()){
                                 viewModel.insertDepartmentFromImporter(departmentList)
                             }
                         }

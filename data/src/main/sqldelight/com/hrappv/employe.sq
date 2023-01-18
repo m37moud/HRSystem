@@ -1,6 +1,6 @@
 CREATE TABLE IF NOT EXISTS employe (
     emp_id INTEGER NOT NULL DEFAULT 1,
-    id INTEGER PRIMARY KEY  UNIQUE,
+--     id INTEGER PRIMARY KEY  UNIQUE,
     fname TEXT NOT NULL DEFAULT "No Name",
 --     image TEXT ,--AS ICON NOT NULL,
     totaldays INTEGER NOT NULL,
@@ -16,14 +16,15 @@ CREATE TABLE IF NOT EXISTS employe (
 getAllEmployees:
 SELECT employe.emp_id,employe.fname, Department.department AS department_name,employe.totaldays,employe.bith_day,employe.salary,employe.vacanition,employe.vbalance,employe.bdl_balance
 FROM employe
-JOIN Department ON employe.depart_id = Department.depart_id;
+JOIN Department ON employe.depart_id = Department.depart_id
+ORDER BY emp_id ASC;
 
 --make thos funcation in search to get all employee and searsched funcation
 getEmployeeByName:
 SELECT employe.emp_id,employe.fname, Department.department AS department_name,employe.totaldays,employe.bith_day,employe.salary,employe.vacanition,employe.vbalance,employe.bdl_balance
 FROM employe
 JOIN Department ON employe.depart_id = Department.depart_id
-WHERE fname LIKE ?  ; --'%'+:name+'%'
+WHERE fname LIKE ?  ORDER BY emp_id ASC ; --'%'+:name+'%'
 
 
 getEmployeeByID:
@@ -41,7 +42,7 @@ WHERE depart_id = :depart_id;
 
 
 insertEmployee: INSERT INTO employe
-VALUES (?,?,?,?,?,?,?,?,?,(SELECT id FROM Department WHERE department = ?));
+VALUES (?,?,?,?,?,?,?,?,(SELECT depart_id FROM Department WHERE department = ?));
 
 
 

@@ -17,6 +17,8 @@ interface ViewEmpDataSource {
 
     suspend fun insertEmployee(employee : Employees)
 
+    suspend fun insertMultiEmployee(employees: List<Employees>): Boolean
+
 
 
 }

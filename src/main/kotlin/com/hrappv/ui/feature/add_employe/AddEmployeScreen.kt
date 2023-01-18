@@ -5,6 +5,7 @@ import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.*
 import androidx.compose.material.*
 import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.filled.Refresh
 import androidx.compose.material.icons.outlined.ArrowDropDown
 import androidx.compose.material.icons.outlined.KeyboardArrowUp
 import androidx.compose.runtime.*
@@ -25,8 +26,9 @@ fun AddEmployeeScreen(
     viewModel: AddEmployeViewModel
 ) {
     val formState = remember { mutableStateOf(EmployeeFormState()) }
+    var path by remember { mutableStateOf("F:\\8") }
 
-    val path by remember { mutableStateOf("D:\\desk\\شغل لعهد\\tutorial audting\\2022\\شهراغسطس8\\8\\8") }
+//    val path by remember { mutableStateOf("D:\\desk\\شغل لعهد\\tutorial audting\\2022\\شهراغسطس8\\8\\8") }
     val showPathDialog by remember { mutableStateOf(false) }
     val scope = rememberCoroutineScope()
 
@@ -37,7 +39,7 @@ fun AddEmployeeScreen(
         Column(
             modifier = Modifier.fillMaxSize(),
             horizontalAlignment = Alignment.CenterHorizontally,
-            verticalArrangement = Arrangement.Center
+//            verticalArrangement = Arrangement.Center
         ) {
             Card(Modifier.fillMaxWidth(), elevation = 8.dp) {
                 Row(modifier = Modifier.align(Alignment.End))
@@ -48,9 +50,24 @@ fun AddEmployeeScreen(
 //                            path.value = it
 //                        }
 //                    }
+                    OutlinedTextField(
+                        value = path,
+                        onValueChange = { path = it },
+                        modifier = Modifier.padding(end = 16.dp).weight(1f),
+                        placeholder = { Text("put url excel folder") },
+                        label = { Text(text = "paste here ...") },
+                        leadingIcon = { Icon(Icons.Filled.Refresh, "search location") }
+
+                    )
+
                     Button(onClick = {
                         scope.launch(Dispatchers.IO) {
-                            employee = excelImporter(path)
+                            employee = excelImporter(path).distinct()
+                            println(employee.toString())
+
+                            if (employee.isNotEmpty()){
+                                viewModel.insertEmpFromImporter(employee)
+                            }
                         }
                     }) {
                         Text(text = "Import From Excel")

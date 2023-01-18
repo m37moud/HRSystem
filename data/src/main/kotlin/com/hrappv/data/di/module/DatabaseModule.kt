@@ -25,7 +25,9 @@ class DatabaseModule {
     fun provideSqlDelightProvider(): SqlDriver {
         //JdbcSqliteDriver(JdbcSqliteDriver.IN_MEMORY + filePath, Properties())
 //   HrAppDb.Schema.create(driver)
-        return JdbcSqliteDriver(url = "jdbc:sqlite:database.db", Properties())
+        return JdbcSqliteDriver(url = "jdbc:sqlite:database.db", Properties()).apply {
+            HrAppDb.Schema.create(this)
+        }
         //JdbcSqliteDriver (
 //            schema = HrAppDb.Schema,
 //            context = app,
@@ -60,56 +62,62 @@ class DatabaseModule {
 //    driver.execute(null, String.format("PRAGMA user_version = %d;", version), 0, null)
 //}
 
-
-    @Provides
-    @Singleton
-    fun provideDataBase(sqliteDriver: SqlDriver): HrAppDb {
-        val sqlCursor = sqliteDriver.executeQuery(null, "PRAGMA user_version;", 0, null)
-
-        var version: Int = sqlCursor.getLong(0)!!.toInt()
-
-        val currentVer = version
-        if (currentVer == 0) {
-            HrAppDb.Schema.create(sqliteDriver)
-            version = 1
-            sqliteDriver.execute(null, String.format("PRAGMA user_version = %d;", version), 0, null)
-            println("init: created tables, setVersion to 1")
-        } else {
-            val schemaVer: Int = HrAppDb.Schema.version
-            if (schemaVer > currentVer) {
-                HrAppDb.Schema.migrate(sqliteDriver, currentVer, schemaVer)
-                version = schemaVer
-                sqliteDriver.execute(null, String.format("PRAGMA user_version = %d;", version), 0, null)
-
-                println("init: migrated from $currentVer to $schemaVer")
-            } else {
-                println("init")
-            }
-        }
-        return HrAppDb(sqliteDriver)
-
-    }
+//
+//    @Provides
+//    @Singleton
+//    fun provideDataBase(sqliteDriver: SqlDriver): HrAppDb {
+//        val sqlCursor = sqliteDriver.executeQuery(null, "PRAGMA user_version;", 0, null)
+//
+//        var version: Int = sqlCursor.getLong(0)!!.toInt()
+//
+//        val currentVer = version
+//        if (currentVer == 0) {
+//            HrAppDb.Schema.create(sqliteDriver)
+//            version = 1
+//            sqliteDriver.execute(null, String.format("PRAGMA user_version = %d;", version), 0, null)
+//            println("init: created tables, setVersion to 1")
+//        } else {
+//            val schemaVer: Int = HrAppDb.Schema.version
+//            if (schemaVer > currentVer) {
+//                HrAppDb.Schema.migrate(sqliteDriver, currentVer, schemaVer)
+//                version = schemaVer
+//                sqliteDriver.execute(null, String.format("PRAGMA user_version = %d;", version), 0, null)
+//
+//                println("init: migrated from $currentVer to $schemaVer")
+//            } else {
+//                println("init")
+//            }
+//        }
+//        return HrAppDb(sqliteDriver)
+//
+//    }
 
 
     @Provides
     @Singleton
     fun provideUsersDataSource(
-        hrDb: HrAppDb,
+//        hrDb: HrAppDb,
+        sqliteDriver: SqlDriver,
+
         dispatcher: CoroutineDispatcher
     ): UserDataSource {
         return UserDataSourceImpl(
-            hrDb, dispatcher
+//            hrDb, dispatcher
+            HrAppDb(sqliteDriver), dispatcher
         )
     }
 
     @Provides
     @Singleton
     fun provideViewEmpDataSource(
-        hrDb: HrAppDb,
+        sqliteDriver: SqlDriver,
+//        hrDb: HrAppDb,
+
         dispatcher: CoroutineDispatcher
     ): ViewEmpDataSource {
         return ViewEmpDataSourceImpl(
-            hrDb, dispatcher
+            HrAppDb(sqliteDriver), dispatcher
+//            hrDb, dispatcher
         )
     }
 
@@ -117,11 +125,16 @@ class DatabaseModule {
     @Provides
     @Singleton
     fun provideDepartmentDataSource(
-        hrDb: HrAppDb,
+        sqliteDriver: SqlDriver,
+
+//        hrDb: HrAppDb,
         dispatcher: CoroutineDispatcher
     ): DepartmentDataSource {
         return DepartmentDataSourceImpl(
-            hrDb, dispatcher
+            HrAppDb(sqliteDriver),
+
+//            hrDb,
+            dispatcher
         )
     }
 

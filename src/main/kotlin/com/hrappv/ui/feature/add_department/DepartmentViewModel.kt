@@ -1,5 +1,6 @@
 package com.hrappv.ui.feature.add_department
 
+import com.hrappv.data.local.datastore.DepartmentDataSource
 import com.hrappv.data.models.Department
 import com.hrappv.data.models.Employees
 import com.hrappv.data.repo.MyRepo
@@ -10,6 +11,7 @@ import javax.inject.Inject
 
 class DepartmentViewModel @Inject constructor(
     private val myRepo: MyRepo,
+//    private val dataSource : DepartmentDataSource
     // Inject your repos here...
 ) : ViewModel() {
 

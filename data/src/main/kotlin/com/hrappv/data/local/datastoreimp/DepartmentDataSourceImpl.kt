@@ -21,9 +21,10 @@ class DepartmentDataSourceImpl @Inject constructor(
         withContext(dispatcher) {
             queries.transaction {
                 departments.forEach { depart ->
-                    val department = depart.depart_id?.let { queries.selectRocketById(it).executeAsOneOrNull() }
+                    println(depart.department)
+                    val department = depart.department.let { queries.selectDepartmentByName(it).executeAsOneOrNull() }
                     println(department.toString())
-                    if (department != null) {
+                    if (department == null) {
                         insertDepart(depart)
                     }
 
@@ -42,15 +43,16 @@ class DepartmentDataSourceImpl @Inject constructor(
     }
 
     override suspend fun checkDepartment(id: Long) {
-        val department = queries.selectRocketById(id)
+        val department = queries.selectDepartmentById(id)
 
     }
 
-    private fun insertDepart(
+     fun insertDepart(
         department: Department
     ) {
+         println(department.toString())
         queries.insertDepartMent(
-            depart_id = department.depart_id,
+//            depart_id = department.depart_id,
             department = department.department,
             commetion_rate = department.commetion_rate,
             depart_type = department.depart_type,
@@ -63,16 +65,16 @@ class DepartmentDataSourceImpl @Inject constructor(
     override suspend fun insertDepartment(
         department: Department
     ) {
-        withContext(dispatcher) {
-            queries.insertDepartMent(
-                depart_id = department.depart_id,
-                department = department.department,
-                commetion_rate = department.commetion_rate,
-                depart_type = department.depart_type,
-                commetion_type = department.commetion_type,
-                commetion_month = department.commetion_month,
-            )
-        }
+//        withContext(dispatcher) {
+//            queries.insertDepartMent(
+////                depart_id = department.depart_id,
+//                department = department.department,
+//                commetion_rate = department.commetion_rate,
+//                depart_type = department.depart_type,
+//                commetion_type = department.commetion_type,
+//                commetion_month = department.commetion_month,
+//            )
+//        }
     }
 
 

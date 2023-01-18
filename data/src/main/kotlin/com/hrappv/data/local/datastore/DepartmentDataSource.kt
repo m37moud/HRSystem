@@ -13,4 +13,6 @@ interface DepartmentDataSource {
 
 
     suspend fun insertMultiDepartment(departments: List<Department>): Boolean
+
+//    fun getDepartment() : List<>
 }
