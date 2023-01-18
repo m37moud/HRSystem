@@ -48,6 +48,8 @@ dependencies {
 //    implementation("androidx.compose.material3:material3:1.0.1")
 //    implementation("androidx.compose.material3:material3-window-size-class:1.0.1")
 
+implementation 'com.google.android.material:material:<version>'
+
     // Dagger : A fast dependency injector for Android and Java.
 
     kapt("com.google.dagger:dagger-compiler:$daggerVersion")
