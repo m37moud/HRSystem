@@ -21,7 +21,7 @@ WHERE depart_id = ?;
 
 insertDepartMent:
 INSERT INTO Department
--- VALUES((CASE (SELECT COUNT(*) FROM Department) WHEN 0 THEN 1 ELSE (SELECT MAX(depart_id)+1 FROM Department) END), ?, ?, ?, ?, ?);
+-- VALUES((CASE (SELECT COUNT(*) FROM Department) WHEN 0 THEN 1 ELSE (SELECT MAX(depart_id)+1 FROM Department) END), "test", ?, ?, ?, ?);
 VALUES(?, ?, ?, ?, ?, ?);
 
 
