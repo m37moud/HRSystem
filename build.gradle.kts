@@ -5,6 +5,7 @@ import org.jetbrains.kotlin.gradle.tasks.KotlinCompile
 //https://medium.com/@theendik00/sqldelight-for-postgresql-on-kotlin-jvm-b95d14d96134
 
 // sqldelight quick start https://handstandsam.com/2019/08/23/sqldelight-1-x-quick-start-guide-for-android/
+//date picker https://gist.github.com/crisu83/92705fde7e2f27599a71642704e0ce62
 
 plugins {
 //    val kotlinVersion = "1.6.10"
