@@ -60,7 +60,12 @@ fun DepartmentScreen(viewModel: DepartmentViewModel){
                                 viewModel.insertDepartmentFromImporter(departmentList)
                             }
                         }
-                    }) {
+                    }
+                         ,modifier = Modifier.padding(16.dp),
+        // Provide a custom shape for this button. In this example. we specify the button to have
+        // round corners of 16dp radius.
+        shape = RoundedCornerShape(16.dp),
+        elevation = ButtonDefaults.elevation(5.dp),) {
                         Text(text = "Import From Excel")
                     }
                 }
