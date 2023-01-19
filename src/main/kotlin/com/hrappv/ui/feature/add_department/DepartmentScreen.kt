@@ -27,6 +27,81 @@ fun DepartmentScreen(viewModel: DepartmentViewModel){
     val scope = rememberCoroutineScope()
 
     var departmentList : List<Department> = emptyList()
+    
+    
+    /*
+    https://github.com/vinaygaba/Learn-Jetpack-Compose-By-Example
+    LazyColumn(
+        modifier = Modifier.fillMaxWidth()
+    ) {
+        itemsIndexed(items = personList,
+            itemContent = { index, person ->
+                // AnimatedVisibility is a pre-defined composable that automatically animates the 
+                // appearace and disappearance of it's content. This makes it super easy to animated 
+                // things like insertion/deletion of a list element. The visible property tells the
+                // AnimatedVisibility about whether to show the composable that it wraps (in this case, 
+                // the Card that you see below). This is where you can add logic about whether a certain 
+                // element needs to either be shown or not. In our case, we want to show an element, only
+                // if its not a part of the deletedPersonList list. As this list changes and a given 
+                // person is either shown or hidden from the screen, the "enter" and "exit" animations 
+                // are called for a given item. AnimatedVisibility also let's you specify the enter and 
+                // exit animation so that you have full control over how you'd like to animate it's enter
+                // or exit. In the example below, since I also added functionality to delete an item, I 
+                // customize the exit animation to be an animation that shrinks vertically and gave the 
+                // animation a duration of 1000ms. 
+                AnimatedVisibility(
+                    visible = !deletedPersonList.contains(person),
+                    enter = expandVertically(),
+                    exit = shrinkVertically(
+                        animationSpec = tween(
+                            durationMillis = 1000,
+                        )
+                    )
+                ) {
+                    // Card composable is a predefined composable that is meant to represent the 
+                    // card surface as specified by the Material Design specification. We also 
+                    // configure it to have rounded corners and apply a modifier.
+                    Card(
+                        shape = RoundedCornerShape(4.dp),
+                        backgroundColor = colors[index % colors.size],
+                        modifier = Modifier.fillParentMaxWidth()
+                    ) {
+                        // Row is a composable that places its children in a horizontal sequence. You
+                        // can think of it similar to a LinearLayout with the horizontal orientation.
+                        Row(
+                            modifier = Modifier.fillParentMaxWidth(),
+                            horizontalArrangement = Arrangement.SpaceBetween
+                        ) {
+                            // Text is a predefined composable that does exactly what you'd expect it to -
+                            // display text on the screen. It allows you to customize its appearance using
+                            // the style property.
+                            Text(
+                                person.name, style = TextStyle(
+                                    color = Color.Black,
+                                    fontSize = 20.sp,
+                                    textAlign = TextAlign.Center
+                                ), modifier = Modifier.padding(16.dp)
+                            )
+                            IconButton(
+                                // When this button is clicked, we add the person to deletedPersonList.
+                                onClick = {
+                                    deletedPersonList.add(person)
+                                }
+                            ) {
+                                // Simple composable that allows you to draw an icon on the screen. It
+                                // accepts a vector asset as the icon.
+                                Icon(
+                                    imageVector = Icons.Filled.Delete,
+                                    contentDescription = "Delete"
+                                )
+                            }
+                        }
+                    }
+                }
+            })
+    }
+}
+    */
 
     Surface {
         Column(
