@@ -86,6 +86,8 @@ fun LoginScreen(viewModel: LoginViewModel) {
 private fun LoginForm(viewModel: LoginViewModel) {
     var userName by remember { mutableStateOf("") }
     var password by remember { mutableStateOf("") }
+    val passwordVisibility = remember { mutableStateOf(false) }
+    
     OutlinedTextField(
         value = userName,
         onValueChange = {
@@ -128,8 +130,20 @@ private fun LoginForm(viewModel: LoginViewModel) {
                 contentDescription = null
             )
         },
+          trailingIcon = {
+                IconButton(onClick = {
+                    passwordVisibility.value = !passwordVisibility.value
+                }) {
+                    Icon(
+                        painter = painterResource(id = R.drawable.password_eye),
+                        contentDescription = "",
+                        tint = if (passwordVisibility.value) custom else Grey
+                    )
+                }
+            },
 
-        visualTransformation = PasswordVisualTransformation(),
+        visualTransformation =if (passwordVisibility.value) VisualTransformation.None
+            else PasswordVisualTransformation(),
         modifier = Modifier.onKeyEvent {
             if (it.key == Key.Enter) {
                 viewModel.login(userName, password)
@@ -146,7 +160,33 @@ private fun LoginForm(viewModel: LoginViewModel) {
 
         )
     Spacer(modifier = Modifier.height(8.dp))
+    
+         Row(
+            horizontalArrangement = Arrangement.Center
+        ) {
+            val isChecked = remember { mutableStateOf(false) }
 
+            Checkbox(
+                checked = isChecked.value,
+                onCheckedChange = { isChecked.value = it },
+                enabled = true,
+                colors = CheckboxDefaults.colors(custom),
+                modifier = Modifier
+                    .padding(5.dp)
+                    .size(3.dp),
+            )
+
+            Spacer(modifier = Modifier.padding(2.dp))
+
+            Text(
+                "I Agree to  App Terms of Service and Privacy Policy.",
+                modifier = Modifier.width(320.dp),
+                textAlign = TextAlign.Center,
+                fontSize = 12.sp,
+                color = custom
+            )
+        }
+  Spacer(modifier = Modifier.height(8.dp))
     Button(
         modifier = Modifier.testTag("login-button"),
         onClick = {
