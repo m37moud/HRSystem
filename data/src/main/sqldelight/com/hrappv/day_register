@@ -1,0 +1,11 @@
+CREATE TABLE "day_register" (
+	"emp_name"	VARCHAR,
+	"department"	VARCHAR,
+	"ODATE"	VARCHAR,
+	"day"	DATE,
+	"status"	VARCHAR,
+	"in_time"	timestamp,
+	"out_time"	timestamp,
+	"late"	FLOAT,
+	"early"	FLOAT
+);
