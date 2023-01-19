@@ -346,6 +346,7 @@ fun ReadonlyTextField(
 ////
 //
 //// final code
+@OptIn(ExperimentalMaterialApi::class)
 @Composable
 fun TextFieldMenu(modifier: Modifier = Modifier, name: String) {
 
@@ -413,6 +414,103 @@ fun TextFieldMenu(modifier: Modifier = Modifier, name: String) {
         }
     }
 }
+
+
+
+// in githup space in 19/1
+@Composable
+fun TextFieldMenu2(modifier: Modifier = Modifier, name: String) {
+var expanded by remember { mutableStateOf(false) }
+val suggestions = listOf("Item1","Item2","Item3")
+var selectedText by remember { mutableStateOf("") }
+
+var textfieldSize by remember { mutableStateOf(Size.Zero)}
+
+val icon = if (expanded)
+    Icons.Filled.ArrowDropUp //it requires androidx.compose.material:material-icons-extended
+else
+    Icons.Filled.ArrowDropDown
+
+
+Column() {
+    OutlinedTextField(
+        value = selectedText,
+        onValueChange = { selectedText = it },
+        modifier = Modifier
+            .fillMaxWidth()
+            .onGloballyPositioned { coordinates ->
+                //This value is used to assign to the DropDown the same width
+                textfieldSize = coordinates.size.toSize()
+            },
+        label = {Text("Label")},
+        trailingIcon = {
+            Icon(icon,"contentDescription",
+                 Modifier.clickable { expanded = !expanded })
+        }
+    )
+    DropdownMenu(
+        expanded = expanded,
+        onDismissRequest = { expanded = false },
+        modifier = Modifier
+            .width(with(LocalDensity.current){textfieldSize.width.toDp()})
+    ) {
+        suggestions.forEach { label ->
+            DropdownMenuItem(onClick = {
+                selectedText = label
+            }) {
+                Text(text = label)
+            }
+        }
+    }
+}
+}
+
+// in githup space in 19/1
+@Composable
+fun TextFieldMenu3(modifier: Modifier = Modifier, name: String) {
+var expanded by remember { mutableStateOf(false) }
+val suggestions = listOf("Item1","Item2","Item3")
+var selectedText by remember { mutableStateOf("") }
+
+var dropDownWidth by remember { mutableStateOf(0) }
+
+val icon = if (expanded)
+    Icons.Filled.....
+else
+    Icons.Filled.ArrowDropDown
+
+
+Column() {
+    OutlinedTextField(
+        value = selectedText,
+        onValueChange = { selectedText = it },
+        modifier = Modifier.fillMaxWidth()
+            .onSizeChanged {
+                dropDownWidth = it.width
+            },
+        label = {Text("Label")},
+        trailingIcon = {
+            Icon(icon,"contentDescription", Modifier.clickable { expanded = !expanded })
+        }
+    )
+    DropdownMenu(
+        expanded = expanded,
+        onDismissRequest = { expanded = false },
+        modifier = Modifier
+                .width(with(LocalDensity.current){dropDownWidth.toDp()})
+    ) {
+        suggestions.forEach { label ->
+            DropdownMenuItem(onClick = {
+                selectedText = label
+            }) {
+                Text(text = label)
+            }
+        }
+    }
+}
+}
+
+
 
 //
 //
