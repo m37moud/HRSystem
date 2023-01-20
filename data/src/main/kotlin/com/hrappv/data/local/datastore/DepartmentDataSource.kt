@@ -1,7 +1,8 @@
 package com.hrappv.data.local.datastore
 
 import com.hrappv.data.models.Department
-import com.hrappv.data.models.Employees
+import kotlinx.coroutines.flow.Flow
+import utils.LCE
 
 interface DepartmentDataSource {
 
@@ -13,6 +14,8 @@ interface DepartmentDataSource {
 
 
     suspend fun insertMultiDepartment(departments: List<Department>): Boolean
+
+    fun getAllDepartments() : Flow<List<Department>>
 
 //    fun getDepartment() : List<>
 }

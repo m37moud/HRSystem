@@ -5,7 +5,10 @@ import com.hrappv.data.local.datastore.DepartmentDataSource
 import com.hrappv.data.local.datastore.UserDataSource
 import com.hrappv.data.models.Department
 import com.hrappv.data.models.Employees
+import com.squareup.sqldelight.runtime.coroutines.asFlow
+import com.squareup.sqldelight.runtime.coroutines.mapToList
 import kotlinx.coroutines.CoroutineDispatcher
+import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.withContext
 import javax.inject.Inject
 
@@ -42,15 +45,21 @@ class DepartmentDataSourceImpl @Inject constructor(
         return insert
     }
 
+    override fun getAllDepartments(): Flow<List<Department>> {
+        return queries.getAllDepartments(mapper = { depart_id, department, commetion_rate, depart_type, commetion_type, commetion_month ->
+            Department(depart_id, department, commetion_rate, depart_type, commetion_type, commetion_month)
+        }).asFlow().mapToList()
+    }
+
     override suspend fun checkDepartment(id: Long) {
         val department = queries.selectDepartmentById(id)
 
     }
 
-     fun insertDepart(
+    private fun insertDepart(
         department: Department
     ) {
-         println(department.toString())
+        println(department.toString())
         queries.insertDepartMent(
 //            depart_id = department.depart_id,
             department = department.department,

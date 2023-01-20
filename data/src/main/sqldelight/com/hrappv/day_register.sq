@@ -1,0 +1,11 @@
+CREATE TABLE IF NOT EXISTS day_register (
+	emp_name	TEXT,
+	department	TEXT,
+	ODATE	TEXT,
+	day	TEXT,
+	status	TEXT,
+	in_time	TEXT,
+	out_time	TEXT,
+	late	REAL AS Float,
+	early	REAL AS Float
+);

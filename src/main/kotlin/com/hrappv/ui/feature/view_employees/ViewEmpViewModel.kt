@@ -24,7 +24,7 @@ class ViewEmpViewModel @Inject constructor(
     // Inject your repos here...
 ) : ViewModel() {
 
-    private val _EmpResults: MutableStateFlow<LCE<List<GetEmployeeByName>>> = MutableStateFlow(LCE.NOACTION)
+    private val _EmpResults: MutableStateFlow<LCE<List<GetEmployeeByName>>> = MutableStateFlow(LCE.LOADING)
     val empResults: StateFlow<LCE<List<GetEmployeeByName>>> = _EmpResults
 
     private val _employee: MutableStateFlow<GetEmployeeByID> =

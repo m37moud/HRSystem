@@ -87,8 +87,7 @@ dependencies {
     //implementation("com.vanpra.compose-material-dialogs:core:0.8.0")
 //    implementation("io.github.vanpra.compose-material-dialogs:datetime:0.9.0")
 //    implementation("com.afollestad.material-dialogs:input:3.3.0")
- implementation("ca.gosyer:compose-material-dialogs-datetime:0.9.1")
-// implementation "ca.gosyer:compose-material-dialogs-datetime:0.9.1"
+ implementation("ca.gosyer:compose-material-dialogs-datetime:0.8.0")
 
 
 //lottie
@@ -132,6 +131,7 @@ dependencies {
       
 }
 
+
 tasks.withType<KotlinCompile>() {
     kotlinOptions.jvmTarget = "1.8"//"11"
 }
@@ -156,6 +156,7 @@ tasks.withType(JavaCompile) {
     options.targetCompatibility = '1.8'
 }
 */
+
 
 val compileKotlin: KotlinCompile by tasks
 compileKotlin.kotlinOptions {

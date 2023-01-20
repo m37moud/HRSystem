@@ -34,6 +34,8 @@ import androidx.compose.ui.text.input.PasswordVisualTransformation
 import androidx.compose.ui.input.key.key
 import androidx.compose.ui.text.input.ImeAction
 import androidx.compose.ui.text.input.KeyboardType
+import androidx.compose.ui.text.input.VisualTransformation
+import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.window.application
 import compose.icons.FontAwesomeIcons
 import compose.icons.fontawesomeicons.Solid
@@ -87,7 +89,7 @@ private fun LoginForm(viewModel: LoginViewModel) {
     var userName by remember { mutableStateOf("") }
     var password by remember { mutableStateOf("") }
     val passwordVisibility = remember { mutableStateOf(false) }
-    
+
     OutlinedTextField(
         value = userName,
         onValueChange = {
@@ -130,20 +132,22 @@ private fun LoginForm(viewModel: LoginViewModel) {
                 contentDescription = null
             )
         },
-          trailingIcon = {
-                IconButton(onClick = {
-                    passwordVisibility.value = !passwordVisibility.value
-                }) {
-                    Icon(
-                        painter = painterResource(id = R.drawable.password_eye),
-                        contentDescription = "",
-                        tint = if (passwordVisibility.value) custom else Grey
-                    )
-                }
-            },
+        trailingIcon = {
+            IconButton(onClick = {
+                passwordVisibility.value = !passwordVisibility.value
+            }) {
+                Icon(
+                    modifier = Modifier.size(24.dp),
+                    painter = if (passwordVisibility.value) painterResource("drawables/eye_open.png")
+                    else painterResource("drawables/eye_close.png"),
+                    contentDescription = "",
+//                        tint = if (passwordVisibility.value) custom else Grey
+                )
+            }
+        },
 
-        visualTransformation =if (passwordVisibility.value) VisualTransformation.None
-            else PasswordVisualTransformation(),
+        visualTransformation = if (passwordVisibility.value) VisualTransformation.None
+        else PasswordVisualTransformation(),
         modifier = Modifier.onKeyEvent {
             if (it.key == Key.Enter) {
                 viewModel.login(userName, password)
@@ -160,33 +164,33 @@ private fun LoginForm(viewModel: LoginViewModel) {
 
         )
     Spacer(modifier = Modifier.height(8.dp))
-    
-         Row(
-            horizontalArrangement = Arrangement.Center
-        ) {
-            val isChecked = remember { mutableStateOf(false) }
 
-            Checkbox(
-                checked = isChecked.value,
-                onCheckedChange = { isChecked.value = it },
-                enabled = true,
-                colors = CheckboxDefaults.colors(custom),
-                modifier = Modifier
-                    .padding(5.dp)
-                    .size(3.dp),
-            )
+    Row(
+        horizontalArrangement = Arrangement.Center
+    ) {
+        val isChecked = remember { mutableStateOf(false) }
 
-            Spacer(modifier = Modifier.padding(2.dp))
+        Checkbox(
+            checked = isChecked.value,
+            onCheckedChange = { isChecked.value = it },
+            enabled = true,
+//            colors = CheckboxDefaults.colors(custom),
+            modifier = Modifier
+                .padding(5.dp)
+                .size(3.dp),
+        )
+        Spacer(modifier = Modifier.width(8.dp))
 
-            Text(
-                "I Agree to  App Terms of Service and Privacy Policy.",
-                modifier = Modifier.width(320.dp),
-                textAlign = TextAlign.Center,
-                fontSize = 12.sp,
-                color = custom
-            )
-        }
-  Spacer(modifier = Modifier.height(8.dp))
+
+        Text(
+            "remember password",
+//            modifier = Modifier.width(320.dp),
+            textAlign = TextAlign.Center,
+            fontSize = 12.sp,
+//            color = custom
+        )
+    }
+    Spacer(modifier = Modifier.height(8.dp))
     Button(
         modifier = Modifier.testTag("login-button"),
         onClick = {

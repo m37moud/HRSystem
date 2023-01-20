@@ -14,18 +14,20 @@ import kotlinx.coroutines.GlobalScope
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.swing.Swing
 import java.awt.FileDialog
+import java.awt.Frame
 import java.io.File
 import java.nio.file.Path
 import javax.swing.JOptionPane
 
 @Composable
-fun FrameWindowScope.FileDialog(
+fun FileDialog( //FrameWindowScope.
+    parent: Frame? = null,
     title: String,
     isLoad: Boolean,
     onResult: (result: Path?) -> Unit
 ) = AwtWindow(
     create = {
-        object : FileDialog(window, "Choose a file", if (isLoad) LOAD else SAVE) {
+        object : FileDialog(parent, "Choose a file", if (isLoad) LOAD else SAVE) { //window
             override fun setVisible(value: Boolean) {
                 super.setVisible(value)
                 if (value) {

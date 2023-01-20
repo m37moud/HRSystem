@@ -50,10 +50,11 @@ import utils.LCE
 //https://johncodeos.com/how-to-add-search-in-list-with-jetpack-compose/
 
 
-
 @Composable
 fun ViewEmpScreen(viewEmployee: ViewEmpViewModel) {
     val scope = rememberCoroutineScope()
+    val scaffoldState = rememberScaffoldState()
+
     val textState = remember { mutableStateOf(TextFieldValue("")) }
 //    val textState =viewEmployee.queries.collectAsState()
     var deletedEmpName = remember { mutableStateOf("-") }
@@ -72,10 +73,9 @@ fun ViewEmpScreen(viewEmployee: ViewEmpViewModel) {
     var selectedGrid by remember { mutableStateOf(true) }
     var selectedMenu by remember { mutableStateOf(false) }
 
-    val scaffoldState = rememberScaffoldState()
 
     val deleteEmpState = viewEmployee.delete.collectAsState()
-    if(deleteEmpState.value){
+    if (deleteEmpState.value) {
         scope.launch { scaffoldState.snackbarHostState.showSnackbar("Employee ${deletedEmpName.value} deleted Sucssessful") }
     }
 
@@ -115,7 +115,10 @@ fun ViewEmpScreen(viewEmployee: ViewEmpViewModel) {
 //                    backgroundColor = MaterialTheme.colors.onBackground
                     )
                     {
-                        Text(text = "Employees Number : ${viewEmployee.empNumber.value.toString()}", modifier = Modifier.padding(10.dp))
+                        Text(
+                            text = "Employees Number : ${viewEmployee.empNumber.value.toString()}",
+                            modifier = Modifier.padding(10.dp)
+                        )
                     }
 
                 }
@@ -131,10 +134,10 @@ fun ViewEmpScreen(viewEmployee: ViewEmpViewModel) {
                 SearchView(modifier = Modifier.align(Alignment.CenterStart),
                     state = textState, onpressEnterSearch = {
 //                search(viewEmployee, empName)
-                            viewEmployee.getEmployees(empName)
+                        viewEmployee.getEmployees(empName)
                     }) {
 //                search(viewEmployee, "")
-                        viewEmployee.getEmployees("")
+                    viewEmployee.getEmployees("")
                 }
 
 
@@ -169,13 +172,13 @@ fun ViewEmpScreen(viewEmployee: ViewEmpViewModel) {
                         selectedGrid = selectedGrid,
                         selectedMenu = selectedMenu,
                         onDeleteClick = { id ->
-                            try{
+                            try {
 
 //                                viewEmployee.getSingleEmployee(id)
 
                                 viewEmployee.deleteEmployee(id)
 
-                            }catch (exception : Exception){
+                            } catch (exception: Exception) {
                                 scope.launch { scaffoldState.snackbarHostState.showSnackbar("Delete failed") }
                                 println(exception.message)
 
@@ -487,7 +490,6 @@ fun SearchView(
 
 @OptIn(ExperimentalFoundationApi::class)
 @Composable
-@Preview
 fun ContentUI(
     data: List<GetEmployeeByName>,
     selectedGrid: Boolean,
@@ -497,86 +499,79 @@ fun ContentUI(
 
     ) {
 
-    if (selectedGrid) {
-        LazyVerticalGrid(
-            modifier = Modifier
-                .fillMaxWidth()
+    if (selectedGrid)
+        EmployeeGridLazyColumn(
+            data, onDeleteClick
+        )
+
+
+
+    if (selectedMenu)
+        EmployeeLazyColumn(data)
+
+
+}
+
+@OptIn(ExperimentalFoundationApi::class)
+@Composable
+fun EmployeeGridLazyColumn(
+    data: List<GetEmployeeByName>,
+    onDeleteClick: (id: Long) -> Unit,
+
+    ) {
+    LazyVerticalGrid(
+        modifier = Modifier
+            .fillMaxWidth()
 //        .systemBarsPadding()
-            ,
-            columns = GridCells.Fixed(4),
-            //columns = GridCells.Adaptive(minSize = 128.dp)
-            contentPadding = PaddingValues(horizontal = 16.dp, vertical = 16.dp),
-            verticalArrangement = Arrangement.spacedBy(8.dp),
-            horizontalArrangement = Arrangement.spacedBy(8.dp)
+        ,
+        columns = GridCells.Fixed(4),
+        //columns = GridCells.Adaptive(minSize = 128.dp)
+        contentPadding = PaddingValues(horizontal = 16.dp, vertical = 16.dp),
+        verticalArrangement = Arrangement.spacedBy(8.dp),
+        horizontalArrangement = Arrangement.spacedBy(8.dp)
+    ) {
+        items(data) { employee ->
+            EmployeeCardGrid(
+                Modifier.animateItemPlacement(
+                    tween(durationMillis = 250)
+                ),
+                employee, onDeleteClick
+            )
+
+        }
+    }
+}
+
+@OptIn(ExperimentalFoundationApi::class)
+@Composable
+fun EmployeeLazyColumn(
+    data: List<GetEmployeeByName>,
+) {
+    Column(
+        modifier = Modifier.fillMaxSize()
+//            .horizontalScroll(rememberScrollState())
+        ,
+        horizontalAlignment = Alignment.CenterHorizontally // this can change for verticalAlignment
+    ) {
+        Header()
+
+        LazyColumn(
+            modifier = Modifier.fillMaxSize()
+//                .padding(vertical = 4.dp) // this can change for contentPadding = PaddingValues(horizontal = 16.dp)
+            , contentPadding = PaddingValues(vertical = 4.dp)
         ) {
-            items(data) { employee ->
-                EmployeeCardGrid(
+            items(items = data) { employee ->
+                EmployeeCardMenu(
                     Modifier.animateItemPlacement(
                         tween(durationMillis = 250)
                     ),
-                    employee, onDeleteClick
+                    employee,
                 )
 
+
             }
         }
-    }
 
-    /*
-
-// another 
-val dates = MutableList(35) { if (it + 1 > 31) -1 else it + 1 }
-val chunks = dates.chunked(7)
-
-LazyColumn(
-Modifier
-    .fillMaxSize()
-    .systemBarsPadding()
-) {
-items(chunks) {
-    Row(
-        Modifier
-            .fillMaxWidth()
-            .padding(vertical = 8.dp),
-        horizontalArrangement = Arrangement.SpaceEvenly
-    ) {
-        it.forEach { date ->
-            Box(Modifier.size(24.dp), contentAlignment = Alignment.Center) {
-                if (date != -1) Text(text = "$date")
-            }
-        }
-    }
-}
-}
-    */
-
-    if (selectedMenu) {
-        Column(
-            modifier = Modifier.fillMaxSize()
-//            .horizontalScroll(rememberScrollState())
-            ,
-            horizontalAlignment = Alignment.CenterHorizontally // this can change for verticalAlignment
-        ) {
-            Header()
-
-            LazyColumn(
-                modifier = Modifier.fillMaxSize()
-//                .padding(vertical = 4.dp) // this can change for contentPadding = PaddingValues(horizontal = 16.dp)
-                , contentPadding = PaddingValues(vertical = 4.dp)
-            ) {
-                items(items = data) { employee ->
-                    EmployeeCardMenu(
-                        Modifier.animateItemPlacement(
-                            tween(durationMillis = 250)
-                        ),
-                        employee,
-                    )
-
-
-                }
-            }
-
-
-        }
 
     }
 }
@@ -662,7 +657,11 @@ fun EmployeeItemGrid(employee: GetEmployeeByName, onDeleteClick: (id: Long) -> U
                     expanded = true
                 })
                 {
-                    Icon(imageVector = Icons.Outlined.MoreVert, contentDescription = null, modifier = Modifier.size(25.dp))
+                    Icon(
+                        imageVector = Icons.Outlined.MoreVert,
+                        contentDescription = null,
+                        modifier = Modifier.size(25.dp)
+                    )
                 }
 
                 Spacer(modifier = Modifier.height(4.dp))
@@ -681,7 +680,6 @@ fun EmployeeItemGrid(employee: GetEmployeeByName, onDeleteClick: (id: Long) -> U
                 }
 
             }
-
 
 
         }

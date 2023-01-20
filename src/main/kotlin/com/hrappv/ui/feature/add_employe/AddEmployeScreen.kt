@@ -5,6 +5,8 @@ import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.*
 import androidx.compose.material.*
 import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.filled.ArrowDropDown
+import androidx.compose.material.icons.filled.KeyboardArrowUp
 import androidx.compose.material.icons.filled.Refresh
 import androidx.compose.material.icons.outlined.ArrowDropDown
 import androidx.compose.material.icons.outlined.KeyboardArrowUp
@@ -12,13 +14,22 @@ import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.alpha
+import androidx.compose.ui.geometry.Size
+import androidx.compose.ui.layout.onGloballyPositioned
+import androidx.compose.ui.layout.onSizeChanged
+import androidx.compose.ui.platform.LocalDensity
 import androidx.compose.ui.text.input.TextFieldValue
 import androidx.compose.ui.unit.dp
+import androidx.compose.ui.unit.toSize
 import com.hrappv.data.models.Employees
 import com.hrappv.ui.value.HrAppVTheme
+import com.vanpra.composematerialdialogs.MaterialDialog
+import com.vanpra.composematerialdialogs.datetime.date.datepicker
+import com.vanpra.composematerialdialogs.rememberMaterialDialogState
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 import util.Constatnts.Companion.excelImporter
+import java.time.format.DateTimeFormatter
 
 
 @Composable
@@ -90,10 +101,11 @@ fun AddEmployeeScreen(
                 label = { Text("First Name") }
             )
             Spacer(modifier = Modifier.height(8.dp))
-            TextFieldMenu(name = "Department")
+            TextFieldMenu3(name = "Department")
 
 
             Spacer(modifier = Modifier.height(8.dp))
+//            MyDateField()
 
             TextField(
                 value = formState.value.bith_day,
@@ -199,18 +211,20 @@ fun ReadonlyTextField(
     }
 }
 
-//
+
 //@Composable
 //fun MyDateField() {
 //    val dialogState = rememberMaterialDialogState()
-//    val dialog = MaterialDialog()
 //    val textState = remember { mutableStateOf(TextFieldValue()) }
-//    dialog.build {
+//    val dialog = MaterialDialog(dialogState, buttons = {
+//        positiveButton("Ok")
+//        negativeButton("Cancel")
+//    }){
 //        datepicker { date ->
-//            val formattedDate = date.format(
-//                DateTimeFormatter.ofPattern("dd.MM.yyyy")
-//            )
-//            textState.value = TextFieldValue(formattedDate)
+////            val formattedDate = date.(
+////                DateTimeFormatter.ofPattern("dd.MM.yyyy")
+////            )
+//            textState.value = TextFieldValue(text = date.toString())
 //        }
 //    }
 //
@@ -219,7 +233,7 @@ fun ReadonlyTextField(
 //            value = textState.value,
 //            onValueChange = { textState.value = it },
 //            onClick = {
-//                dialog.show()
+//                dialogState.show()
 //            },
 //            label = {
 //                Text(text = "Date")
@@ -362,14 +376,6 @@ fun TextFieldMenu(modifier: Modifier = Modifier, name: String) {
         mutableStateOf(false)
     }
 
-    // the box
-//    ExposedDropdownMenuBox(
-//        expanded = expanded,
-//        onExpandedChange = {
-//            expanded = !expanded
-//        }
-//    ) {
-
     Column(modifier = modifier) {
         // text field
         TextField(
@@ -427,7 +433,7 @@ var selectedText by remember { mutableStateOf("") }
 var textfieldSize by remember { mutableStateOf(Size.Zero)}
 
 val icon = if (expanded)
-    Icons.Filled.ArrowDropUp //it requires androidx.compose.material:material-icons-extended
+    Icons.Filled.KeyboardArrowUp //it requires androidx.compose.material:material-icons-extended
 else
     Icons.Filled.ArrowDropDown
 
@@ -437,12 +443,12 @@ Column() {
         value = selectedText,
         onValueChange = { selectedText = it },
         modifier = Modifier
-            .fillMaxWidth()
+//            .fillMaxWidth()
             .onGloballyPositioned { coordinates ->
                 //This value is used to assign to the DropDown the same width
                 textfieldSize = coordinates.size.toSize()
             },
-        label = {Text("Label")},
+        label = {Text("$name")},
         trailingIcon = {
             Icon(icon,"contentDescription",
                  Modifier.clickable { expanded = !expanded })
@@ -475,7 +481,7 @@ var selectedText by remember { mutableStateOf("") }
 var dropDownWidth by remember { mutableStateOf(0) }
 
 val icon = if (expanded)
-    Icons.Filled.....
+    Icons.Filled.KeyboardArrowUp
 else
     Icons.Filled.ArrowDropDown
 
@@ -484,11 +490,13 @@ Column() {
     OutlinedTextField(
         value = selectedText,
         onValueChange = { selectedText = it },
-        modifier = Modifier.fillMaxWidth()
+        modifier = Modifier
             .onSizeChanged {
                 dropDownWidth = it.width
             },
-        label = {Text("Label")},
+        readOnly = true,
+
+        label = {Text("$name")},
         trailingIcon = {
             Icon(icon,"contentDescription", Modifier.clickable { expanded = !expanded })
         }
@@ -502,6 +510,8 @@ Column() {
         suggestions.forEach { label ->
             DropdownMenuItem(onClick = {
                 selectedText = label
+                expanded = false
+
             }) {
                 Text(text = label)
             }
