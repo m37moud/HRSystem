@@ -37,11 +37,8 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.compose.ui.window.Dialog
 import com.hrappv.data.models.Department
-import com.hrappv.ui.feature.add_employe.EmployeeFormState
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
-import showFileDialog
-import util.Constatnts
 import utils.LCE
 
 @Composable
@@ -72,6 +69,7 @@ fun DepartmentScreen(viewModel: DepartmentViewModel) {
                 shape = RoundedCornerShape(4.dp),
                 elevation = 8.dp
             ) {
+
 
                 Box(
                     modifier = Modifier
@@ -107,10 +105,10 @@ fun DepartmentScreen(viewModel: DepartmentViewModel) {
                         if (showAddDepartmentDialog) {
                             AddDepartmentDialog(
                                 onClose = { showAddDepartmentDialog = false },
-                                title = "Select Folder",
+                                title = "Add Department",
                             ) {
-                                if (it.toString().isNotEmpty()) path = it.toString()
-                                showPathDialog = false
+//                                if (it.toString().isNotEmpty()) println(it.toString())
+                                showAddDepartmentDialog = false
                             }
                         }
 
@@ -127,7 +125,10 @@ fun DepartmentScreen(viewModel: DepartmentViewModel) {
                         )
                         Button(
                             onClick = {
+
                                 scope.launch(Dispatchers.IO) {
+                                    showAddDepartmentDialog = true
+
 //                                FileDialog(title = "", isLoad = true, onResult = {})
 //                                    showPathDialog = true
 //                                departmentList = Constatnts.excelImporterDepartment(path).distinct()
@@ -215,52 +216,74 @@ fun DepartmentScreen(viewModel: DepartmentViewModel) {
 
 @Composable
 fun AddDepartmentDialog(onClose: () -> Unit, title: String, onResult: (Department) -> Unit) {
-    Dialog(onCloseRequest = onClose) {
-        val formState = remember { mutableStateOf(Department()) }
-        Column {
-
-            TextField(
-                value = formState.value.depart_id,
-                onValueChange = { formState.value.depart_id = it },
-                label = { Text("Department ID") }
-            )
-            Spacer(modifier = Modifier.height(8.dp))
-
-            TextField(
-                value = formState.value.fname,
-                onValueChange = { formState.value.fname = it },
-                label = { Text("Department Name") }
-            )
-            Spacer(modifier = Modifier.height(8.dp))
-//            TextFieldMenu()
+//    val formState = remember { mutableStateOf(Department(department = "Department Name")) }
 
 
-            Spacer(modifier = Modifier.height(8.dp))
-
-            TextFieldMenu(name = "Department Type")
-
-            TextField(
-                value = formState.value.salary,
-                onValueChange = { formState.value.salary = it },
-                label = { Text("Department Commetion Type") }
-            )
-            Spacer(modifier = Modifier.height(8.dp))
-
-            TextField(
-                value = formState.value.vacanition,
-                onValueChange = { formState.value.vacanition = it },
-                label = { Text("Department Commetion Month") }
-            )
-            Spacer(modifier = Modifier.height(8.dp))
-            Spacer(modifier = Modifier.height(8.dp))
-
-            Button(onClick = {
-                // Insert the new employee into the database here
-            }) {
-                Text("Add Department")
-            }
+    Dialog(
+        onCloseRequest = onClose, title = title,
+//        state = rememberWindowState(
+//            height = Dp.Unspecified,
+//            position = WindowPosition(Alignment.Center)),
+            content = {
+//            var department = Department()
+//            Surface {
+//                Column(horizontalAlignment = Alignment.CenterHorizontally, verticalArrangement = Arrangement.Center) {
+//
+////                    TextField(
+////                        value = formState.value.depart_id.toString(),
+////                        onValueChange = { formState.value.depart_id = it.toLong() },
+////                        label = { Text("Department ID") }
+////                    )
+////                    Spacer(modifier = Modifier.height(8.dp))
+//
+////                    formState.value.department?.let {
+//                        TextField(
+//                            value = "it",
+//                            onValueChange = {  }, //formState.value.department = it
+//                            label = { Text("Department Name") }
+//                        )
+////                    }
+//                    Spacer(modifier = Modifier.height(8.dp))
+////            TextFieldMenu()
+//
+//
+//                    TextField(
+//                        value = "formState.value.commetion_rate.toString()",
+//                        onValueChange = {  }, //formState.value.commetion_rate = it.toLong()
+//                        label = { Text("Department Commetion Type") }
+//                    )
+//                    Spacer(modifier = Modifier.height(8.dp))
+//
+////                    formState.value.commetion_type?.let {
+//                        TextFieldMenu(name = "it") {
+////                            formState.value.commetion_type = it
+//                        }
+////                    }
+//
+//                    Spacer(modifier = Modifier.height(8.dp))
+//
+////                    formState.value.commetion_month?.let {
+////                        TextField(
+////                            value = "it",
+////                            onValueChange = {
+//////                                formState.value.commetion_month = it
+////                                            },
+////                            label = { Text("Department Commetion Month") }
+////                        )
+////                    }
+//                    Spacer(modifier = Modifier.height(8.dp))
+//
+//                    Button(onClick = {
+////                        onResult(Department())
+////                        onClose()
+//                        // Insert the new employee into the database here
+//                    }) {
+//                        Text("Add Department")
+//                    }
+//                }
+//            }
         }
-    }
+    )
 }
 
 @OptIn(ExperimentalComposeUiApi::class)
@@ -391,7 +414,7 @@ fun EmployeeLazyColumn(
                 ) {
                     EmployeeCardMenu(
                         Modifier.animateItemPlacement(
-                            tween(durationMillis = 1000)
+                            tween(durationMillis = 3000)
                         ),
                         department,
                     )
@@ -415,7 +438,7 @@ private fun Header(modifier: Modifier = Modifier) {
         Row(
             modifier = Modifier
                 .fillMaxWidth()
-                .padding(vertical = 4.dp, horizontal = 10.dp),
+                .padding(vertical = 3.dp, horizontal = 10.dp),
             horizontalArrangement = Arrangement.SpaceBetween
         ) {
 
@@ -523,12 +546,11 @@ fun LoadingUI() {
 }
 
 
-
 @Composable
-fun TextFieldMenu(modifier: Modifier = Modifier, name: String) {
+fun TextFieldMenu(modifier: Modifier = Modifier, name: String, onValue: (String) -> Unit) {
 
 
-    val listItems = arrayOf("Favorites", "Options", "Settings", "Share")
+    val listItems = arrayOf("ادارى", "صناعى")
 
     var selectedItem by remember {
         mutableStateOf(listItems[0])
@@ -550,7 +572,7 @@ fun TextFieldMenu(modifier: Modifier = Modifier, name: String) {
         // text field
         TextField(
             value = selectedItem,
-            onValueChange = {},
+            onValueChange = { onValue },
             readOnly = true,
             label = { Text(text = "$name") },
             trailingIcon = {

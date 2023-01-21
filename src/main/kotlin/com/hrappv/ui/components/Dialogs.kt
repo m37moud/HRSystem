@@ -55,9 +55,8 @@ fun FileDialog( //FrameWindowScope.
             override fun setVisible(value: Boolean) {
                 super.setVisible(value)
                 if (value) {
-
-                    if (file != null) {
-                        onResult(File(directory).resolve(file).toPath()) // File(directory).resolve(file).toPath()
+                    if (directory != null) {
+                        onResult(File(directory).toPath()) // File(directory).resolve(file).toPath()
                     } else {
                         onResult(null)
                     }
@@ -66,7 +65,9 @@ fun FileDialog( //FrameWindowScope.
         }.apply {
 //            this.iconImages = painterResource("drawables/logo.png") //Icons.Default.Menu//painterResource("drawables/logo.png")
             this.title = title
-            isMultipleMode = true
+            this.file = "" // to select only folder
+//            this.fileFilter = FileNameExtensionFilter("folders", "") // to
+
 //            painterResource("drawables/logo.png")
 
 
