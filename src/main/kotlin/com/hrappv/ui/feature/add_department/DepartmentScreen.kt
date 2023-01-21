@@ -14,33 +14,43 @@ import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.*
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.AccountBox
+import androidx.compose.material.icons.filled.Close
 import androidx.compose.material.icons.filled.Refresh
+import androidx.compose.material.icons.filled.Search
 import androidx.compose.material.icons.outlined.ArrowDropDown
 import androidx.compose.material.icons.outlined.KeyboardArrowUp
 import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
+import androidx.compose.ui.ExperimentalComposeUiApi
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
-import androidx.compose.ui.res.painterResource
+import androidx.compose.ui.input.key.Key
+import androidx.compose.ui.input.key.key
+import androidx.compose.ui.input.key.onKeyEvent
+import androidx.compose.ui.platform.testTag
+import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.text.font.FontWeight
+import androidx.compose.ui.text.input.TextFieldValue
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
-import androidx.compose.ui.window.Window
-import com.hrappv.GetEmployeeByName
+import androidx.compose.ui.unit.sp
+import androidx.compose.ui.window.Dialog
 import com.hrappv.data.models.Department
 import com.hrappv.ui.feature.add_employe.EmployeeFormState
-import com.hrappv.ui.value.R
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
+import showFileDialog
 import util.Constatnts
 import utils.LCE
 
 @Composable
 fun DepartmentScreen(viewModel: DepartmentViewModel) {
-    var path by remember { mutableStateOf("F:\\8") }
+    var path by remember { mutableStateOf("") }
+    val textState = remember { mutableStateOf(TextFieldValue("")) }
 
-    val showPathDialog by remember { mutableStateOf(false) }
+    var showPathDialog by remember { mutableStateOf(false) }
+    var showAddDepartmentDialog by remember { mutableStateOf(false) }
     val scope = rememberCoroutineScope()
     val scaffoldState = rememberScaffoldState()
 
@@ -50,79 +60,6 @@ fun DepartmentScreen(viewModel: DepartmentViewModel) {
     var departmentList: List<Department> = emptyList()
 
 
-    /*
-    https://github.com/vinaygaba/Learn-Jetpack-Compose-By-Example
-    LazyColumn(
-        modifier = Modifier.fillMaxWidth()
-    ) {
-        itemsIndexed(items = personList,
-            itemContent = { index, person ->
-                // AnimatedVisibility is a pre-defined composable that automatically animates the 
-                // appearace and disappearance of it's content. This makes it super easy to animated 
-                // things like insertion/deletion of a list element. The visible property tells the
-                // AnimatedVisibility about whether to show the composable that it wraps (in this case, 
-                // the Card that you see below). This is where you can add logic about whether a certain 
-                // element needs to either be shown or not. In our case, we want to show an element, only
-                // if its not a part of the deletedPersonList list. As this list changes and a given 
-                // person is either shown or hidden from the screen, the "enter" and "exit" animations 
-                // are called for a given item. AnimatedVisibility also let's you specify the enter and 
-                // exit animation so that you have full control over how you'd like to animate it's enter
-                // or exit. In the example below, since I also added functionality to delete an item, I 
-                // customize the exit animation to be an animation that shrinks vertically and gave the 
-                // animation a duration of 1000ms. 
-                AnimatedVisibility(
-                    visible = !deletedPersonList.contains(person),
-                    enter = expandVertically(),
-                    exit = shrinkVertically(
-                        animationSpec = tween(
-                            durationMillis = 1000,
-                        )
-                    )
-                ) {
-                    // Card composable is a predefined composable that is meant to represent the 
-                    // card surface as specified by the Material Design specification. We also 
-                    // configure it to have rounded corners and apply a modifier.
-                    Card(
-                        shape = RoundedCornerShape(4.dp),
-                        backgroundColor = colors[index % colors.size],
-                        modifier = Modifier.fillParentMaxWidth()
-                    ) {
-                        // Row is a composable that places its children in a horizontal sequence. You
-                        // can think of it similar to a LinearLayout with the horizontal orientation.
-                        Row(
-                            modifier = Modifier.fillParentMaxWidth(),
-                            horizontalArrangement = Arrangement.SpaceBetween
-                        ) {
-                            // Text is a predefined composable that does exactly what you'd expect it to -
-                            // display text on the screen. It allows you to customize its appearance using
-                            // the style property.
-                            Text(
-                                person.name, style = TextStyle(
-                                    color = Color.Black,
-                                    fontSize = 20.sp,
-                                    textAlign = TextAlign.Center
-                                ), modifier = Modifier.padding(16.dp)
-                            )
-                            IconButton(
-                                // When this button is clicked, we add the person to deletedPersonList.
-                                onClick = {
-                                    deletedPersonList.add(person)
-                                }
-                            ) {
-                                // Simple composable that allows you to draw an icon on the screen. It
-                                // accepts a vector asset as the icon.
-                                Icon(
-                                    imageVector = Icons.Filled.Delete,
-                                    contentDescription = "Delete"
-                                )
-                            }
-                        }
-                    }
-                }
-            })
-    }
-}
-    */
 
     Surface {
         Column(
@@ -130,45 +67,112 @@ fun DepartmentScreen(viewModel: DepartmentViewModel) {
             horizontalAlignment = Alignment.CenterHorizontally,
 //            verticalArrangement = Arrangement.Center
         ) {
-            Card(Modifier.fillMaxWidth(), elevation = 8.dp) {
-                Row(modifier = Modifier.align(Alignment.End))
-                {
+            Card(
+//                modifier = Modifier.fillMaxWidth(),
+                shape = RoundedCornerShape(4.dp),
+                elevation = 8.dp
+            ) {
 
-//                    if (showPathDialog) {
-//                        FileDialog(title = "Select Folder", isLoad = true) {
-//                            path.value = it
-//                        }
-//                    }
-                    OutlinedTextField(
-                        value = path,
-                        onValueChange = { path = it },
-                        modifier = Modifier.padding(end = 16.dp).weight(1f),
-                        placeholder = { Text("put url excel folder") },
-                        label = { Text(text = "paste here ...") },
-                        leadingIcon = { Icon(Icons.Filled.Refresh, "search location") }
+                Box(
+                    modifier = Modifier
+                        .fillMaxWidth()
+                        .padding(start = 8.dp, end = 8.dp)
+                ) {
 
-                    )
-                    Button(
-                        onClick = {
-                            scope.launch(Dispatchers.IO) {
-//                                FileDialog(title = "", isLoad = true, onResult = {})
 
-                                departmentList = Constatnts.excelImporterDepartment(path).distinct()
-                                println(departmentList.toString())
-                                if (departmentList.isNotEmpty()) {
-                                    viewModel.insertDepartmentFromImporter(departmentList)
-                                }
-                            }
-                        },
-                        modifier = Modifier.padding(16.dp),
-                        // Provide a custom shape for this button. In this example. we specify the button to have
-                        // round corners of 16dp radius.
-                        shape = RoundedCornerShape(16.dp),
-                        elevation = ButtonDefaults.elevation(5.dp),
-                    ) {
-                        Text(text = "Import From Excel")
+                    SearchView(modifier = Modifier.align(Alignment.CenterStart),
+                        state = textState, onpressEnterSearch = {
+//                search(viewEmployee, empName)
+//                                viewModel.getEmployees(empName)
+                        }) {
+//                            viewModel.getEmployees("")
                     }
+
+
+
+                    Row(modifier = Modifier.align(Alignment.CenterEnd))
+                    {
+
+                        if (showPathDialog) {
+                            FileDialog(
+//                                showDialogState = { showPathDialog = false },
+                                title = "Select Folder",
+                                isLoad = true
+                            ) {
+                                if (it.toString().isNotEmpty()) path = it.toString()
+                                showPathDialog = false
+                            }
+                        }
+
+                        if (showAddDepartmentDialog) {
+                            AddDepartmentDialog(
+                                onClose = { showAddDepartmentDialog = false },
+                                title = "Select Folder",
+                            ) {
+                                if (it.toString().isNotEmpty()) path = it.toString()
+                                showPathDialog = false
+                            }
+                        }
+
+
+                        OutlinedTextField(
+                            value = path,
+                            onValueChange = { path = it },
+
+                            modifier = Modifier.padding(end = 16.dp),
+                            placeholder = { Text("Select Excel Folder") },
+                            label = { Text(text = "Folder Path ...") },
+                            leadingIcon = { Icon(Icons.Filled.Refresh, "search location") }
+
+                        )
+                        Button(
+                            onClick = {
+                                scope.launch(Dispatchers.IO) {
+//                                FileDialog(title = "", isLoad = true, onResult = {})
+//                                    showPathDialog = true
+//                                departmentList = Constatnts.excelImporterDepartment(path).distinct()
+//                                println(departmentList.toString())
+//                                if (departmentList.isNotEmpty()) {
+//                                    viewModel.insertDepartmentFromImporter(departmentList)
+//                                }
+                                }
+                            },
+                            modifier = Modifier.padding(16.dp),
+                            // Provide a custom shape for this button. In this example. we specify the button to have
+                            // round corners of 16dp radius.
+                            shape = RoundedCornerShape(16.dp),
+                            elevation = ButtonDefaults.elevation(5.dp),
+                        ) {
+                            Text(text = "Add Department")
+                        }
+
+
+                        Button(
+                            onClick = {
+                                scope.launch(Dispatchers.IO) {
+//                                FileDialog(title = "", isLoad = true, onResult = {})
+                                    showPathDialog = true
+//                                departmentList = Constatnts.excelImporterDepartment(path).distinct()
+//                                println(departmentList.toString())
+//                                if (departmentList.isNotEmpty()) {
+//                                    viewModel.insertDepartmentFromImporter(departmentList)
+//                                }
+                                }
+                            },
+                            modifier = Modifier.padding(16.dp),
+                            // Provide a custom shape for this button. In this example. we specify the button to have
+                            // round corners of 16dp radius.
+                            shape = RoundedCornerShape(16.dp),
+                            elevation = ButtonDefaults.elevation(5.dp),
+                        ) {
+                            Text(text = "Import From Excel")
+                        }
+                    }
+
+
                 }
+
+
             }
 
             Spacer(modifier = Modifier.height(8.dp))
@@ -208,6 +212,140 @@ fun DepartmentScreen(viewModel: DepartmentViewModel) {
 
 }
 
+
+@Composable
+fun AddDepartmentDialog(onClose: () -> Unit, title: String, onResult: (Department) -> Unit) {
+    Dialog(onCloseRequest = onClose) {
+        val formState = remember { mutableStateOf(Department()) }
+        Column {
+
+            TextField(
+                value = formState.value.depart_id,
+                onValueChange = { formState.value.depart_id = it },
+                label = { Text("Department ID") }
+            )
+            Spacer(modifier = Modifier.height(8.dp))
+
+            TextField(
+                value = formState.value.fname,
+                onValueChange = { formState.value.fname = it },
+                label = { Text("Department Name") }
+            )
+            Spacer(modifier = Modifier.height(8.dp))
+//            TextFieldMenu()
+
+
+            Spacer(modifier = Modifier.height(8.dp))
+
+            TextFieldMenu(name = "Department Type")
+
+            TextField(
+                value = formState.value.salary,
+                onValueChange = { formState.value.salary = it },
+                label = { Text("Department Commetion Type") }
+            )
+            Spacer(modifier = Modifier.height(8.dp))
+
+            TextField(
+                value = formState.value.vacanition,
+                onValueChange = { formState.value.vacanition = it },
+                label = { Text("Department Commetion Month") }
+            )
+            Spacer(modifier = Modifier.height(8.dp))
+            Spacer(modifier = Modifier.height(8.dp))
+
+            Button(onClick = {
+                // Insert the new employee into the database here
+            }) {
+                Text("Add Department")
+            }
+        }
+    }
+}
+
+@OptIn(ExperimentalComposeUiApi::class)
+@Composable
+private fun SearchView(
+    modifier: Modifier = Modifier, state: MutableState<TextFieldValue>,
+    onpressEnterSearch: () -> Unit,
+    onCloseSearch: () -> Unit,
+) {
+    Row(
+        modifier = modifier
+//                    .fillMaxWidth()
+            .padding(
+                horizontal = 16.dp,
+                vertical = 16.dp
+            ), // this can change for contentPadding = PaddingValues(horizontal = 16.dp)
+        verticalAlignment = Alignment.CenterVertically, // this modifier for column
+//            horizontalArrangement = Arrangement.Center      // this can change for Arrangement.spacedBy()
+
+    ) {
+        OutlinedTextField(
+            value = state.value,
+            onValueChange = { value ->
+                state.value = value
+            },
+            modifier = modifier.padding(end = 16.dp)
+                .onKeyEvent {
+                    if (it.key == Key.Enter) {
+                        onpressEnterSearch()
+                        true
+                    } else {
+                        false
+                    }
+                }.testTag("password"),
+            textStyle = TextStyle(fontSize = 18.sp),
+            placeholder = { Text("Search by name or ID") },
+            label = { Text(text = "Search") },
+            leadingIcon = {
+                Icon(
+                    Icons.Default.Search,
+                    contentDescription = "",
+                    modifier = Modifier
+                        .padding(15.dp)
+                        .size(24.dp)
+                )
+            },
+            trailingIcon = {
+                if (state.value != TextFieldValue("")) {
+                    IconButton(
+                        onClick = {
+                            onCloseSearch()
+
+                            state.value =
+                                TextFieldValue("") // Remove text from TextField when you press the 'X' icon
+                        }
+                    ) {
+                        Icon(
+                            Icons.Default.Close,
+                            contentDescription = "",
+                            modifier = Modifier
+                                .padding(15.dp)
+                                .size(24.dp)
+                        )
+                    }
+                }
+            },
+            singleLine = true,
+
+            )
+
+
+//        Button(onClick = {
+////                    importState = LCE.LOADING
+//
+////                search(viewEmployee, empName)
+//            onpressEnterSearch()
+//        }) {
+//            Icon(Icons.Outlined.Search, "Search")
+//        }
+
+    }
+
+}
+
+
 @Composable
 private fun ContentUI(
     data: List<Department>,
@@ -241,23 +379,23 @@ fun EmployeeLazyColumn(
 //                .padding(vertical = 4.dp) // this can change for contentPadding = PaddingValues(horizontal = 16.dp)
             , contentPadding = PaddingValues(vertical = 4.dp)
         ) {
-            items(items = data, itemContent =  { department ->
+            items(items = data, itemContent = { department ->
                 AnimatedVisibility(
                     visible = true//!deletedPersonList.contains(person),
-                    ,enter = expandVertically(),
+                    , enter = expandVertically(),
                     exit = shrinkVertically(
                         animationSpec = tween(
                             durationMillis = 1000,
                         )
                     )
-                ){
+                ) {
                     EmployeeCardMenu(
-                    Modifier.animateItemPlacement(
-                        tween(durationMillis = 1000)
-                    ),
-                    department,
-                )}
-
+                        Modifier.animateItemPlacement(
+                            tween(durationMillis = 1000)
+                        ),
+                        department,
+                    )
+                }
 
 
             })
@@ -323,7 +461,7 @@ fun EmployeeItemMenu(
 
     ) {
         Item(text = department.depart_id.toString(), width = 50.dp)
-        Item(text = department.department, width = 450.dp)
+        Item(text = department.department.toString(), width = 450.dp)
         Item(text = department.commetion_rate.toString(), width = 200.dp)
         Item(text = department.depart_type.toString(), width = 200.dp)
         Item(text = department.commetion_type.toString(), width = 200.dp)
@@ -385,51 +523,6 @@ fun LoadingUI() {
 }
 
 
-@Composable
-fun AddSingleDepartment() {
-    val formState = remember { mutableStateOf(EmployeeFormState()) }
-
-    TextField(
-        value = formState.value.emp_id,
-        onValueChange = { formState.value.emp_id = it },
-        label = { Text("Department ID") }
-    )
-    Spacer(modifier = Modifier.height(8.dp))
-
-    TextField(
-        value = formState.value.fname,
-        onValueChange = { formState.value.fname = it },
-        label = { Text("Department Name") }
-    )
-    Spacer(modifier = Modifier.height(8.dp))
-//            TextFieldMenu()
-
-
-    Spacer(modifier = Modifier.height(8.dp))
-
-    TextFieldMenu(name = "Department Type")
-
-    TextField(
-        value = formState.value.salary,
-        onValueChange = { formState.value.salary = it },
-        label = { Text("Department Commetion Type") }
-    )
-    Spacer(modifier = Modifier.height(8.dp))
-
-    TextField(
-        value = formState.value.vacanition,
-        onValueChange = { formState.value.vacanition = it },
-        label = { Text("Department Commetion Month") }
-    )
-    Spacer(modifier = Modifier.height(8.dp))
-    Spacer(modifier = Modifier.height(8.dp))
-
-    Button(onClick = {
-        // Insert the new employee into the database here
-    }) {
-        Text("Add Department")
-    }
-}
 
 @Composable
 fun TextFieldMenu(modifier: Modifier = Modifier, name: String) {

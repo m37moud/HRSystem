@@ -22,6 +22,7 @@ class DepartmentViewModel @Inject constructor(
 
     private val _DepartResults: MutableStateFlow<LCE<List<Department>>> = MutableStateFlow(LCE.LOADING)
     val departResults: StateFlow<LCE<List<Department>>> = _DepartResults
+
     val departments = myRepo.department.getAllDepartments()
 
 
@@ -62,7 +63,7 @@ class DepartmentViewModel @Inject constructor(
         _DepartResults.value = LCE.LOADING
 
         if (departments.isEmpty()) {
-            _DepartResults.value = LCE.ERROR("Employee Not Found")
+            _DepartResults.value = LCE.ERROR("No Department is Found")
 
         } else _DepartResults.value = LCE.CONTENT(departments)
 //

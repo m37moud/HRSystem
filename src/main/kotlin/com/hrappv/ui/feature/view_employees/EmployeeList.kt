@@ -255,7 +255,7 @@ fun selectPreviewBtn(
 }
 
 @Composable
-fun SearchView(
+private fun SearchView(
     modifier: Modifier = Modifier, state: MutableState<TextFieldValue>,
     onpressEnterSearch: () -> Unit,
     onCloseSearch: () -> Unit,

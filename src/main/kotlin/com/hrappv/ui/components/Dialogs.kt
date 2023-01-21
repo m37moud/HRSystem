@@ -1,13 +1,13 @@
-
 import androidx.compose.desktop.ui.tooling.preview.Preview
-import androidx.compose.material.Surface
+import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.filled.Menu
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.DisposableEffect
-import androidx.compose.ui.ExperimentalComposeUiApi
-import androidx.compose.ui.window.AwtWindow
-import androidx.compose.ui.window.Dialog
-import androidx.compose.ui.window.FrameWindowScope
-import androidx.compose.ui.window.WindowScope
+import androidx.compose.runtime.MutableState
+import androidx.compose.ui.Alignment
+import androidx.compose.ui.res.painterResource
+import androidx.compose.ui.unit.Dp
+import androidx.compose.ui.window.*
 import kotlinx.coroutines.DelicateCoroutinesApi
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.GlobalScope
@@ -19,6 +19,30 @@ import java.io.File
 import java.nio.file.Path
 import javax.swing.JOptionPane
 
+
+@Composable
+fun showFileDialog(
+    showDialogState: () -> Unit,
+    title: String,
+    isLoad: Boolean,
+    onResult: (result: Path?) -> Unit,
+) {
+
+    Window(
+        onCloseRequest = {
+            showDialogState()
+        },
+        title = title,
+        state = rememberWindowState(
+            height = Dp.Unspecified,
+            position = WindowPosition(Alignment.Center)
+        ),
+    ) {
+
+        FileDialog(title = title, isLoad = isLoad, onResult = onResult)
+    }
+}
+
 @Composable
 fun FileDialog( //FrameWindowScope.
     parent: Frame? = null,
@@ -27,19 +51,25 @@ fun FileDialog( //FrameWindowScope.
     onResult: (result: Path?) -> Unit
 ) = AwtWindow(
     create = {
-        object : FileDialog(parent, "Choose a file", if (isLoad) LOAD else SAVE) { //window
+        object : FileDialog(parent, "Choose a file", if (isLoad) LOAD else SAVE) { //window //parent
             override fun setVisible(value: Boolean) {
                 super.setVisible(value)
                 if (value) {
+
                     if (file != null) {
-                        onResult(File(directory).resolve(file).toPath())
+                        onResult(File(directory).resolve(file).toPath()) // File(directory).resolve(file).toPath()
                     } else {
                         onResult(null)
                     }
                 }
             }
         }.apply {
+//            this.iconImages = painterResource("drawables/logo.png") //Icons.Default.Menu//painterResource("drawables/logo.png")
             this.title = title
+            isMultipleMode = true
+//            painterResource("drawables/logo.png")
+
+
         }
     },
     dispose = FileDialog::dispose
