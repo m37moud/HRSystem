@@ -216,7 +216,7 @@ fun DepartmentScreen(viewModel: DepartmentViewModel) {
 
 @Composable
 fun AddDepartmentDialog(onClose: () -> Unit, title: String, onResult: (Department) -> Unit) {
-//    val formState = remember { mutableStateOf(Department(department = "Department Name")) }
+    val formState = remember { mutableStateOf(Department(department = "Department Name")) }
 
 
     Dialog(
@@ -226,62 +226,62 @@ fun AddDepartmentDialog(onClose: () -> Unit, title: String, onResult: (Departmen
 //            position = WindowPosition(Alignment.Center)),
             content = {
 //            var department = Department()
-//            Surface {
-//                Column(horizontalAlignment = Alignment.CenterHorizontally, verticalArrangement = Arrangement.Center) {
-//
-////                    TextField(
-////                        value = formState.value.depart_id.toString(),
-////                        onValueChange = { formState.value.depart_id = it.toLong() },
-////                        label = { Text("Department ID") }
-////                    )
-////                    Spacer(modifier = Modifier.height(8.dp))
-//
-////                    formState.value.department?.let {
-//                        TextField(
-//                            value = "it",
-//                            onValueChange = {  }, //formState.value.department = it
-//                            label = { Text("Department Name") }
-//                        )
-////                    }
-//                    Spacer(modifier = Modifier.height(8.dp))
-////            TextFieldMenu()
-//
-//
+            Surface(modifier = Modifier.fillMaxSize()) {
+                Column(horizontalAlignment = Alignment.CenterHorizontally, verticalArrangement = Arrangement.Center) {
+
 //                    TextField(
-//                        value = "formState.value.commetion_rate.toString()",
-//                        onValueChange = {  }, //formState.value.commetion_rate = it.toLong()
-//                        label = { Text("Department Commetion Type") }
+//                        value = formState.value.depart_id.toString(),
+//                        onValueChange = { formState.value.depart_id = it.toLong() },
+//                        label = { Text("Department ID") }
 //                    )
 //                    Spacer(modifier = Modifier.height(8.dp))
-//
-////                    formState.value.commetion_type?.let {
-//                        TextFieldMenu(name = "it") {
-////                            formState.value.commetion_type = it
-//                        }
-////                    }
-//
-//                    Spacer(modifier = Modifier.height(8.dp))
-//
-////                    formState.value.commetion_month?.let {
-////                        TextField(
-////                            value = "it",
-////                            onValueChange = {
-//////                                formState.value.commetion_month = it
-////                                            },
-////                            label = { Text("Department Commetion Month") }
-////                        )
-////                    }
-//                    Spacer(modifier = Modifier.height(8.dp))
-//
-//                    Button(onClick = {
-////                        onResult(Department())
-////                        onClose()
-//                        // Insert the new employee into the database here
-//                    }) {
-//                        Text("Add Department")
+
+//                    formState.value.department?.let {
+                        TextField(
+                            value = "it",
+                            onValueChange = {  }, //formState.value.department = it
+                            label = { Text("Department Name") }
+                        )
 //                    }
-//                }
-//            }
+                    Spacer(modifier = Modifier.height(8.dp))
+//            TextFieldMenu()
+
+
+                    TextField(
+                        value = "formState.value.commetion_rate.toString()",
+                        onValueChange = {  }, //formState.value.commetion_rate = it.toLong()
+                        label = { Text("Department Commetion Type") }
+                    )
+                    Spacer(modifier = Modifier.height(8.dp))
+
+//                    formState.value.commetion_type?.let {
+                        TextFieldMenu(name = "it") {
+//                            formState.value.commetion_type = it
+                        }
+//                    }
+
+                    Spacer(modifier = Modifier.height(8.dp))
+
+//                    formState.value.commetion_month?.let {
+//                        TextField(
+//                            value = "it",
+//                            onValueChange = {
+////                                formState.value.commetion_month = it
+//                                            },
+//                            label = { Text("Department Commetion Month") }
+//                        )
+//                    }
+                    Spacer(modifier = Modifier.height(8.dp))
+
+                    Button(onClick = {
+                        onResult(formState.value)
+//                        onClose()
+                        // Insert the new employee into the database here
+                    }) {
+                        Text("Add Department")
+                    }
+                }
+            }
         }
     )
 }

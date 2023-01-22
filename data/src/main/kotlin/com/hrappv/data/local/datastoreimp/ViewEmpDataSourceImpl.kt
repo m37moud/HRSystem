@@ -31,7 +31,7 @@ class ViewEmpDataSourceImpl @Inject constructor(
 //        }
     }
 
-    override suspend fun deleteEmployee(id: Long) :Boolean{
+    override suspend fun deleteEmployee(id: Long): Boolean {
         var delete = false
         withContext(dispatcher) {
             try {
@@ -62,25 +62,46 @@ class ViewEmpDataSourceImpl @Inject constructor(
         }
     }
 
-    override suspend fun insertEmployee(employee: Employees) {
-        withContext(dispatcher) {
-            queries.insertEmployee(
-                emp_id = employee.emp_id,
-//                id = employee.id,
-                fname = employee.fname,
-                totaldays = employee.totaldays,
-                bith_day = employee.bith_day,
-                salary = employee.salary,
-                vacanition = employee.vacanition,
-                vbalance = employee.vbalance,
-                bdl_balance = employee.bdl_balance,
-                department = employee.department_name,
-            )
-        }
+    override suspend fun insertEmployee(employee: Employees): String {
+        var result = ""
+        try {
+            withContext(dispatcher) {
 
+                queries.transaction {
+
+                    val emp = queries.getEmployeeByID(employee.emp_id).executeAsOneOrNull()
+                    if (emp == null) {
+                        insertEmp(employee)
+                    } else {
+                        result = "this employee is already found"
+                    }
+
+                }
+//            queries.insertEmployee(
+//                emp_id = employee.emp_id,
+////                id = employee.id,
+//                fname = employee.fname,
+//                totaldays = employee.totaldays,
+//                bith_day = employee.bith_day,
+//                salary = employee.salary,
+//                vacanition = employee.vacanition,
+//                vbalance = employee.vbalance,
+//                bdl_balance = employee.bdl_balance,
+//                department = employee.department_name,
+//            )
+            }
+
+        } catch (exc: Exception) {
+
+            result = exc.message.toString()
+
+            println(result)
+            return result
+        }
+        return result
     }
 
-    override suspend fun insertMultiEmployee(employees: List<Employees>) : Boolean {
+    override suspend fun insertMultiEmployee(employees: List<Employees>): Boolean {
         var insert = false
 
         withContext(dispatcher) {

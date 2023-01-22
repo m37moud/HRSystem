@@ -1,9 +1,11 @@
 package com.hrappv.ui.feature.splash
 
 import com.github.theapache64.expekt.should
+import com.hrappv.data.models.Employees
 import com.hrappv.test.MainCoroutineRule
 import com.hrappv.test.MyDaggerMockRule
 import com.hrappv.ui.feature.add_department.DepartmentViewModel
+import com.hrappv.ui.feature.add_employe.AddEmployeViewModel
 import com.nhaarman.mockitokotlin2.mock
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 import org.junit.Rule
@@ -32,6 +34,13 @@ class SplashViewModelTest {
         }
     }
 
+
+    private val addEmployeViewModel by lazy {
+        AddEmployeViewModel(mock()).apply {
+            init(coroutineRule)
+        }
+    }
+
     @Test
     fun `Splash finished after delay`() {
         splashViewModel.isSplashFinished.value.should.`false` // Flag should be false before delay
@@ -46,6 +55,12 @@ class SplashViewModelTest {
 //            depart
 //        )
 //        departmentViewModel.insertDepartmentFromImporter(departmentList)
+//        val items = departmentViewModel.
+//        println("department ${items}")
+
+//val emp = Employees(2,"qqqqq" , "lo.k r'u hgydhv")
+//        addEmployeViewModel.insertNewEmp(emp)
+//
 //        val items = departmentViewModel.
 //        println("department ${items}")
     }

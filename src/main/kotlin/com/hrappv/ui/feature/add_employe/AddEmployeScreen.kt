@@ -3,6 +3,8 @@ package com.hrappv.ui.feature.add_employe
 import androidx.compose.desktop.ui.tooling.preview.Preview
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.*
+import androidx.compose.foundation.rememberScrollState
+import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.*
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.ArrowDropDown
@@ -21,23 +23,31 @@ import androidx.compose.ui.platform.LocalDensity
 import androidx.compose.ui.text.input.TextFieldValue
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.toSize
+import com.hrappv.data.models.Department
 import com.hrappv.data.models.Employees
 import com.hrappv.ui.value.HrAppVTheme
-import com.vanpra.composematerialdialogs.MaterialDialog
-import com.vanpra.composematerialdialogs.datetime.date.datepicker
-import com.vanpra.composematerialdialogs.rememberMaterialDialogState
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 import util.Constatnts.Companion.excelImporter
-import java.time.format.DateTimeFormatter
 
 
 @Composable
 fun AddEmployeeScreen(
     viewModel: AddEmployeViewModel
 ) {
+    val departments = viewModel.departments.collectAsState(emptyList()).value
+    val insertResult = viewModel.insertEmp.collectAsState()
     val formState = remember { mutableStateOf(EmployeeFormState()) }
     var path by remember { mutableStateOf("F:\\8") }
+    var emp_id by remember { mutableStateOf("") }
+    var fname by remember { mutableStateOf("") }
+    var totaldays by remember { mutableStateOf("") }
+    var bith_day by remember { mutableStateOf("") }
+    var salary by remember { mutableStateOf("") }
+    var vacanition by remember { mutableStateOf("") }
+    var vbalance by remember { mutableStateOf("") }
+    var bdl_balance by remember { mutableStateOf("") }
+    var department by remember { mutableStateOf("") }
 
 //    val path by remember { mutableStateOf("D:\\desk\\شغل لعهد\\tutorial audting\\2022\\شهراغسطس8\\8\\8") }
     val showPathDialog by remember { mutableStateOf(false) }
@@ -76,7 +86,7 @@ fun AddEmployeeScreen(
                             employee = excelImporter(path).distinct()
                             println(employee.toString())
 
-                            if (employee.isNotEmpty()){
+                            if (employee.isNotEmpty()) {
                                 viewModel.insertEmpFromImporter(employee)
                             }
                         }
@@ -88,75 +98,82 @@ fun AddEmployeeScreen(
 
             Spacer(modifier = Modifier.height(8.dp))
 
-            TextField(
-                value = formState.value.emp_id,
-                onValueChange = { formState.value.emp_id = it },
-                label = { Text("Employee ID") }
-            )
-            Spacer(modifier = Modifier.height(8.dp))
+            Column(
+//    modifier = Modifier.fillMaxSize(),
+                modifier = Modifier.verticalScroll(state = rememberScrollState(0), enabled = true),
+                horizontalAlignment = Alignment.CenterHorizontally,
 
-            TextField(
-                value = formState.value.fname,
-                onValueChange = { formState.value.fname = it },
-                label = { Text("First Name") }
-            )
-            Spacer(modifier = Modifier.height(8.dp))
-            TextFieldMenu3(name = "Department")
+                ) {
+
+                OutlinedTextField(
+                    value = emp_id,
+                    onValueChange = { emp_id = it },
+                    label = { Text("Employee ID") }
+                )
+                Spacer(modifier = Modifier.height(8.dp))
+
+                OutlinedTextField(
+                    value = fname,
+                    onValueChange = { fname = it },
+                    label = { Text("Employee Name") }
+                )
+                Spacer(modifier = Modifier.height(8.dp))
+                TextFieldMenu3(name = "Department", departments = departments)
 
 
-            Spacer(modifier = Modifier.height(8.dp))
+                Spacer(modifier = Modifier.height(8.dp))
 //            MyDateField()
 
-            TextField(
-                value = formState.value.bith_day,
-                onValueChange = { formState.value.bith_day = it },
-                label = { Text("Birth Day") }
-            )
-            Spacer(modifier = Modifier.height(8.dp))
+                OutlinedTextField(
+                    value = bith_day,
+                    onValueChange = { bith_day = it },
+                    label = { Text("Birth Date") }
+                )
+                Spacer(modifier = Modifier.height(8.dp))
 
 //           DatePicker(
 //            selectedDate = formState.value.bith_day,
 //            onDateSelected = { formState.value.bith_day = it }
 //        )
-            TextField(
-                value = formState.value.salary,
-                onValueChange = { formState.value.salary = it },
-                label = { Text("Salary") }
-            )
-            Spacer(modifier = Modifier.height(8.dp))
+                OutlinedTextField(
+                    value = salary,
+                    onValueChange = { salary = it },
+                    label = { Text("Salary") }
+                )
+                Spacer(modifier = Modifier.height(8.dp))
 
-            TextField(
-                value = formState.value.vacanition,
-                onValueChange = { formState.value.vacanition = it },
-                label = { Text("Vacation Days") }
-            )
-            Spacer(modifier = Modifier.height(8.dp))
+                OutlinedTextField(
+                    value = vacanition,
+                    onValueChange = { vacanition = it },
+                    label = { Text("Vacation Days") }
+                )
+                Spacer(modifier = Modifier.height(8.dp))
 
-            TextField(
-                value = formState.value.vbalance,
-                onValueChange = { formState.value.vbalance = it },
-                label = { Text("Vacation Balance") }
-            )
-            Spacer(modifier = Modifier.height(8.dp))
+                OutlinedTextField(
+                    value = vbalance,
+                    onValueChange = { vbalance = it },
+                    label = { Text("Vacation Balance") }
+                )
+                Spacer(modifier = Modifier.height(8.dp))
 
-            TextField(
-                value = formState.value.bdl_balance,
-                onValueChange = { formState.value.bdl_balance = it },
-                label = { Text("bdl_balance") }
-            )
-            Spacer(modifier = Modifier.height(8.dp))
-            TextField(
-                value = formState.value.totaldays,
-                onValueChange = { formState.value.totaldays = it },
-                label = { Text("Total Days") }
-            )
+                OutlinedTextField(
+                    value = bdl_balance,
+                    onValueChange = { bdl_balance = it },
+                    label = { Text("bdl_balance") }
+                )
+                Spacer(modifier = Modifier.height(8.dp))
+                OutlinedTextField(
+                    value = totaldays,
+                    onValueChange = { totaldays = it },
+                    label = { Text("Total Days") }
+                )
 
 //        TextField(
 //            value = formState.value.depart_id,
 //            onValueChange = { formState.value.depart_id = it },
 //            label = { Text("Department ID") }
 //        )
-            Spacer(modifier = Modifier.height(8.dp))
+                Spacer(modifier = Modifier.height(8.dp))
 
 
 //         DropdownMenu(
@@ -164,13 +181,29 @@ fun AddEmployeeScreen(
 //            onSelectedOptionChange = { formState.value.depart_id = it },
 //            options = listOf("Option 1", "Option 2", "Option 3")
 //        )
-            Spacer(modifier = Modifier.height(8.dp))
+                Spacer(modifier = Modifier.height(8.dp))
 
-            Button(onClick = {
-                // Insert the new employee into the database here
-            }) {
-                Text("Add Employee")
+
+                Button(onClick = {
+                    val emp = Employees(
+                        emp_id.toLong(),
+                        fname,
+                        department,
+                        totaldays.toLong(),
+                        bith_day,
+                        salary.toFloat(),
+                        vacanition.toLong(),
+                        vbalance.toLong(),
+                        bdl_balance.toLong()
+
+                    )
+                    viewModel.insertNewEmp(emp)
+                    // Insert the new employee into the database here
+                }) {
+                    Text("Add Employee")
+                }
             }
+
         }
     }
 
@@ -211,7 +244,7 @@ fun ReadonlyTextField(
     }
 }
 
-
+//
 //@Composable
 //fun MyDateField() {
 //    val dialogState = rememberMaterialDialogState()
@@ -422,104 +455,112 @@ fun TextFieldMenu(modifier: Modifier = Modifier, name: String) {
 }
 
 
-
 // in githup space in 19/1
 @Composable
 fun TextFieldMenu2(modifier: Modifier = Modifier, name: String) {
-var expanded by remember { mutableStateOf(false) }
-val suggestions = listOf("Item1","Item2","Item3")
-var selectedText by remember { mutableStateOf("") }
+    var expanded by remember { mutableStateOf(false) }
+    val suggestions = listOf("Item1", "Item2", "Item3")
+    var selectedText by remember { mutableStateOf("") }
 
-var textfieldSize by remember { mutableStateOf(Size.Zero)}
+    var textfieldSize by remember { mutableStateOf(Size.Zero) }
 
-val icon = if (expanded)
-    Icons.Filled.KeyboardArrowUp //it requires androidx.compose.material:material-icons-extended
-else
-    Icons.Filled.ArrowDropDown
+    val icon = if (expanded)
+        Icons.Filled.KeyboardArrowUp //it requires androidx.compose.material:material-icons-extended
+    else
+        Icons.Filled.ArrowDropDown
 
 
-Column() {
-    OutlinedTextField(
-        value = selectedText,
-        onValueChange = { selectedText = it },
-        modifier = Modifier
+    Column() {
+        OutlinedTextField(
+            value = selectedText,
+            onValueChange = { selectedText = it },
+            modifier = Modifier
 //            .fillMaxWidth()
-            .onGloballyPositioned { coordinates ->
-                //This value is used to assign to the DropDown the same width
-                textfieldSize = coordinates.size.toSize()
-            },
-        label = {Text("$name")},
-        trailingIcon = {
-            Icon(icon,"contentDescription",
-                 Modifier.clickable { expanded = !expanded })
-        }
-    )
-    DropdownMenu(
-        expanded = expanded,
-        onDismissRequest = { expanded = false },
-        modifier = Modifier
-            .width(with(LocalDensity.current){textfieldSize.width.toDp()})
-    ) {
-        suggestions.forEach { label ->
-            DropdownMenuItem(onClick = {
-                selectedText = label
-            }) {
-                Text(text = label)
+                .onGloballyPositioned { coordinates ->
+                    //This value is used to assign to the DropDown the same width
+                    textfieldSize = coordinates.size.toSize()
+                },
+            label = { Text("$name") },
+            trailingIcon = {
+                Icon(icon, "contentDescription",
+                    Modifier.clickable { expanded = !expanded })
+            }
+        )
+        DropdownMenu(
+            expanded = expanded,
+            onDismissRequest = { expanded = false },
+            modifier = Modifier
+                .width(with(LocalDensity.current) { textfieldSize.width.toDp() })
+        ) {
+            suggestions.forEach { label ->
+                DropdownMenuItem(onClick = {
+                    selectedText = label
+                }) {
+                    Text(text = label)
+                }
             }
         }
     }
-}
 }
 
 // in githup space in 19/1
 @Composable
-fun TextFieldMenu3(modifier: Modifier = Modifier, name: String) {
-var expanded by remember { mutableStateOf(false) }
-val suggestions = listOf("Item1","Item2","Item3")
-var selectedText by remember { mutableStateOf("") }
+fun TextFieldMenu3(modifier: Modifier = Modifier, name: String, departments: List<Department>) {
+    var expanded by remember { mutableStateOf(false) }
+    val suggestions = listOf("Item1", "Item2", "Item3")
+    var selectedText by remember { mutableStateOf("") }
 
-var dropDownWidth by remember { mutableStateOf(0) }
+    var dropDownWidth by remember { mutableStateOf(0) }
 
-val icon = if (expanded)
-    Icons.Filled.KeyboardArrowUp
-else
-    Icons.Filled.ArrowDropDown
+    val icon = if (expanded)
+        Icons.Filled.KeyboardArrowUp
+    else
+        Icons.Filled.ArrowDropDown
 
 
-Column() {
-    OutlinedTextField(
-        value = selectedText,
-        onValueChange = { selectedText = it },
-        modifier = Modifier
-            .onSizeChanged {
-                dropDownWidth = it.width
-            },
-        readOnly = true,
-
-        label = {Text("$name")},
-        trailingIcon = {
-            Icon(icon,"contentDescription", Modifier.clickable { expanded = !expanded })
-        }
-    )
-    DropdownMenu(
-        expanded = expanded,
-        onDismissRequest = { expanded = false },
-        modifier = Modifier
-                .width(with(LocalDensity.current){dropDownWidth.toDp()})
+    Column(
+        modifier = Modifier.height(200.dp).verticalScroll(
+            state = rememberScrollState(0), enabled = true
+        )
     ) {
-        suggestions.forEach { label ->
-            DropdownMenuItem(onClick = {
-                selectedText = label
-                expanded = false
+        OutlinedTextField(
+            value = selectedText,
+            onValueChange = { selectedText = it },
+            modifier = Modifier
+                .onSizeChanged {
+                    dropDownWidth = it.width
+                },
+            readOnly = true,
 
-            }) {
-                Text(text = label)
+            label = { Text("$name") },
+            trailingIcon = {
+                Icon(icon, "contentDescription", Modifier.clickable { expanded = !expanded })
+            }
+        )
+        DropdownMenu(
+            expanded = expanded,
+            onDismissRequest = { expanded = false },
+            modifier = Modifier
+                .width(with(LocalDensity.current) { dropDownWidth.toDp() })
+        ) {
+            departments.forEach { label ->
+                DropdownMenuItem(onClick = {
+                    selectedText = label.department
+                    expanded = false
+
+                }) {
+                    Text(text = label.department)
+                }
             }
         }
     }
 }
-}
 
+@OptIn(ExperimentalMaterialApi::class)
+@Composable
+private fun ShowMessageDialog(message: String, onDismissRequest: () -> Unit) {
+    AlertDialog(onDismissRequest = onDismissRequest, title = Text("Message"), text = Text(message))
+}
 
 
 //

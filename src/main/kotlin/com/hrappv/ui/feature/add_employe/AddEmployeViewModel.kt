@@ -26,6 +26,10 @@ class AddEmployeViewModel @Inject constructor(
     val empResults: StateFlow<LCE<List<EmployeeResult>>> = _EmpResults
 
 
+
+    private val _insertEmp = MutableStateFlow("")
+    val insertEmp: StateFlow<String> = _insertEmp
+
     private val _isBackPressed = MutableStateFlow(false)
     val backToMain: StateFlow<Boolean> = _isBackPressed
 
@@ -43,6 +47,15 @@ class AddEmployeViewModel @Inject constructor(
             myRepo.viewEmployees.insertMultiEmployee(emplist)
         }
     }
+
+    fun insertNewEmp(employee : Employees){
+        launchOnIO {
+            _insertEmp.value = myRepo.viewEmployees.insertEmployee(employee)
+        }
+    }
+
+    val departments = myRepo.department.getAllDepartments()
+
     fun onBackPress() {
         _isBackPressed.value = true
     }

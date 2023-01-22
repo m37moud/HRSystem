@@ -15,7 +15,7 @@ interface ViewEmpDataSource {
 
     suspend fun getEmployeeByID(id:Long) : GetEmployeeByID?
 
-    suspend fun insertEmployee(employee : Employees)
+    suspend fun insertEmployee(employee : Employees) : String
 
     suspend fun insertMultiEmployee(employees: List<Employees>): Boolean
 

@@ -1,7 +1,8 @@
 package com.hrappv.ui.feature.add_employe
 
 data class EmployeeFormState(
-    var emp_id: String = "",
+
+var emp_id: String = "",
     var fname: String = "",
     var totaldays: String = "21",
     var bith_day: String = "",
