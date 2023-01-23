@@ -1,6 +1,5 @@
 CREATE TABLE IF NOT EXISTS employe (
     emp_id INTEGER NOT NULL DEFAULT 1,
---     id INTEGER PRIMARY KEY  UNIQUE,
     fname TEXT NOT NULL DEFAULT "No Name",
 --     image TEXT ,--AS ICON NOT NULL,
     totaldays INTEGER NOT NULL,
@@ -27,6 +26,20 @@ JOIN Department ON employe.depart_id = Department.depart_id
 WHERE fname LIKE ?  ORDER BY emp_id ASC ; --'%'+:name+'%'
 
 
+getEmployeeByDepartment:
+SELECT employe.emp_id,employe.fname, Department.department AS department_name,employe.totaldays,employe.bith_day,employe.salary,employe.vacanition,employe.vbalance,employe.bdl_balance
+FROM employe
+JOIN Department ON employe.depart_id = Department.depart_id
+WHERE  employe.depart_id = :depart_id  ORDER BY emp_id ASC ; --'%'+:name+'%'
+
+
+getEmployeeLikeID:
+SELECT employe.emp_id,employe.fname, Department.department AS department_name,employe.totaldays,employe.bith_day,employe.salary,employe.vacanition,employe.vbalance,employe.bdl_balance
+FROM employe
+JOIN Department ON employe.depart_id = Department.depart_id
+WHERE emp_id LIKE '%'+:emp_id+'%'  ORDER BY emp_id ASC ; --'%'+:name+'%'
+
+
 getEmployeeByID:
 SELECT employe.emp_id,employe.fname, Department.department AS department_name,employe.totaldays,employe.bith_day,employe.salary,employe.vacanition,employe.vbalance,employe.bdl_balance
 FROM employe
@@ -34,14 +47,9 @@ JOIN Department ON employe.depart_id = Department.depart_id
 WHERE emp_id = :id;
 
 
-getEmployeesByDepartment:
-SELECT *
-FROM employe
-WHERE depart_id = :depart_id;
 
-
-
-insertEmployee: INSERT INTO employe
+insertEmployee:
+INSERT INTO employe
 VALUES (?,?,?,?,?,?,?,?,(SELECT depart_id FROM Department WHERE department = ?));
 
 

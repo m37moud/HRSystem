@@ -4,11 +4,10 @@ import androidx.compose.desktop.ui.tooling.preview.Preview
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.rememberScrollState
+import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.*
 import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.filled.ArrowDropDown
-import androidx.compose.material.icons.filled.KeyboardArrowUp
 import androidx.compose.material.icons.filled.Refresh
 import androidx.compose.material.icons.outlined.ArrowDropDown
 import androidx.compose.material.icons.outlined.KeyboardArrowUp
@@ -16,15 +15,10 @@ import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.alpha
-import androidx.compose.ui.geometry.Size
-import androidx.compose.ui.layout.onGloballyPositioned
-import androidx.compose.ui.layout.onSizeChanged
-import androidx.compose.ui.platform.LocalDensity
 import androidx.compose.ui.text.input.TextFieldValue
 import androidx.compose.ui.unit.dp
-import androidx.compose.ui.unit.toSize
-import com.hrappv.data.models.Department
 import com.hrappv.data.models.Employees
+import com.hrappv.ui.components.MenuDropDown
 import com.hrappv.ui.value.HrAppVTheme
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
@@ -41,20 +35,39 @@ fun AddEmployeeScreen(
     var path by remember { mutableStateOf("F:\\8") }
     var emp_id by remember { mutableStateOf("") }
     var fname by remember { mutableStateOf("") }
-    var totaldays by remember { mutableStateOf("") }
-    var bith_day by remember { mutableStateOf("") }
-    var salary by remember { mutableStateOf("") }
-    var vacanition by remember { mutableStateOf("") }
-    var vbalance by remember { mutableStateOf("") }
-    var bdl_balance by remember { mutableStateOf("") }
+    var totaldays by remember { mutableStateOf("21") }
+    var bith_day by remember { mutableStateOf("1990-11-16") }
+    var salary by remember { mutableStateOf("1000") }
+    var vacanition by remember { mutableStateOf("0") }
+    var vbalance by remember { mutableStateOf("0") }
+    var bdl_balance by remember { mutableStateOf("0") }
     var department by remember { mutableStateOf("") }
 
+    var showMessageDialog by remember { mutableStateOf(false) }
+
 //    val path by remember { mutableStateOf("D:\\desk\\شغل لعهد\\tutorial audting\\2022\\شهراغسطس8\\8\\8") }
-    val showPathDialog by remember { mutableStateOf(false) }
+    var showPathDialog by remember { mutableStateOf(false) }
     val scope = rememberCoroutineScope()
 
     var employee: List<Employees> = emptyList()
 
+
+    if (insertResult.value.isNotEmpty()) {
+        showMessageDialog = true
+
+
+    }
+
+
+    if (showMessageDialog) {
+        ShowMessageDialog(
+            onDismissRequest = {
+                viewModel.dialogMessage()//close
+                showMessageDialog = false
+            },
+            message = insertResult.value
+        )
+    }
 
     Surface {
         Column(
@@ -81,16 +94,23 @@ fun AddEmployeeScreen(
 
                     )
 
-                    Button(onClick = {
-                        scope.launch(Dispatchers.IO) {
-                            employee = excelImporter(path).distinct()
-                            println(employee.toString())
+                    Button(
+                        onClick = {
+                            scope.launch(Dispatchers.IO) {
+                                employee = excelImporter(path).distinct()
+                                println(employee.toString())
 
-                            if (employee.isNotEmpty()) {
-                                viewModel.insertEmpFromImporter(employee)
+                                if (employee.isNotEmpty()) {
+                                    viewModel.insertEmpFromImporter(employee)
+                                }
                             }
-                        }
-                    }) {
+                        },
+                        modifier = Modifier.padding(16.dp),
+                        // Provide a custom shape for this button. In this example. we specify the button to have
+                        // round corners of 16dp radius.
+                        shape = RoundedCornerShape(16.dp),
+                        elevation = ButtonDefaults.elevation(5.dp),
+                    ) {
                         Text(text = "Import From Excel")
                     }
                 }
@@ -99,7 +119,7 @@ fun AddEmployeeScreen(
             Spacer(modifier = Modifier.height(8.dp))
 
             Column(
-//    modifier = Modifier.fillMaxSize(),
+                //  modifier = Modifier.fillMaxSize(),
                 modifier = Modifier.verticalScroll(state = rememberScrollState(0), enabled = true),
                 horizontalAlignment = Alignment.CenterHorizontally,
 
@@ -118,7 +138,21 @@ fun AddEmployeeScreen(
                     label = { Text("Employee Name") }
                 )
                 Spacer(modifier = Modifier.height(8.dp))
-                TextFieldMenu3(name = "Department", departments = departments)
+                MenuDropDown(
+                    name = "Select Department", departments = departments,
+                    menuItemSelected = { depart ->
+                        if (depart != null) {
+                            department = if (depart.department == "Select Department") {
+                                ""
+                            } else {
+                                depart.department
+
+                            }
+
+
+                        }
+                    }
+                )
 
 
                 Spacer(modifier = Modifier.height(8.dp))
@@ -175,29 +209,34 @@ fun AddEmployeeScreen(
 //        )
                 Spacer(modifier = Modifier.height(8.dp))
 
-
-//         DropdownMenu(
-//            selectedOption = formState.value.depart_id,
-//            onSelectedOptionChange = { formState.value.depart_id = it },
-//            options = listOf("Option 1", "Option 2", "Option 3")
-//        )
                 Spacer(modifier = Modifier.height(8.dp))
 
 
                 Button(onClick = {
-                    val emp = Employees(
-                        emp_id.toLong(),
-                        fname,
-                        department,
-                        totaldays.toLong(),
-                        bith_day,
-                        salary.toFloat(),
-                        vacanition.toLong(),
-                        vbalance.toLong(),
-                        bdl_balance.toLong()
+                    if (emp_id.isNotEmpty() && department.isNotEmpty()) {
 
-                    )
-                    viewModel.insertNewEmp(emp)
+                        Employees(
+                            emp_id.toLong(),
+                            fname,
+                            department,
+                            totaldays.toLong(),
+                            bith_day,
+                            salary.toFloat(),
+                            vacanition.toLong(),
+                            vbalance.toLong(),
+                            bdl_balance.toLong()
+
+                        ).apply {
+                            println("with apply emp " + this)
+                            viewModel.insertNewEmp(this)
+
+                        }
+                    } else {
+                        viewModel.dialogMessage("You need to add (Employee Id and Department)")
+
+                    }
+
+
                     // Insert the new employee into the database here
                 }) {
                     Text("Add Employee")
@@ -347,50 +386,6 @@ fun ReadonlyTextField(
 //    }
 //}
 //
-///*
-//Let’s implement it. If you look at the output, there are 2 elements – TextField and menu. They are placed inside a box.
-//
-//Jetpack Compose provides two APIs:
-//
-//ExposedDropdownMenu – It is the menu that shows the items.
-//ExposedDropdownMenuBox – It is the box that contains the TextField and the ExposedDropdownMenu.
-//
-//params
-//expanded – Whether the menu is currently open and visible to the user.
-//
-//onDismissRequest – Called when the user requests to dismiss the menu, such as by tapping on the screen outside the menu’s bounds or pressing the back button.
-//
-//content – The content of the dropdown menu, typically a DropdownMenuItem
-//*/
-//
-//@Composable
-//fun ExposedDropdownMenu(
-//    expanded: Boolean,
-//    onDismissRequest: () -> Unit,
-//    modifier: Modifier = Modifier,
-//    content: @Composable ColumnScope.() -> Unit
-//) {
-//}
-////
-/////*
-////params
-////expanded – Whether the Dropdown Menu should be expanded or not.
-////
-////onExpandedChange – It is called when the user clicks on this menu box.
-////
-////content – The content to be displayed inside ExposedDropdownMenuBox. It typically contains TextField and ExposedDropdownMenu.
-////*/
-//
-//@ExperimentalMaterialApi
-//@Composable
-//fun ExposedDropdownMenuBox(
-//    expanded: Boolean,
-//    onExpandedChange: (Boolean) -> Unit,
-//    modifier: Modifier = Modifier,
-//    content: @Composable ExposedDropdownMenuBoxScope.() -> Unit
-//) {
-//}
-////
 //
 //// final code
 @OptIn(ExperimentalMaterialApi::class)
@@ -456,110 +451,17 @@ fun TextFieldMenu(modifier: Modifier = Modifier, name: String) {
 
 
 // in githup space in 19/1
-@Composable
-fun TextFieldMenu2(modifier: Modifier = Modifier, name: String) {
-    var expanded by remember { mutableStateOf(false) }
-    val suggestions = listOf("Item1", "Item2", "Item3")
-    var selectedText by remember { mutableStateOf("") }
-
-    var textfieldSize by remember { mutableStateOf(Size.Zero) }
-
-    val icon = if (expanded)
-        Icons.Filled.KeyboardArrowUp //it requires androidx.compose.material:material-icons-extended
-    else
-        Icons.Filled.ArrowDropDown
-
-
-    Column() {
-        OutlinedTextField(
-            value = selectedText,
-            onValueChange = { selectedText = it },
-            modifier = Modifier
-//            .fillMaxWidth()
-                .onGloballyPositioned { coordinates ->
-                    //This value is used to assign to the DropDown the same width
-                    textfieldSize = coordinates.size.toSize()
-                },
-            label = { Text("$name") },
-            trailingIcon = {
-                Icon(icon, "contentDescription",
-                    Modifier.clickable { expanded = !expanded })
-            }
-        )
-        DropdownMenu(
-            expanded = expanded,
-            onDismissRequest = { expanded = false },
-            modifier = Modifier
-                .width(with(LocalDensity.current) { textfieldSize.width.toDp() })
-        ) {
-            suggestions.forEach { label ->
-                DropdownMenuItem(onClick = {
-                    selectedText = label
-                }) {
-                    Text(text = label)
-                }
-            }
-        }
-    }
-}
-
-// in githup space in 19/1
-@Composable
-fun TextFieldMenu3(modifier: Modifier = Modifier, name: String, departments: List<Department>) {
-    var expanded by remember { mutableStateOf(false) }
-    val suggestions = listOf("Item1", "Item2", "Item3")
-    var selectedText by remember { mutableStateOf("") }
-
-    var dropDownWidth by remember { mutableStateOf(0) }
-
-    val icon = if (expanded)
-        Icons.Filled.KeyboardArrowUp
-    else
-        Icons.Filled.ArrowDropDown
-
-
-    Column(
-        modifier = Modifier.height(200.dp).verticalScroll(
-            state = rememberScrollState(0), enabled = true
-        )
-    ) {
-        OutlinedTextField(
-            value = selectedText,
-            onValueChange = { selectedText = it },
-            modifier = Modifier
-                .onSizeChanged {
-                    dropDownWidth = it.width
-                },
-            readOnly = true,
-
-            label = { Text("$name") },
-            trailingIcon = {
-                Icon(icon, "contentDescription", Modifier.clickable { expanded = !expanded })
-            }
-        )
-        DropdownMenu(
-            expanded = expanded,
-            onDismissRequest = { expanded = false },
-            modifier = Modifier
-                .width(with(LocalDensity.current) { dropDownWidth.toDp() })
-        ) {
-            departments.forEach { label ->
-                DropdownMenuItem(onClick = {
-                    selectedText = label.department
-                    expanded = false
-
-                }) {
-                    Text(text = label.department)
-                }
-            }
-        }
-    }
-}
 
 @OptIn(ExperimentalMaterialApi::class)
 @Composable
+@Preview
 private fun ShowMessageDialog(message: String, onDismissRequest: () -> Unit) {
-    AlertDialog(onDismissRequest = onDismissRequest, title = Text("Message"), text = Text(message))
+    AlertDialog(
+        modifier = Modifier.width(200.dp),
+        onDismissRequest = onDismissRequest,
+        buttons = { Button(onClick = { onDismissRequest() }) { Text("ok") } },
+        title = { Text("Message", modifier = Modifier.fillMaxSize(), maxLines = 1) },
+        text = { Text(message) })
 }
 
 

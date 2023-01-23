@@ -31,6 +31,15 @@ class ViewEmpDataSourceImpl @Inject constructor(
 //        }
     }
 
+    override fun getEmployeeByDepartment(departmentID: Long): List<GetEmployeeByDepartment> {
+        return queries.getEmployeeByDepartment(departmentID).executeAsList()
+    }
+
+    override fun getEmployeeLikeID(name: String): List<GetEmployeeLikeID> {
+        return queries.getEmployeeLikeID(name).executeAsList()
+
+    }
+
     override suspend fun deleteEmployee(id: Long): Boolean {
         var delete = false
         withContext(dispatcher) {
@@ -62,6 +71,7 @@ class ViewEmpDataSourceImpl @Inject constructor(
         }
     }
 
+
     override suspend fun insertEmployee(employee: Employees): String {
         var result = ""
         try {
@@ -70,12 +80,31 @@ class ViewEmpDataSourceImpl @Inject constructor(
                 queries.transaction {
 
                     val emp = queries.getEmployeeByID(employee.emp_id).executeAsOneOrNull()
+
+                    println("insertEmployee emp = $emp")
+
                     if (emp == null) {
+                        println("will insert emp = $emp")
+
                         insertEmp(employee)
+                        afterCommit {
+
+                            println("employee is inserted")
+
+                            result = " employee is inserted"
+                        }
+
                     } else {
+                        println("this employee is already found ")
+
                         result = "this employee is already found"
                     }
 
+                    afterRollback {
+                        println("some thing goes wrong")
+
+                        result = "some thing goes wrong"
+                    }
                 }
 //            queries.insertEmployee(
 //                emp_id = employee.emp_id,
@@ -127,18 +156,26 @@ class ViewEmpDataSourceImpl @Inject constructor(
     }
 
     private fun insertEmp(employee: Employees) {
-        queries.insertEmployee(
-            emp_id = employee.emp_id,
+        queries.transaction {
+            queries.insertEmployee(
+                emp_id = employee.emp_id,
 //            id = employee.id,
-            fname = employee.fname,
-            totaldays = employee.totaldays,
-            bith_day = employee.bith_day,
-            salary = employee.salary,
-            vacanition = employee.vacanition,
-            vbalance = employee.vbalance,
-            bdl_balance = employee.bdl_balance,
-            department = employee.department_name,
-        )
+                fname = employee.fname,
+                totaldays = employee.totaldays,
+                bith_day = employee.bith_day,
+                salary = employee.salary,
+                vacanition = employee.vacanition,
+                vbalance = employee.vbalance,
+                bdl_balance = employee.bdl_balance,
+                department = employee.department_name,
+            )
+            afterRollback {
+                println("some thing goes wrong")
+            }
+            afterCommit {
+                println("employee is inserted")
+            }
+        }
 
     }
 }

@@ -54,6 +54,10 @@ class AddEmployeViewModel @Inject constructor(
         }
     }
 
+    fun dialogMessage(message: String = "" ){
+        _insertEmp.value = message
+    }
+
     val departments = myRepo.department.getAllDepartments()
 
     fun onBackPress() {

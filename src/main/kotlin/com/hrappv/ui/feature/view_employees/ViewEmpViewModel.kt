@@ -24,6 +24,10 @@ class ViewEmpViewModel @Inject constructor(
     // Inject your repos here...
 ) : ViewModel() {
 
+
+    val departments = myRepo.department.getAllDepartments()
+
+
     private val _EmpResults: MutableStateFlow<LCE<List<GetEmployeeByName>>> = MutableStateFlow(LCE.LOADING)
     val empResults: StateFlow<LCE<List<GetEmployeeByName>>> = _EmpResults
 
@@ -87,6 +91,19 @@ class ViewEmpViewModel @Inject constructor(
 //        println(data.toString())
         }
     }
+
+
+    fun getEmployeesByDepartment(id: Long){
+        launchOnIO {
+            val data = dataSource.getEmployeeByDepartment(id)
+            println(data.joinToString( " - "))
+
+        }
+
+    }
+
+
+
 
     fun deleteEmployee(id: Long) {
         println("delete press")

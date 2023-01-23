@@ -1,23 +1,29 @@
 @file:OptIn(ExperimentalComposeUiApi::class)
 
+import androidx.compose.animation.AnimatedVisibility
 import androidx.compose.animation.core.tween
+import androidx.compose.animation.expandVertically
+import androidx.compose.animation.shrinkVertically
 import androidx.compose.desktop.ui.tooling.preview.Preview
 import androidx.compose.foundation.BorderStroke
 import androidx.compose.foundation.ExperimentalFoundationApi
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.border
 import androidx.compose.foundation.layout.*
-import androidx.compose.foundation.lazy.grid.GridCells
 import androidx.compose.foundation.lazy.LazyColumn
+import androidx.compose.foundation.lazy.grid.GridCells
 import androidx.compose.foundation.lazy.grid.LazyVerticalGrid
 import androidx.compose.foundation.lazy.grid.items
 import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.material.*
 import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.filled.*
+import androidx.compose.material.icons.filled.AccountBox
+import androidx.compose.material.icons.filled.Close
+import androidx.compose.material.icons.filled.Menu
+import androidx.compose.material.icons.filled.Search
+import androidx.compose.material.icons.outlined.Create
 import androidx.compose.material.icons.outlined.MoreVert
-import androidx.compose.material.icons.outlined.Search
 import androidx.compose.material.ripple.rememberRipple
 import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
@@ -38,7 +44,9 @@ import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import com.hrappv.Department
 import com.hrappv.GetEmployeeByName
+import com.hrappv.ui.components.MenuDropDown
 import com.hrappv.ui.feature.view_employees.ViewEmpViewModel
 import compose.icons.FontAwesomeIcons
 import compose.icons.fontawesomeicons.Solid
@@ -60,9 +68,13 @@ fun ViewEmpScreen(viewEmployee: ViewEmpViewModel) {
     var deletedEmpName = remember { mutableStateOf("-") }
 
 
+
+
     val empName = textState.value.text
 //    val empName = textState.value
     viewEmployee.getQueries(empName)
+
+    val departments = viewEmployee.departments.collectAsState(emptyList()).value
 
     val employees = viewEmployee.empResults.collectAsState()
 //    val allEmployee = viewEmployee.allEmployees.collectAsState(emptyList()).value
@@ -132,7 +144,11 @@ fun ViewEmpScreen(viewEmployee: ViewEmpViewModel) {
 
 
                 SearchView(modifier = Modifier.align(Alignment.CenterStart),
-                    state = textState, onpressEnterSearch = {
+                    name = "All Departments",departments=departments,
+                    state = textState,menuItemSelected = {id->
+                        id?.let { it1 -> viewEmployee.getEmployeesByDepartment(it1.depart_id!!) }
+
+                    }, onpressEnterSearch = {
 //                search(viewEmployee, empName)
                         viewEmployee.getEmployees(empName)
                     }) {
@@ -174,7 +190,7 @@ fun ViewEmpScreen(viewEmployee: ViewEmpViewModel) {
                         onDeleteClick = { id ->
                             try {
 
-//                                viewEmployee.getSingleEmployee(id)
+                                viewEmployee.getSingleEmployee(id)
 
                                 viewEmployee.deleteEmployee(id)
 
@@ -254,10 +270,21 @@ fun selectPreviewBtn(
     }
 }
 
+//@Composable
+//fun DepartmentSearchView(departmentName : String, departments: List<com.hrappv.data.models.Department>){
+//
+//    MenuDropDown(name = departmentName, departments = departments)
+//
+//
+//}
+
 @Composable
 private fun SearchView(
     modifier: Modifier = Modifier, state: MutableState<TextFieldValue>,
+    departments: List<com.hrappv.data.models.Department>,
+    name: String,
     onpressEnterSearch: () -> Unit,
+    menuItemSelected : (com.hrappv.data.models.Department?) -> Unit,
     onCloseSearch: () -> Unit,
 ) {
     Row(
@@ -321,55 +348,58 @@ private fun SearchView(
 
             )
 
-        OutlinedTextField(
-            value = state.value,
-            onValueChange = { value ->
-                state.value = value
-            },
-            modifier = modifier.padding(end = 16.dp)
-                .onKeyEvent {
-                    if (it.key == Key.Enter) {
-                        onpressEnterSearch()
-                        true
-                    } else {
-                        false
-                    }
-                }.testTag("password"),
-            textStyle = TextStyle(fontSize = 18.sp),
-            placeholder = { Text("Department") },
-            label = { Text(text = "Department") },
-            leadingIcon = {
-                Icon(
-                    Icons.Default.Search,
-                    contentDescription = "",
-                    modifier = Modifier
-                        .padding(15.dp)
-                        .size(24.dp)
-                )
-            },
-            trailingIcon = {
-                if (state.value != TextFieldValue("")) {
-                    IconButton(
-                        onClick = {
-                            onCloseSearch()
+        MenuDropDown(name = name, departments = departments ,menuItemSelected = menuItemSelected )
 
-                            state.value =
-                                TextFieldValue("") // Remove text from TextField when you press the 'X' icon
-                        }
-                    ) {
-                        Icon(
-                            Icons.Default.Close,
-                            contentDescription = "",
-                            modifier = Modifier
-                                .padding(15.dp)
-                                .size(24.dp)
-                        )
-                    }
-                }
-            },
-            singleLine = true,
 
-            )
+//        OutlinedTextField(
+//            value = state.value,
+//            onValueChange = { value ->
+//                state.value = value
+//            },
+//            modifier = modifier.padding(end = 16.dp)
+//                .onKeyEvent {
+//                    if (it.key == Key.Enter) {
+//                        onpressEnterSearch()
+//                        true
+//                    } else {
+//                        false
+//                    }
+//                }.testTag("password"),
+//            textStyle = TextStyle(fontSize = 18.sp),
+//            placeholder = { Text("Department") },
+//            label = { Text(text = "Department") },
+//            leadingIcon = {
+//                Icon(
+//                    Icons.Default.Search,
+//                    contentDescription = "",
+//                    modifier = Modifier
+//                        .padding(15.dp)
+//                        .size(24.dp)
+//                )
+//            },
+//            trailingIcon = {
+//                if (state.value != TextFieldValue("")) {
+//                    IconButton(
+//                        onClick = {
+//                            onCloseSearch()
+//
+//                            state.value =
+//                                TextFieldValue("") // Remove text from TextField when you press the 'X' icon
+//                        }
+//                    ) {
+//                        Icon(
+//                            Icons.Default.Close,
+//                            contentDescription = "",
+//                            modifier = Modifier
+//                                .padding(15.dp)
+//                                .size(24.dp)
+//                        )
+//                    }
+//                }
+//            },
+//            singleLine = true,
+//
+//            )
 
 //        Button(onClick = {
 ////                    importState = LCE.LOADING
@@ -530,15 +560,26 @@ fun EmployeeGridLazyColumn(
         verticalArrangement = Arrangement.spacedBy(8.dp),
         horizontalArrangement = Arrangement.spacedBy(8.dp)
     ) {
-        items(data) { employee ->
-            EmployeeCardGrid(
-                Modifier.animateItemPlacement(
-                    tween(durationMillis = 250)
-                ),
-                employee, onDeleteClick
-            )
+        items(data, itemContent = { employee ->
+            AnimatedVisibility(
+                visible = true//!deletedPersonList.contains(person),
+                , enter = expandVertically(),
+                exit = shrinkVertically(
+                    animationSpec = tween(
+                        durationMillis = 1000,
+                    )
+                )
+            ) {
+                EmployeeCardGrid(
+                    Modifier.animateItemPlacement(
+                        tween(durationMillis = 2000)
+                    ),
+                    employee, onDeleteClick
+                )
+            }
 
-        }
+
+        })
     }
 }
 
@@ -560,16 +601,16 @@ fun EmployeeLazyColumn(
 //                .padding(vertical = 4.dp) // this can change for contentPadding = PaddingValues(horizontal = 16.dp)
             , contentPadding = PaddingValues(vertical = 4.dp)
         ) {
-            items(items = data) { employee ->
+            items(items = data, itemContent = { employee ->
                 EmployeeCardMenu(
                     Modifier.animateItemPlacement(
-                        tween(durationMillis = 250)
+                        tween(durationMillis = 1000)
                     ),
                     employee,
                 )
 
 
-            }
+            })
         }
 
 
@@ -579,8 +620,7 @@ fun EmployeeLazyColumn(
 @Composable
 private fun Header(modifier: Modifier = Modifier) {
     Card(
-        backgroundColor =
-        Color.LightGray,
+//        backgroundColor = Color.LightGray,
         modifier = Modifier.padding(horizontal = 8.dp),
     ) {
         Row(
@@ -624,8 +664,7 @@ fun EmployeeCardMenu(
     employee: GetEmployeeByName,
 ) {
     Card(
-        backgroundColor =
-        Color.LightGray,
+//        backgroundColor = Color.LightGray,
 //        .cardColors(containerColor = MaterialTheme.colors.primary)
         modifier = modifier.padding(vertical = 4.dp, horizontal = 8.dp),
     ) {
@@ -651,6 +690,9 @@ fun EmployeeItemGrid(employee: GetEmployeeByName, onDeleteClick: (id: Long) -> U
         Spacer(modifier = Modifier.height(8.dp))
 
         Row() {
+            IconButton(onClick = {}){
+                Icon(Icons.Outlined.Create , contentDescription = null)
+            }
             Spacer(modifier = Modifier.weight(1f))
             Column {
                 IconButton(onClick = {
@@ -705,7 +747,7 @@ fun EmployeeItemGrid(employee: GetEmployeeByName, onDeleteClick: (id: Long) -> U
         }
         Spacer(modifier = Modifier.height(8.dp))
 
-        Card() { Text(text = employee.fname, style = MaterialTheme.typography.h5) }
+        Card() { Text(text = employee.fname, style = MaterialTheme.typography.h6) }
         Spacer(modifier = Modifier.height(8.dp))
 
         Card() { Text(text = employee.department_name) }
@@ -739,7 +781,7 @@ private fun ItemGrid(modifier: Modifier = Modifier, icon: ImageVector, txt: Stri
         )
         Spacer(modifier = Modifier.height(8.dp))
 
-        Text(text = txt)
+        Text(text = txt , style = MaterialTheme.typography.body2)
 
     }
 
@@ -781,8 +823,7 @@ fun Item(text: String, width: Dp) {
 
     Card(
         elevation = 10.dp,
-        backgroundColor =
-        Color.LightGray,
+//        backgroundColor = Color.LightGray,
         modifier = Modifier.padding(horizontal = 10.dp)
     ) {
         Text(
@@ -797,7 +838,10 @@ fun Item(text: String, width: Dp) {
 
 @Composable
 fun ErrorUI(error: String = "Something went wrong, try again in a few minutes. ¯\\_(ツ)_/¯") {
-    Box(modifier = Modifier.fillMaxSize()) {
+    Box(
+        modifier = Modifier.fillMaxSize(),
+        contentAlignment = Alignment.Center
+    ) {
         Text(
             text = error,
             modifier = Modifier

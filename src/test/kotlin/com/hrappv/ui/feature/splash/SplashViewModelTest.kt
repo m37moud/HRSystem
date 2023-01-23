@@ -59,10 +59,21 @@ class SplashViewModelTest {
 //        println("department ${items}")
 
 //val emp = Employees(2,"qqqqq" , "lo.k r'u hgydhv")
-//        addEmployeViewModel.insertNewEmp(emp)
-//
+        val emp = Employees(
+            emp_id = 1,
+            fname = "",
+            department_name = "",
+            totaldays = 21,
+            bith_day = "1990-11-16",
+            salary = 1000.0f,
+            vacanition = 0,
+            vbalance = 0,
+            bdl_balance = 0
+        )
+        val result = addEmployeViewModel.insertNewEmp(emp)
+
 //        val items = departmentViewModel.
-//        println("department ${items}")
+        println("department ${result}")
     }
 
 }

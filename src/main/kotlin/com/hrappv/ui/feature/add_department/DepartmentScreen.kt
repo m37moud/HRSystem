@@ -377,7 +377,7 @@ private fun ContentUI(
 
     ) {
 
-    EmployeeLazyColumn(data, onDeleteClick)
+    DepartmentLazyColumn(data, onDeleteClick)
 
 
 }
@@ -385,7 +385,7 @@ private fun ContentUI(
 
 @OptIn(ExperimentalFoundationApi::class)
 @Composable
-fun EmployeeLazyColumn(
+private fun DepartmentLazyColumn(
     data: List<Department>,
     onDeleteClick: (id: Long) -> Unit,
 ) {
@@ -412,7 +412,7 @@ fun EmployeeLazyColumn(
                         )
                     )
                 ) {
-                    EmployeeCardMenu(
+                    DepartmentCardMenu(
                         Modifier.animateItemPlacement(
                             tween(durationMillis = 3000)
                         ),
@@ -431,14 +431,13 @@ fun EmployeeLazyColumn(
 @Composable
 private fun Header(modifier: Modifier = Modifier) {
     Card(
-        backgroundColor =
-        Color.LightGray,
+//        backgroundColor = Color.LightGray,
         modifier = Modifier.padding(horizontal = 8.dp),
     ) {
         Row(
             modifier = Modifier
                 .fillMaxWidth()
-                .padding(vertical = 3.dp, horizontal = 10.dp),
+                .padding(vertical = 5.dp, horizontal = 10.dp),
             horizontalArrangement = Arrangement.SpaceBetween
         ) {
 
@@ -455,24 +454,23 @@ private fun Header(modifier: Modifier = Modifier) {
 
 @Composable
 @Preview
-fun EmployeeCardMenu(
+private fun DepartmentCardMenu(
     modifier: Modifier = Modifier,
     department: Department,
 ) {
     Card(
-        backgroundColor =
-        Color.LightGray,
+//        backgroundColor = Color.LightGray,
 //        .cardColors(containerColor = MaterialTheme.colors.primary)
         modifier = modifier.padding(vertical = 4.dp, horizontal = 8.dp),
     ) {
-        EmployeeItemMenu(department)
+        DepartmentItemMenu(department)
     }
 
 }
 
 @Composable
 @Preview
-fun EmployeeItemMenu(
+private fun DepartmentItemMenu(
     department: Department,
 ) {
 
@@ -483,7 +481,7 @@ fun EmployeeItemMenu(
         horizontalArrangement = Arrangement.SpaceBetween //this can change for Arrangement.spacedBy()
 
     ) {
-        Item(text = department.depart_id.toString(), width = 50.dp)
+        Item(text = department.depart_id.toString(), width = 55.dp)
         Item(text = department.department.toString(), width = 450.dp)
         Item(text = department.commetion_rate.toString(), width = 200.dp)
         Item(text = department.depart_type.toString(), width = 200.dp)
@@ -505,8 +503,7 @@ fun Item(text: String, width: Dp) {
 
     Card(
         elevation = 10.dp,
-//        backgroundColor =
-//        Color.LightGray,
+//        backgroundColor = Color.LightGray,
         modifier = Modifier.padding(horizontal = 10.dp)
     ) {
         Text(
