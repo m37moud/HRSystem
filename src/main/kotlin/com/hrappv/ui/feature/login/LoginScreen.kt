@@ -96,7 +96,6 @@ private fun LoginForm(viewModel: LoginViewModel) {
             userName = it
 //            viewModel.emitError(null)
         },
-        singleLine = true,
         label = {
             Text(R.string.USER_NAME)
         },
@@ -108,6 +107,7 @@ private fun LoginForm(viewModel: LoginViewModel) {
             )
         },
         modifier = Modifier.testTag("username"),
+        singleLine = true,
         keyboardOptions = KeyboardOptions(
             autoCorrect = true,
             keyboardType = KeyboardType.Email,

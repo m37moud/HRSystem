@@ -56,9 +56,29 @@ fun DepartmentScreen(viewModel: DepartmentViewModel) {
 
     var departmentList: List<Department> = emptyList()
 
-
+    if (showPathDialog) {
+        FileDialog(
+//                                showDialogState = { showPathDialog = false },
+            title = "Select Folder",
+            isLoad = true
+        ) {
+            if (it.toString().isNotEmpty()) path = it.toString()
+            showPathDialog = false
+        }
+    }
+//
+//    if (showAddDepartmentDialog) {
+//        AddDepartmentDialog(
+//            onClose = { showAddDepartmentDialog = false },
+//            title = "Add Department",
+//        ) {
+////                                if (it.toString().isNotEmpty()) println(it.toString())
+//            showAddDepartmentDialog = false
+//        }
+//    }
 
     Surface {
+
         Column(
             modifier = Modifier.fillMaxSize(),
             horizontalAlignment = Alignment.CenterHorizontally,
@@ -91,27 +111,6 @@ fun DepartmentScreen(viewModel: DepartmentViewModel) {
                     Row(modifier = Modifier.align(Alignment.CenterEnd))
                     {
 
-                        if (showPathDialog) {
-                            FileDialog(
-//                                showDialogState = { showPathDialog = false },
-                                title = "Select Folder",
-                                isLoad = true
-                            ) {
-                                if (it.toString().isNotEmpty()) path = it.toString()
-                                showPathDialog = false
-                            }
-                        }
-
-                        if (showAddDepartmentDialog) {
-                            AddDepartmentDialog(
-                                onClose = { showAddDepartmentDialog = false },
-                                title = "Add Department",
-                            ) {
-//                                if (it.toString().isNotEmpty()) println(it.toString())
-                                showAddDepartmentDialog = false
-                            }
-                        }
-
 
                         OutlinedTextField(
                             value = path,
@@ -127,8 +126,9 @@ fun DepartmentScreen(viewModel: DepartmentViewModel) {
                             onClick = {
 
                                 scope.launch(Dispatchers.IO) {
-                                    showAddDepartmentDialog = true
+//                                    showAddDepartmentDialog = true
 
+                                    viewModel.onAddDepartment()
 //                                FileDialog(title = "", isLoad = true, onResult = {})
 //                                    showPathDialog = true
 //                                departmentList = Constatnts.excelImporterDepartment(path).distinct()
@@ -220,11 +220,12 @@ fun AddDepartmentDialog(onClose: () -> Unit, title: String, onResult: (Departmen
 
 
     Dialog(
-        onCloseRequest = onClose, title = title,
+        onCloseRequest = onClose,
+        title = title,
 //        state = rememberWindowState(
 //            height = Dp.Unspecified,
 //            position = WindowPosition(Alignment.Center)),
-            content = {
+        content = {
 //            var department = Department()
             Surface(modifier = Modifier.fillMaxSize()) {
                 Column(horizontalAlignment = Alignment.CenterHorizontally, verticalArrangement = Arrangement.Center) {
@@ -237,11 +238,11 @@ fun AddDepartmentDialog(onClose: () -> Unit, title: String, onResult: (Departmen
 //                    Spacer(modifier = Modifier.height(8.dp))
 
 //                    formState.value.department?.let {
-                        TextField(
-                            value = "it",
-                            onValueChange = {  }, //formState.value.department = it
-                            label = { Text("Department Name") }
-                        )
+                    TextField(
+                        value = "it",
+                        onValueChange = { }, //formState.value.department = it
+                        label = { Text("Department Name") }
+                    )
 //                    }
                     Spacer(modifier = Modifier.height(8.dp))
 //            TextFieldMenu()
@@ -249,15 +250,15 @@ fun AddDepartmentDialog(onClose: () -> Unit, title: String, onResult: (Departmen
 
                     TextField(
                         value = "formState.value.commetion_rate.toString()",
-                        onValueChange = {  }, //formState.value.commetion_rate = it.toLong()
+                        onValueChange = { }, //formState.value.commetion_rate = it.toLong()
                         label = { Text("Department Commetion Type") }
                     )
                     Spacer(modifier = Modifier.height(8.dp))
 
 //                    formState.value.commetion_type?.let {
-                        TextFieldMenu(name = "it") {
+                    TextFieldMenu(name = "it") {
 //                            formState.value.commetion_type = it
-                        }
+                    }
 //                    }
 
                     Spacer(modifier = Modifier.height(8.dp))

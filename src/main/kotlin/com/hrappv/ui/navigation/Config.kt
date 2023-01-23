@@ -29,7 +29,8 @@ sealed class Config(
     object Home : Config(
         label = R.string.HOME,
         icon = Icons.Rounded.Home
-    )object Department : Config(
+    )
+    object Department : Config(
         label = R.string.DEPARTMENT,
         icon = Icons.Rounded.Home
     )

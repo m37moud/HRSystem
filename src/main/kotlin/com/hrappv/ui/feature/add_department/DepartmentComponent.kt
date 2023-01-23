@@ -13,11 +13,9 @@ import javax.inject.Inject
 class DepartmentComponent(
     appComponent: AppComponent,
     private val componentContext: ComponentContext,
-    private val onBackPress: () -> Unit
+    private val onBackPress: () -> Unit,
+    private val onAddDepartment: () -> Unit,
 ) : Component, ComponentContext by componentContext {
-
-    private val _isBackPressed = MutableStateFlow(false)
-    val backToMain: StateFlow<Boolean> = _isBackPressed
 
     @Inject
     lateinit var viewModel: DepartmentViewModel
@@ -36,10 +34,19 @@ class DepartmentComponent(
             viewModel.init(scope)
         }
         val backToMain by viewModel.backToMain.collectAsState()
+        val addDepartment by viewModel.iSAddDepartmentPressed.collectAsState()
 
+
+
+        if (addDepartment) {
+            println("addDepartment is $addDepartment")
+            onAddDepartment()
+
+
+        }
 
         if (backToMain) {
-            println("startEmpResult is $backToMain")
+            println("back is $backToMain")
             onBackPress()
 
         }

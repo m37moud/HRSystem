@@ -13,6 +13,7 @@ import com.arkivanov.decompose.extensions.compose.jetbrains.subscribeAsState
 import com.arkivanov.decompose.router.stack.*
 import com.arkivanov.decompose.value.Value
 import com.hrappv.ui.feature.about.AboutComponent
+import com.hrappv.ui.feature.add_department.DefaultDepartmentComponent
 import com.hrappv.ui.feature.add_department.DepartmentComponent
 import com.hrappv.ui.feature.add_employe.AddEmployeScreenComponent
 import com.hrappv.ui.feature.home_screen.HomeComponent
@@ -68,7 +69,7 @@ class NavHostComponent(
                 onBackPress = ::onBackPress
 
             )
-            is Config.Department -> DepartmentComponent(
+            is Config.Department -> DefaultDepartmentComponent(
                 appComponent = appComponent,
                 componentContext = componentContext,
 //                userAuthState = config.userAuthState,

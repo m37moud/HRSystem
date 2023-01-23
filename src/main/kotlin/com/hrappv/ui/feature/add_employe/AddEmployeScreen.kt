@@ -5,6 +5,7 @@ import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.shape.RoundedCornerShape
+import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.*
 import androidx.compose.material.icons.Icons
@@ -15,6 +16,8 @@ import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.alpha
+import androidx.compose.ui.text.input.ImeAction
+import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.text.input.TextFieldValue
 import androidx.compose.ui.unit.dp
 import com.hrappv.data.models.Employees
@@ -128,14 +131,25 @@ fun AddEmployeeScreen(
                 OutlinedTextField(
                     value = emp_id,
                     onValueChange = { emp_id = it },
-                    label = { Text("Employee ID") }
+                    label = { Text("Employee ID") },
+                    singleLine = true,
+                    keyboardOptions = KeyboardOptions(
+                        autoCorrect = true,
+                        keyboardType = KeyboardType.Text,
+                        imeAction = ImeAction.Next
+                    ),
                 )
                 Spacer(modifier = Modifier.height(8.dp))
 
                 OutlinedTextField(
                     value = fname,
                     onValueChange = { fname = it },
-                    label = { Text("Employee Name") }
+                    label = { Text("Employee Name") }, singleLine = true,
+                    keyboardOptions = KeyboardOptions(
+                        autoCorrect = true,
+                        keyboardType = KeyboardType.Text,
+                        imeAction = ImeAction.Next
+                    ),
                 )
                 Spacer(modifier = Modifier.height(8.dp))
                 MenuDropDown(
@@ -161,7 +175,12 @@ fun AddEmployeeScreen(
                 OutlinedTextField(
                     value = bith_day,
                     onValueChange = { bith_day = it },
-                    label = { Text("Birth Date") }
+                    label = { Text("Birth Date") }, singleLine = true,
+                    keyboardOptions = KeyboardOptions(
+                        autoCorrect = true,
+                        keyboardType = KeyboardType.Text,
+                        imeAction = ImeAction.Next
+                    ),
                 )
                 Spacer(modifier = Modifier.height(8.dp))
 
@@ -172,34 +191,64 @@ fun AddEmployeeScreen(
                 OutlinedTextField(
                     value = salary,
                     onValueChange = { salary = it },
-                    label = { Text("Salary") }
+                    label = { Text("Salary") },
+                    singleLine = true,
+                    keyboardOptions = KeyboardOptions(
+                        autoCorrect = true,
+                        keyboardType = KeyboardType.Text,
+                        imeAction = ImeAction.Next
+                    )
                 )
                 Spacer(modifier = Modifier.height(8.dp))
 
                 OutlinedTextField(
                     value = vacanition,
                     onValueChange = { vacanition = it },
-                    label = { Text("Vacation Days") }
+                    label = { Text("Vacation Days") },
+                    singleLine = true,
+                    keyboardOptions = KeyboardOptions(
+                        autoCorrect = true,
+                        keyboardType = KeyboardType.Text,
+                        imeAction = ImeAction.Next
+                    )
                 )
                 Spacer(modifier = Modifier.height(8.dp))
 
                 OutlinedTextField(
                     value = vbalance,
                     onValueChange = { vbalance = it },
-                    label = { Text("Vacation Balance") }
+                    label = { Text("Vacation Balance") },
+                    singleLine = true,
+                    keyboardOptions = KeyboardOptions(
+                        autoCorrect = true,
+                        keyboardType = KeyboardType.Text,
+                        imeAction = ImeAction.Next
+                    )
                 )
                 Spacer(modifier = Modifier.height(8.dp))
 
                 OutlinedTextField(
                     value = bdl_balance,
                     onValueChange = { bdl_balance = it },
-                    label = { Text("bdl_balance") }
+                    label = { Text("bdl_balance") },
+                    singleLine = true,
+                    keyboardOptions = KeyboardOptions(
+                        autoCorrect = true,
+                        keyboardType = KeyboardType.Text,
+                        imeAction = ImeAction.Next
+                    )
                 )
                 Spacer(modifier = Modifier.height(8.dp))
                 OutlinedTextField(
                     value = totaldays,
                     onValueChange = { totaldays = it },
-                    label = { Text("Total Days") }
+                    label = { Text("Total Days") },
+                    singleLine = true,
+                    keyboardOptions = KeyboardOptions(
+                        autoCorrect = true,
+                        keyboardType = KeyboardType.Text,
+                        imeAction = ImeAction.Next
+                    )
                 )
 
 //        TextField(
@@ -207,7 +256,6 @@ fun AddEmployeeScreen(
 //            onValueChange = { formState.value.depart_id = it },
 //            label = { Text("Department ID") }
 //        )
-                Spacer(modifier = Modifier.height(8.dp))
 
                 Spacer(modifier = Modifier.height(8.dp))
 
@@ -216,7 +264,7 @@ fun AddEmployeeScreen(
                     if (emp_id.isNotEmpty() && department.isNotEmpty()) {
 
                         Employees(
-                            emp_id.toLong(),
+                            emp_id.trim().toLong(),
                             fname,
                             department,
                             totaldays.toLong(),

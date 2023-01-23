@@ -29,6 +29,9 @@ class DepartmentViewModel @Inject constructor(
     val departNumber = MutableStateFlow(0)
 
 
+    private val _ISAddDepartmentPressed = MutableStateFlow(false)
+    val iSAddDepartmentPressed: StateFlow<Boolean> = _ISAddDepartmentPressed
+
     private val _isBackPressed = MutableStateFlow(false)
     val backToMain: StateFlow<Boolean> = _isBackPressed
 
@@ -55,7 +58,18 @@ class DepartmentViewModel @Inject constructor(
     }
 
 
+    fun insertDepartment(department: Department) {
+        launchOnIO {
+            myRepo.department.insertDepartment(department)
+        }
+    }
+
+
+    fun onAddDepartment() {
+        _ISAddDepartmentPressed.value = true
+    }
     fun onBackPress() {
+        _ISAddDepartmentPressed.value = false
         _isBackPressed.value = true
     }
 
