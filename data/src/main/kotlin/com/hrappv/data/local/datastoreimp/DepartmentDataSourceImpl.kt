@@ -73,17 +73,41 @@ class DepartmentDataSourceImpl @Inject constructor(
 
     override suspend fun insertDepartment(
         department: Department
-    ) {
-//        withContext(dispatcher) {
-//            queries.insertDepartMent(
-////                depart_id = department.depart_id,
-//                department = department.department,
-//                commetion_rate = department.commetion_rate,
-//                depart_type = department.depart_type,
-//                commetion_type = department.commetion_type,
-//                commetion_month = department.commetion_month,
-//            )
-//        }
+    ): String {
+        var result = ""
+        try {
+            withContext(dispatcher) {
+                queries.transaction {
+
+                    val depart = department.let { queries.selectDepartmentByName(it.department).executeAsOneOrNull() }
+                    println(depart.toString())
+                    if (depart == null) {
+                        insertDepart(department)
+                        println("department is inserted")
+
+                        result = " department is inserted"
+                    } else {
+                        println("this department is already found ")
+
+                        result = "this department is already found"
+                    }
+
+                    afterRollback {
+                        println("some thing goes wrong")
+
+                        result = "some thing goes wrong"
+                    }
+                }
+
+            }
+        } catch (exc: Exception) {
+
+            result = exc.message.toString()
+
+            println(result)
+            return result
+        }
+        return result
     }
 
 

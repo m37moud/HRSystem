@@ -14,7 +14,6 @@ import com.arkivanov.decompose.router.stack.*
 import com.arkivanov.decompose.value.Value
 import com.hrappv.ui.feature.about.AboutComponent
 import com.hrappv.ui.feature.add_department.DefaultDepartmentComponent
-import com.hrappv.ui.feature.add_department.DepartmentComponent
 import com.hrappv.ui.feature.add_employe.AddEmployeScreenComponent
 import com.hrappv.ui.feature.home_screen.HomeComponent
 import com.hrappv.ui.feature.main.MainScreen2
@@ -69,7 +68,7 @@ class NavHostComponent(
                 onBackPress = ::onBackPress
 
             )
-            is Config.Department -> DefaultDepartmentComponent(
+            is Config.MainDepartment -> DefaultDepartmentComponent(
                 appComponent = appComponent,
                 componentContext = componentContext,
 //                userAuthState = config.userAuthState,
@@ -206,7 +205,7 @@ class NavHostComponent(
     }
     private fun startDepartmentScreen() {
 //        router.replaceCurrent(Config.Home)
-        navigation.bringToFront(Config.Department)
+        navigation.bringToFront(Config.MainDepartment)
     }
 
     private fun startAddEmployeeScreen() {

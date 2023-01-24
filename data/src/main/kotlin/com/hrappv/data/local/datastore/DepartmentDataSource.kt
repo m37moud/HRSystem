@@ -10,7 +10,7 @@ interface DepartmentDataSource {
 
     suspend fun insertDepartment(
         department: Department
-    )
+    ): String
 
 
     suspend fun insertMultiDepartment(departments: List<Department>): Boolean

@@ -22,6 +22,7 @@ import androidx.compose.ui.text.input.TextFieldValue
 import androidx.compose.ui.unit.dp
 import com.hrappv.data.models.Employees
 import com.hrappv.ui.components.MenuDropDown
+import com.hrappv.ui.components.ShowMessageDialog
 import com.hrappv.ui.value.HrAppVTheme
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
@@ -33,7 +34,6 @@ fun AddEmployeeScreen(
     viewModel: AddEmployeViewModel
 ) {
     val departments = viewModel.departments.collectAsState(emptyList()).value
-    val insertResult = viewModel.insertEmp.collectAsState()
     val formState = remember { mutableStateOf(EmployeeFormState()) }
     var path by remember { mutableStateOf("F:\\8") }
     var emp_id by remember { mutableStateOf("") }
@@ -54,6 +54,7 @@ fun AddEmployeeScreen(
 
     var employee: List<Employees> = emptyList()
 
+    val insertResult = viewModel.insertEmp.collectAsState()
 
     if (insertResult.value.isNotEmpty()) {
         showMessageDialog = true
@@ -499,18 +500,6 @@ fun TextFieldMenu(modifier: Modifier = Modifier, name: String) {
 
 
 // in githup space in 19/1
-
-@OptIn(ExperimentalMaterialApi::class)
-@Composable
-@Preview
-private fun ShowMessageDialog(message: String, onDismissRequest: () -> Unit) {
-    AlertDialog(
-        modifier = Modifier.width(200.dp),
-        onDismissRequest = onDismissRequest,
-        buttons = { Button(onClick = { onDismissRequest() }) { Text("ok") } },
-        title = { Text("Message", modifier = Modifier.fillMaxSize(), maxLines = 1) },
-        text = { Text(message) })
-}
 
 
 //

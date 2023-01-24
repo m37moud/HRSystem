@@ -30,7 +30,7 @@ sealed class Config(
         label = R.string.HOME,
         icon = Icons.Rounded.Home
     )
-    object Department : Config(
+    object MainDepartment : Config(
         label = R.string.DEPARTMENT,
         icon = Icons.Rounded.Home
     )

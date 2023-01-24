@@ -6,7 +6,9 @@ import com.arkivanov.decompose.ComponentContext
 import com.arkivanov.decompose.ExperimentalDecomposeApi
 import com.arkivanov.decompose.extensions.compose.jetbrains.stack.Children
 import com.arkivanov.decompose.extensions.compose.jetbrains.stack.animation.*
+import com.arkivanov.decompose.extensions.compose.jetbrains.subscribeAsState
 import com.arkivanov.decompose.router.stack.*
+import com.arkivanov.decompose.value.Value
 import com.arkivanov.essenty.parcelable.Parcelable
 import com.arkivanov.essenty.parcelable.Parcelize
 import com.hrappv.di.AppComponent
@@ -29,8 +31,6 @@ class DefaultDepartmentComponent(
     private val onBackPress: () -> Unit
 ) : Component, ComponentContext by componentContext {
 
-    private val _isBackPressed = MutableStateFlow(false)
-    val backToMain: StateFlow<Boolean> = _isBackPressed
 
 //    init {
 //        appComponent.inject(this)
@@ -39,19 +39,21 @@ class DefaultDepartmentComponent(
     private val appComponent: AppComponent = DaggerAppComponent
         .create()
 
-    private val navigation = StackNavigation<Config>()
-    private val stack = childStack(
-        source = navigation,
-        key = "defaultDepartment",
-        initialConfiguration = Config.Department,
-        childFactory = ::createScreenComponent
+    private val departmentNavigation = StackNavigation<DepartmentConfig>()
+    private val departmentStack = childStack(
+        source = departmentNavigation,
+        initialConfiguration = DepartmentConfig.Department,
+        handleBackButton = true,
+        key = "departmentStack",
+        childFactory = ::createScreenComponent,
+
     )
 
 
-    private fun createScreenComponent(config: Config, componentContext: ComponentContext): Component {
+    private fun createScreenComponent(config: DepartmentConfig, componentContext: ComponentContext): Component {
         return when (config) {
 
-            is Config.Department -> DepartmentComponent(
+            is DepartmentConfig.Department -> DepartmentComponent(
                 appComponent = appComponent,
                 componentContext = componentContext,
                 onAddDepartment = ::startAddDepartmentScreen,
@@ -59,7 +61,7 @@ class DefaultDepartmentComponent(
 
             )
 
-            is Config.AddDepartment -> AddDepartmentComponent(
+            is DepartmentConfig.AddDepartment -> AddDepartmentComponent(
                 appComponent = appComponent,
                 componentContext = componentContext,
                 onBackPress = ::onBackPress
@@ -74,10 +76,14 @@ class DefaultDepartmentComponent(
     @OptIn(ExperimentalDecomposeApi::class)
     @Composable
     override fun render() {
+        val childStack: Value<ChildStack<*, Component>> = departmentStack
+        val child = childStack.subscribeAsState()
+        val activeComponent= child.value.active.instance
 
+        println(activeComponent.toString())
 
         Children(
-            stack = stack,
+            stack = departmentStack,
 //            animation = stackAnimation(), //fade() + scale()
             animation =  stackAnimation { _, _, direction ->
                 if (direction.isFront) {
@@ -95,28 +101,30 @@ class DefaultDepartmentComponent(
 
     private fun startAddDepartmentScreen() {
 //        router.replaceCurrent(Config.Home)
-        if (stack.value.active.configuration !is Config.AddDepartment) {
+        if (departmentStack.value.active.configuration !is DepartmentConfig.AddDepartment) {
 
-            navigation.replaceCurrent(Config.AddDepartment)
+            departmentNavigation.push(DepartmentConfig.AddDepartment)
         }
     }
 
     private fun onBackPress() {
-        navigation.replaceCurrent(Config.Department)
+//        navigation.replaceCurrent(Config.Department)
+        if (departmentStack.value.active.configuration !is DepartmentConfig.Department) {
 
-//        navigation.pop()
+            departmentNavigation.pop()
+        }
 //        router.replaceCurrent(Config.Main)
 
     }
 
     @Parcelize
-    private sealed class Config(
+    private sealed class DepartmentConfig(
 //        val index: Int,
 //        val isBackEnabled: Boolean,
     ) : Parcelable {
-        object Department : Config()
+        object Department : DepartmentConfig()
 
-        object AddDepartment : Config()
+        object AddDepartment : DepartmentConfig()
     }
 }
 

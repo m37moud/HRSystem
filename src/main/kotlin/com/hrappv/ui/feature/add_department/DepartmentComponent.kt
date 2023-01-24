@@ -13,8 +13,8 @@ import javax.inject.Inject
 class DepartmentComponent(
     appComponent: AppComponent,
     private val componentContext: ComponentContext,
-    private val onBackPress: () -> Unit,
     private val onAddDepartment: () -> Unit,
+    private val onBackPress: () -> Unit,
 ) : Component, ComponentContext by componentContext {
 
     @Inject
@@ -38,10 +38,10 @@ class DepartmentComponent(
 
 
 
-        if (addDepartment) {
+        if (addDepartment&&!backToMain) {
             println("addDepartment is $addDepartment")
+            viewModel.closeDepart()
             onAddDepartment()
-
 
         }
 

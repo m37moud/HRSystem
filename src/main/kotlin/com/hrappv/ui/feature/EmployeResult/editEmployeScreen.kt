@@ -115,8 +115,7 @@ fun ContentUI(data: List<EmployeeResult>) {
         horizontalAlignment = Alignment.CenterHorizontally // this can change for verticalAlignment
     ) {
         Card(
-            backgroundColor =
-            Color.LightGray,
+//            backgroundColor = Color.LightGray,
             modifier = Modifier.padding(horizontal = 8.dp),
         ) {
             Row(
@@ -200,8 +199,7 @@ fun Item(text: String, width: Dp) {
 
     Card(
         elevation = 10.dp,
-        backgroundColor =
-        Color.LightGray,
+//        backgroundColor = Color.LightGray,
         modifier = Modifier.padding(horizontal = 10.dp)
     ) {
         Text(

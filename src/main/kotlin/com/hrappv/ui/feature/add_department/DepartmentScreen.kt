@@ -11,6 +11,7 @@ import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.shape.RoundedCornerShape
+import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.material.*
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.AccountBox
@@ -30,6 +31,8 @@ import androidx.compose.ui.input.key.onKeyEvent
 import androidx.compose.ui.platform.testTag
 import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.text.font.FontWeight
+import androidx.compose.ui.text.input.ImeAction
+import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.text.input.TextFieldValue
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.Dp
@@ -37,6 +40,7 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.compose.ui.window.Dialog
 import com.hrappv.data.models.Department
+import com.hrappv.ui.feature.add_employe.TextFieldMenu
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 import utils.LCE
@@ -54,7 +58,6 @@ fun DepartmentScreen(viewModel: DepartmentViewModel) {
     val departmentResult = viewModel.departResults.collectAsState().value
     val departments = viewModel.departments.collectAsState(emptyList()).value
 
-    var departmentList: List<Department> = emptyList()
 
     if (showPathDialog) {
         FileDialog(
@@ -66,16 +69,6 @@ fun DepartmentScreen(viewModel: DepartmentViewModel) {
             showPathDialog = false
         }
     }
-//
-//    if (showAddDepartmentDialog) {
-//        AddDepartmentDialog(
-//            onClose = { showAddDepartmentDialog = false },
-//            title = "Add Department",
-//        ) {
-////                                if (it.toString().isNotEmpty()) println(it.toString())
-//            showAddDepartmentDialog = false
-//        }
-//    }
 
     Surface {
 
@@ -112,30 +105,24 @@ fun DepartmentScreen(viewModel: DepartmentViewModel) {
                     {
 
 
-                        OutlinedTextField(
-                            value = path,
-                            onValueChange = { path = it },
-
-                            modifier = Modifier.padding(end = 16.dp),
-                            placeholder = { Text("Select Excel Folder") },
-                            label = { Text(text = "Folder Path ...") },
-                            leadingIcon = { Icon(Icons.Filled.Refresh, "search location") }
-
-                        )
+//                        OutlinedTextField(
+//                            value = path,
+//                            onValueChange = { path = it },
+//
+//                            modifier = Modifier.padding(end = 16.dp),
+//                            placeholder = { Text("Select Excel Folder") },
+//                            label = { Text(text = "Folder Path ...") },
+//                            leadingIcon = { Icon(Icons.Filled.Refresh, "search location") },
+//                            shape = RoundedCornerShape(16.dp),
+////                            elevation = ButtonDefaults.elevation(5.dp),
+//
+//                        )
                         Button(
                             onClick = {
 
                                 scope.launch(Dispatchers.IO) {
-//                                    showAddDepartmentDialog = true
 
                                     viewModel.onAddDepartment()
-//                                FileDialog(title = "", isLoad = true, onResult = {})
-//                                    showPathDialog = true
-//                                departmentList = Constatnts.excelImporterDepartment(path).distinct()
-//                                println(departmentList.toString())
-//                                if (departmentList.isNotEmpty()) {
-//                                    viewModel.insertDepartmentFromImporter(departmentList)
-//                                }
                                 }
                             },
                             modifier = Modifier.padding(16.dp),
@@ -148,26 +135,26 @@ fun DepartmentScreen(viewModel: DepartmentViewModel) {
                         }
 
 
-                        Button(
-                            onClick = {
-                                scope.launch(Dispatchers.IO) {
-//                                FileDialog(title = "", isLoad = true, onResult = {})
-                                    showPathDialog = true
-//                                departmentList = Constatnts.excelImporterDepartment(path).distinct()
-//                                println(departmentList.toString())
-//                                if (departmentList.isNotEmpty()) {
-//                                    viewModel.insertDepartmentFromImporter(departmentList)
+//                        Button(
+//                            onClick = {
+//                                scope.launch(Dispatchers.IO) {
+////                                FileDialog(title = "", isLoad = true, onResult = {})
+//                                    showPathDialog = true
+////                                departmentList = Constatnts.excelImporterDepartment(path).distinct()
+////                                println(departmentList.toString())
+////                                if (departmentList.isNotEmpty()) {
+////                                    viewModel.insertDepartmentFromImporter(departmentList)
+////                                }
 //                                }
-                                }
-                            },
-                            modifier = Modifier.padding(16.dp),
-                            // Provide a custom shape for this button. In this example. we specify the button to have
-                            // round corners of 16dp radius.
-                            shape = RoundedCornerShape(16.dp),
-                            elevation = ButtonDefaults.elevation(5.dp),
-                        ) {
-                            Text(text = "Import From Excel")
-                        }
+//                            },
+//                            modifier = Modifier.padding(16.dp),
+//                            // Provide a custom shape for this button. In this example. we specify the button to have
+//                            // round corners of 16dp radius.
+//                            shape = RoundedCornerShape(16.dp),
+//                            elevation = ButtonDefaults.elevation(5.dp),
+//                        ) {
+//                            Text(text = "Import From Excel")
+//                        }
                     }
 
 
@@ -213,79 +200,6 @@ fun DepartmentScreen(viewModel: DepartmentViewModel) {
 
 }
 
-
-@Composable
-fun AddDepartmentDialog(onClose: () -> Unit, title: String, onResult: (Department) -> Unit) {
-    val formState = remember { mutableStateOf(Department(department = "Department Name")) }
-
-
-    Dialog(
-        onCloseRequest = onClose,
-        title = title,
-//        state = rememberWindowState(
-//            height = Dp.Unspecified,
-//            position = WindowPosition(Alignment.Center)),
-        content = {
-//            var department = Department()
-            Surface(modifier = Modifier.fillMaxSize()) {
-                Column(horizontalAlignment = Alignment.CenterHorizontally, verticalArrangement = Arrangement.Center) {
-
-//                    TextField(
-//                        value = formState.value.depart_id.toString(),
-//                        onValueChange = { formState.value.depart_id = it.toLong() },
-//                        label = { Text("Department ID") }
-//                    )
-//                    Spacer(modifier = Modifier.height(8.dp))
-
-//                    formState.value.department?.let {
-                    TextField(
-                        value = "it",
-                        onValueChange = { }, //formState.value.department = it
-                        label = { Text("Department Name") }
-                    )
-//                    }
-                    Spacer(modifier = Modifier.height(8.dp))
-//            TextFieldMenu()
-
-
-                    TextField(
-                        value = "formState.value.commetion_rate.toString()",
-                        onValueChange = { }, //formState.value.commetion_rate = it.toLong()
-                        label = { Text("Department Commetion Type") }
-                    )
-                    Spacer(modifier = Modifier.height(8.dp))
-
-//                    formState.value.commetion_type?.let {
-                    TextFieldMenu(name = "it") {
-//                            formState.value.commetion_type = it
-                    }
-//                    }
-
-                    Spacer(modifier = Modifier.height(8.dp))
-
-//                    formState.value.commetion_month?.let {
-//                        TextField(
-//                            value = "it",
-//                            onValueChange = {
-////                                formState.value.commetion_month = it
-//                                            },
-//                            label = { Text("Department Commetion Month") }
-//                        )
-//                    }
-                    Spacer(modifier = Modifier.height(8.dp))
-
-                    Button(onClick = {
-                        onResult(formState.value)
-//                        onClose()
-                        // Insert the new employee into the database here
-                    }) {
-                        Text("Add Department")
-                    }
-                }
-            }
-        }
-    )
-}
 
 @OptIn(ExperimentalComposeUiApi::class)
 @Composable
@@ -352,6 +266,7 @@ private fun SearchView(
                 }
             },
             singleLine = true,
+            shape = RoundedCornerShape(16.dp),
 
             )
 
@@ -544,69 +459,3 @@ fun LoadingUI() {
 }
 
 
-@Composable
-fun TextFieldMenu(modifier: Modifier = Modifier, name: String, onValue: (String) -> Unit) {
-
-
-    val listItems = arrayOf("ادارى", "صناعى")
-
-    var selectedItem by remember {
-        mutableStateOf(listItems[0])
-    }
-
-    var expanded by remember {
-        mutableStateOf(false)
-    }
-
-    // the box
-//    ExposedDropdownMenuBox(
-//        expanded = expanded,
-//        onExpandedChange = {
-//            expanded = !expanded
-//        }
-//    ) {
-
-    Column(modifier = modifier) {
-        // text field
-        TextField(
-            value = selectedItem,
-            onValueChange = { onValue },
-            readOnly = true,
-            label = { Text(text = "$name") },
-            trailingIcon = {
-                IconButton(onClick = {
-                    expanded = !expanded
-                }) {
-                    Icon(
-                        imageVector =
-
-                        if (expanded) Icons.Outlined.KeyboardArrowUp else Icons.Outlined.ArrowDropDown,
-                        contentDescription =
-
-                        if (expanded) "show less" else "show more", modifier = Modifier.size(24.dp)
-                    )
-                }
-            },
-//            colors = DropdownMenuDefaults.textFieldColors()
-            // modifier = Modifier.clickable {
-            //      expanded = !expanded
-            // }
-        )
-
-        // menu
-        DropdownMenu(
-            expanded = expanded,
-            onDismissRequest = { expanded = false }
-        ) {
-            listItems.forEach { selectedOption ->
-                // menu item
-                DropdownMenuItem(onClick = {
-                    selectedItem = selectedOption
-                    expanded = false
-                }) {
-                    Text(text = selectedOption)
-                }
-            }
-        }
-    }
-}

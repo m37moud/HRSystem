@@ -29,6 +29,7 @@ class AddDepartmentComponent (
 
 
         }
+
         val backToMain by viewModel.backToMain.collectAsState()
 
 
@@ -37,6 +38,7 @@ class AddDepartmentComponent (
             onBackPress()
 
         }
+
 
         AddDepartmentScreen(viewModel)
 
