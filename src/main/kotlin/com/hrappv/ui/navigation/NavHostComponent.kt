@@ -2,18 +2,18 @@ package com.hrappv.ui.navigation
 
 import androidx.compose.runtime.*
 import com.arkivanov.decompose.extensions.compose.jetbrains.stack.Children
-import com.arkivanov.decompose.extensions.compose.jetbrains.stack.animation.stackAnimation
 import com.hrappv.di.AppComponent
 import com.arkivanov.decompose.ComponentContext
 import com.hrappv.di.DaggerAppComponent
 import com.hrappv.ui.feature.EmployeResult.EmployResultScreenComponent
 import com.hrappv.ui.feature.main.MainScreenComponent
 import com.arkivanov.decompose.*
+import com.arkivanov.decompose.extensions.compose.jetbrains.stack.animation.*
 import com.arkivanov.decompose.extensions.compose.jetbrains.subscribeAsState
 import com.arkivanov.decompose.router.stack.*
 import com.arkivanov.decompose.value.Value
 import com.hrappv.ui.feature.about.AboutComponent
-import com.hrappv.ui.feature.add_department.DefaultDepartmentComponent
+import com.hrappv.ui.feature.department.DefaultDepartmentComponent
 import com.hrappv.ui.feature.add_employe.AddEmployeScreenComponent
 import com.hrappv.ui.feature.home_screen.HomeComponent
 import com.hrappv.ui.feature.main.MainScreen2
@@ -68,6 +68,7 @@ class NavHostComponent(
                 onBackPress = ::onBackPress
 
             )
+
             is Config.MainDepartment -> DefaultDepartmentComponent(
                 appComponent = appComponent,
                 componentContext = componentContext,
@@ -85,6 +86,7 @@ class NavHostComponent(
                 onBackPress = ::onBackPress
 
             )
+
             is Config.ViewEmployee -> ViewEmployeesComponent(
                 appComponent = appComponent,
                 componentContext = componentContext,
@@ -137,7 +139,7 @@ class NavHostComponent(
         var isMenuPressed by remember { mutableStateOf(false) }
         val childStack: Value<ChildStack<*, Component>> = stack
         val child = childStack.subscribeAsState()
-        val activeComponent= child.value.active.instance
+        val activeComponent = child.value.active.instance
 
 
 //        Children(
@@ -166,12 +168,13 @@ class NavHostComponent(
             onSettingsClick = ::startSettingsScreen,
             onAboutClick = ::startAboutScreen,
             onLogoutClick = {},
-        ){
+        ) {
             Children(
                 stack = stack,
-                animation = stackAnimation(), //fade() + scale()
-            ) {
-                it.instance.render()
+                animation = tabAnimation() //stackAnimation(), //fade() + scale()
+            ) { child ->
+
+                child.instance.render()
 
             }
         }
@@ -193,6 +196,48 @@ class NavHostComponent(
 //        router.replaceCurrent(Config.Main())
 ////        navigation.push(Config.Main(userAuthState))
 //    }
+    @OptIn(ExperimentalDecomposeApi::class)
+    @Composable
+    private fun tabAnimation(): StackAnimation<Any, Component> =
+        stackAnimation { child, otherChild, direction ->
+            val index = child.instance.index
+            val otherIndex = otherChild.instance.index
+            val anim = slide()
+            if ((index > otherIndex) == direction.isEnter) anim else anim.flipSide()
+        }
+
+    private val Component.index: Int
+        get() =
+            when (this) {
+                is HomeComponent -> 0
+                is DefaultDepartmentComponent -> 1
+                is AddEmployeScreenComponent -> 2
+                is ViewEmployeesComponent -> 3
+                is EmployResultScreenComponent -> 4
+                is SettingsComponent -> 5
+                is AboutComponent -> 6
+                is MainScreenComponent -> 7
+                else -> {0}
+            }
+
+    @OptIn(ExperimentalDecomposeApi::class)
+    private fun StackAnimator.flipSide(): StackAnimator =
+        StackAnimator { direction, onFinished, content ->
+            invoke(
+                direction = direction.flipSide(),
+                onFinished = onFinished,
+                content = content,
+            )
+        }
+
+    @Suppress("OPT_IN_USAGE")
+    private fun Direction.flipSide(): Direction =
+        when (this) {
+            Direction.ENTER_FRONT -> Direction.ENTER_BACK
+            Direction.EXIT_FRONT -> Direction.EXIT_BACK
+            Direction.ENTER_BACK -> Direction.ENTER_FRONT
+            Direction.EXIT_BACK -> Direction.EXIT_FRONT
+        }
 
     private fun addEmployeScreenStart() {
         navigation.bringToFront(Config.AddEmployee)
@@ -203,6 +248,7 @@ class NavHostComponent(
 //        router.replaceCurrent(Config.Home)
         navigation.bringToFront(Config.Home)
     }
+
     private fun startDepartmentScreen() {
 //        router.replaceCurrent(Config.Home)
         navigation.bringToFront(Config.MainDepartment)
@@ -212,6 +258,7 @@ class NavHostComponent(
 //        router.replaceCurrent(Config.Home)
         navigation.bringToFront(Config.AddEmployee)
     }
+
     private fun startViewEmployeeScreen() {
 //        router.replaceCurrent(Config.Home)
         navigation.bringToFront(Config.ViewEmployee)
@@ -237,10 +284,11 @@ class NavHostComponent(
 //        router.replaceCurrent(Config.Main)
 
     }
-    lateinit var m : () ->Unit
+
+    lateinit var m: () -> Unit
 
     fun logout(onLogOut: () -> Unit) {
-         m = onLogOut
+        m = onLogOut
     }
 }
 //

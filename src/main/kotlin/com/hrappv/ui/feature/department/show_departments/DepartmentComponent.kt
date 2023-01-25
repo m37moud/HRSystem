@@ -1,13 +1,9 @@
-package com.hrappv.ui.feature.add_department
+package com.hrappv.ui.feature.department.show_departments
 
 import androidx.compose.runtime.*
 import com.arkivanov.decompose.ComponentContext
 import com.hrappv.di.AppComponent
-import com.hrappv.ui.feature.add_employe.AddEmployeViewModel
-import com.hrappv.ui.feature.add_employe.AddEmployeeScreen
 import com.hrappv.ui.navigation.Component
-import kotlinx.coroutines.flow.MutableStateFlow
-import kotlinx.coroutines.flow.StateFlow
 import javax.inject.Inject
 
 class DepartmentComponent(

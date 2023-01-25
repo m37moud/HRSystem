@@ -4,13 +4,12 @@ import com.github.theapache64.expekt.should
 import com.hrappv.data.models.Employees
 import com.hrappv.test.MainCoroutineRule
 import com.hrappv.test.MyDaggerMockRule
-import com.hrappv.ui.feature.add_department.DepartmentViewModel
+import com.hrappv.ui.feature.department.show_departments.DepartmentViewModel
 import com.hrappv.ui.feature.add_employe.AddEmployeViewModel
 import com.nhaarman.mockitokotlin2.mock
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 import org.junit.Rule
 import org.junit.Test
-import util.Constatnts
 
 
 @ExperimentalCoroutinesApi

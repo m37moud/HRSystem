@@ -68,7 +68,11 @@ fun AddEmployeeScreen(
             onDismissRequest = {
                 viewModel.dialogMessage()//close
                 showMessageDialog = false
+            }, ok = {
+                viewModel.dialogMessage()
+                showMessageDialog = false
             },
+            cancel = { showMessageDialog = false },
             message = insertResult.value
         )
     }

@@ -1,4 +1,4 @@
-package com.hrappv.ui.feature.add_department
+package com.hrappv.ui.feature.department.add_department
 
 import androidx.compose.runtime.*
 import com.arkivanov.decompose.ComponentContext

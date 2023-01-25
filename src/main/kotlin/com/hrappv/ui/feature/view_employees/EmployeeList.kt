@@ -148,7 +148,8 @@ fun ViewEmpScreen(viewEmployee: ViewEmpViewModel) {
                     state = textState,menuItemSelected = {id->
                         id?.let { it1 -> viewEmployee.getEmployeesByDepartment(it1.depart_id!!) }
 
-                    }, onpressEnterSearch = {
+                    },
+                    onpressEnterSearch = {
 //                search(viewEmployee, empName)
                         viewEmployee.getEmployees(empName)
                     }) {
@@ -278,6 +279,7 @@ fun selectPreviewBtn(
 //
 //}
 
+@OptIn(ExperimentalComposeUiApi::class)
 @Composable
 private fun SearchView(
     modifier: Modifier = Modifier, state: MutableState<TextFieldValue>,

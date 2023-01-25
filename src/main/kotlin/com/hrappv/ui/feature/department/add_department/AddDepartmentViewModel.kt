@@ -1,4 +1,4 @@
-package com.hrappv.ui.feature.add_department
+package com.hrappv.ui.feature.department.add_department
 
 import com.hrappv.data.models.Department
 import com.hrappv.data.repo.MyRepo

@@ -1,14 +1,8 @@
-package com.hrappv.ui.feature.add_department
+package com.hrappv.ui.feature.department.show_departments
 
-import androidx.compose.runtime.Composable
-import androidx.compose.runtime.collectAsState
-import com.hrappv.GetEmployeeByName
-import com.hrappv.data.local.datastore.DepartmentDataSource
 import com.hrappv.data.models.Department
-import com.hrappv.data.models.Employees
 import com.hrappv.data.repo.MyRepo
 import com.hrappv.util.ViewModel
-import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import utils.LCE
@@ -51,32 +45,30 @@ class DepartmentViewModel @Inject constructor(
 //    }
 
 
-
-
-
-
     fun onAddDepartment() {
         _isAddDepartmentPressed.value = true
     }
+
     fun onBackPress() {
         _isBackPressed.value = true
         _isAddDepartmentPressed.value = false
 
     }
-    fun closeDepart(){
+
+    fun closeDepart() {
         _isAddDepartmentPressed.value = false
 
     }
 
     fun setDepartments(departments: List<Department>) {
         _DepartResults.value = LCE.LOADING
-
-        if (departments.isEmpty()) {
-            _DepartResults.value = LCE.ERROR("No Department is Found")
-
-        } else _DepartResults.value = LCE.CONTENT(departments)
-//
-
+        _DepartResults.value = LCE.CONTENT(departments)
 
     }
+
+    fun setDepartError(msg: String) {
+        _DepartResults.value = LCE.ERROR(msg)
+
+    }
+
 }

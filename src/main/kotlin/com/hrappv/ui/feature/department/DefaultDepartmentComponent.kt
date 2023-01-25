@@ -1,7 +1,6 @@
-package com.hrappv.ui.feature.add_department
+package com.hrappv.ui.feature.department
 
 import androidx.compose.runtime.Composable
-import androidx.compose.ui.graphics.vector.ImageVector
 import com.arkivanov.decompose.ComponentContext
 import com.arkivanov.decompose.ExperimentalDecomposeApi
 import com.arkivanov.decompose.extensions.compose.jetbrains.stack.Children
@@ -13,17 +12,9 @@ import com.arkivanov.essenty.parcelable.Parcelable
 import com.arkivanov.essenty.parcelable.Parcelize
 import com.hrappv.di.AppComponent
 import com.hrappv.di.DaggerAppComponent
-import com.hrappv.ui.feature.EmployeResult.EmployResultScreenComponent
-import com.hrappv.ui.feature.about.AboutComponent
-import com.hrappv.ui.feature.add_employe.AddEmployeScreenComponent
-import com.hrappv.ui.feature.home_screen.HomeComponent
-import com.hrappv.ui.feature.main.MainScreenComponent
-import com.hrappv.ui.feature.settings.SettingsComponent
-import com.hrappv.ui.feature.view_employees.ViewEmployeesComponent
+import com.hrappv.ui.feature.department.add_department.AddDepartmentComponent
+import com.hrappv.ui.feature.department.show_departments.DepartmentComponent
 import com.hrappv.ui.navigation.Component
-import com.hrappv.ui.navigation.Config
-import kotlinx.coroutines.flow.MutableStateFlow
-import kotlinx.coroutines.flow.StateFlow
 
 class DefaultDepartmentComponent(
     appComponent: AppComponent,

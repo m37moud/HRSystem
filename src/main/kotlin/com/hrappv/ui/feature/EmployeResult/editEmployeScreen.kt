@@ -42,7 +42,7 @@ fun EmployeeResultScreen(
     Scaffold(
         modifier = Modifier.fillMaxSize(),
         scaffoldState = scaffoldState, topBar = {
-            TopAppBar(backgroundColor = MaterialTheme.colors.onSecondary,
+            TopAppBar(backgroundColor = MaterialTheme.colors.surface,
                 title = {
                     Text(text = "Register Attends")
                 }, navigationIcon = {
