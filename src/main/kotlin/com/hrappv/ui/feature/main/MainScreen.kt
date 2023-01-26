@@ -33,6 +33,7 @@ import com.hrappv.ui.feature.EmployeResult.EmployResultScreenComponent
 import com.hrappv.ui.feature.about.AboutComponent
 import com.hrappv.ui.feature.department.show_departments.DepartmentComponent
 import com.hrappv.ui.feature.add_employe.AddEmployeScreenComponent
+import com.hrappv.ui.feature.department.DefaultDepartmentComponent
 import com.hrappv.ui.feature.home_screen.HomeComponent
 import com.hrappv.ui.feature.settings.SettingsComponent
 import com.hrappv.ui.feature.view_employees.ViewEmployeesComponent
@@ -382,95 +383,90 @@ data class NavigationDrawerItem(
 @Composable
 fun NavMenu(
     modifier: Modifier = Modifier,
-//    component: Component,
     isMenuPressed: Boolean,
     activeComponent: Component,
-//    loginViewModel: LoginViewModel,
     onNavIconClick: () -> Unit,
     onHomeClick: () -> Unit,
     onDepartmentClick: () -> Unit,
     onAddEmployeeClick: () -> Unit,
     onViewEmployeesClick: () -> Unit,
-
     onEmployeeResultClick: () -> Unit,
     onSettingsClick: () -> Unit,
     onAboutClick: () -> Unit,
     onLogoutClick: () -> Unit,
 
     ) {
-//    var isMenuPressed by remember { mutableStateOf(true) }
     NavigationRail(
         modifier = modifier //.width(IntrinsicSize.Max)
 
 //            .border(shape = RectangleShape, border = BorderStroke(2.dp, MaterialTheme.colors.onPrimary)).padding(4.dp)
 
-        . fillMaxHeight ()
+            .fillMaxHeight()
 //            .padding(end = 6.dp)
-        .animateContentSize(),
-    elevation = 10.dp,
-    header = {
-        Row(
-            modifier = modifier
+            .animateContentSize(),
+        elevation = 10.dp,
+        header = {
+            Row(
+                modifier = modifier
 //                    .fillMaxWidth()
-                .padding(4.dp),
-            verticalAlignment = Alignment.CenterVertically
+                    .padding(4.dp),
+                verticalAlignment = Alignment.CenterVertically
 
-        ) {
+            ) {
 
-            if (isMenuPressed) {
-                Text(
-                    "${App.appArgs.appName} ",
-                    fontWeight = FontWeight.Bold,
-                    style = MaterialTheme.typography.subtitle1,
-                )
+                if (isMenuPressed) {
+                    Text(
+                        "${App.appArgs.appName} ",
+                        fontWeight = FontWeight.Bold,
+                        style = MaterialTheme.typography.subtitle1,
+                    )
 
-                Spacer(modifier = modifier.width(120.dp))
-            } else {
-                Spacer(modifier = modifier.width(8.dp))
-            }
+                    Spacer(modifier = modifier.width(120.dp))
+                } else {
+                    Spacer(modifier = modifier.width(8.dp))
+                }
 
-            Icon(
-                imageVector = Icons.Default.Menu,
-                modifier = Modifier.size(25.dp).clickable {
-                    onNavIconClick()
-                },
-                contentDescription = null,
+                Icon(
+                    imageVector = Icons.Default.Menu,
+                    modifier = Modifier.size(25.dp).clickable {
+                        onNavIconClick()
+                    },
+                    contentDescription = null,
 //                colorFilter = ColorFilter.tint(MaterialTheme.colors.onPrimary)
-                tint = MaterialTheme.colors.onPrimary
+                    tint = MaterialTheme.colors.onPrimary
 
-            )
-            Spacer(modifier = Modifier.width(8.dp))
+                )
+                Spacer(modifier = Modifier.width(8.dp))
 
 
-        }
-    },
-    content = {
+            }
+        },
+        content = {
 //        Card(
 //            modifier
 //                .animateContentSize(),
 //            elevation = 6.dp,
 //        ) {
 
-        AppMenuHeader()
+            AppMenuHeader()
 
 
 //
 
 
-        Column(
-            modifier = modifier.width(IntrinsicSize.Max)
-                .fillMaxHeight()
+            Column(
+                modifier = modifier.width(IntrinsicSize.Max)
+                    .fillMaxHeight()
 //                    .padding(top = 16.dp)
 //                .border(shape = RectangleShape, border = BorderStroke(2.dp, MaterialTheme.colors.onPrimary))
 
-        ) {
-            Divider(
-            startIndent = 8.dp,
-            thickness = 2.dp,
-            color = MaterialTheme.colors.onPrimary
-            ,
-        )
-            Spacer(modifier = Modifier.width(8.dp))
+            ) {
+                Divider(
+                    startIndent = 0.dp,
+                    thickness = 2.dp,
+                    color = MaterialTheme.colors.onPrimary,
+                )
+                Spacer(modifier = Modifier.height(8.dp))
 
 //            Spacer(
 //                modifier = Modifier
@@ -480,83 +476,85 @@ fun NavMenu(
 //                    .padding(bottom = 4.dp),
 //                )
 //                Spacer(modifier = modifier.height(16.dp))
-            NavigationMenuItem(
-                selected = activeComponent is HomeComponent,
-                modifier = modifier.fillMaxWidth(),
-                icon = Icons.Default.Home,
-                label = "Home",
-                isMenuPressed = isMenuPressed
+                NavigationMenuItem(
+                    selected = activeComponent is HomeComponent,
+                    modifier = modifier.fillMaxWidth(),
+                    icon = Icons.Default.Home,
+                    label = "Home",
+                    isMenuPressed = isMenuPressed
 //                component.onHomeTabClicked()
-                ,
-                onClick = { onHomeClick() }
-            )
+                    ,
+                    onClick = { onHomeClick() }
+                )
+                Spacer(modifier = modifier.height(8.dp))
 
-            NavigationMenuItem(
-                selected = activeComponent is DepartmentComponent,
-                modifier = modifier.fillMaxWidth(),
-                icon = Icons.Default.FavoriteBorder,
-                label = "Department",
-                isMenuPressed = isMenuPressed
+
+                NavigationMenuItem(
+                    selected = activeComponent is DefaultDepartmentComponent,
+                    modifier = modifier.fillMaxWidth(),
+                    icon = Icons.Default.FavoriteBorder,
+                    label = "Department",
+                    isMenuPressed = isMenuPressed
 //                component.onHomeTabClicked()
-                ,
-                onClick = { onDepartmentClick() }
-            )
+                    ,
+                    onClick = { onDepartmentClick() }
+                )
 
 
 
-            Spacer(modifier = modifier.height(8.dp))
-            NavigationMenuItem(
-                selected = activeComponent is AddEmployeScreenComponent,
+                Spacer(modifier = modifier.height(8.dp))
+                NavigationMenuItem(
+                    selected = activeComponent is AddEmployeScreenComponent,
 
-                modifier = modifier.fillMaxWidth(),
-                icon = Icons.Default.AddCircle,
-                label = "Add Employee",
-                isMenuPressed = isMenuPressed,
-                onClick = { onAddEmployeeClick() }
-            )
+                    modifier = modifier.fillMaxWidth(),
+                    icon = Icons.Default.AddCircle,
+                    label = "Add Employee",
+                    isMenuPressed = isMenuPressed,
+                    onClick = { onAddEmployeeClick() }
+                )
 
-            Spacer(modifier = modifier.height(8.dp))
-            NavigationMenuItem(
-                selected = activeComponent is ViewEmployeesComponent,
+                Spacer(modifier = modifier.height(8.dp))
+                NavigationMenuItem(
+                    selected = activeComponent is ViewEmployeesComponent,
 
-                modifier = modifier.fillMaxWidth(),
-                icon = Icons.Default.Person,
-                label = "Employees",
-                isMenuPressed = isMenuPressed,
-                onClick = { onViewEmployeesClick() }
-            )
+                    modifier = modifier.fillMaxWidth(),
+                    icon = Icons.Default.Person,
+                    label = "Employees",
+                    isMenuPressed = isMenuPressed,
+                    onClick = { onViewEmployeesClick() }
+                )
 
-            Spacer(modifier = modifier.height(8.dp))
-            NavigationMenuItem(
-                selected = activeComponent is EmployResultScreenComponent,
+                Spacer(modifier = modifier.height(8.dp))
+                NavigationMenuItem(
+                    selected = activeComponent is EmployResultScreenComponent,
 
-                modifier = modifier.fillMaxWidth(),
-                icon = Icons.Default.Edit,
-                label = "Register Attends",
-                isMenuPressed = isMenuPressed,
-                onClick = { onEmployeeResultClick() }
+                    modifier = modifier.fillMaxWidth(),
+                    icon = Icons.Default.Edit,
+                    label = "Register Attends",
+                    isMenuPressed = isMenuPressed,
+                    onClick = { onEmployeeResultClick() }
 
-            )
+                )
 
-            Spacer(modifier = modifier.height(8.dp))
-            NavigationMenuItem(
-                selected = activeComponent is SettingsComponent,
+                Spacer(modifier = modifier.height(8.dp))
+                NavigationMenuItem(
+                    selected = activeComponent is SettingsComponent,
 
-                modifier = modifier.fillMaxWidth(),
-                icon = Icons.Default.Settings,
-                label = "Settings",
-                isMenuPressed = isMenuPressed,
-                onClick = { onSettingsClick() }
-            )
-            Spacer(modifier = modifier.height(8.dp))
-            NavigationMenuItem(
-                selected = activeComponent is AboutComponent,
+                    modifier = modifier.fillMaxWidth(),
+                    icon = Icons.Default.Settings,
+                    label = "Settings",
+                    isMenuPressed = isMenuPressed,
+                    onClick = { onSettingsClick() }
+                )
+                Spacer(modifier = modifier.height(8.dp))
+                NavigationMenuItem(
+                    selected = activeComponent is AboutComponent,
 
-                modifier = modifier.fillMaxWidth(),
-                icon = Icons.Default.Info,
-                label = "About",
-                isMenuPressed = isMenuPressed,
-                onClick = { onAboutClick() })
+                    modifier = modifier.fillMaxWidth(),
+                    icon = Icons.Default.Info,
+                    label = "About",
+                    isMenuPressed = isMenuPressed,
+                    onClick = { onAboutClick() })
 
 //                Spacer(modifier = modifier.height(8.dp))
 //                NavigationMenuItem(
@@ -567,10 +565,10 @@ fun NavMenu(
 //                )
 
 
-        }
+            }
 //        }
 
-    }
+        }
     )
 
 }

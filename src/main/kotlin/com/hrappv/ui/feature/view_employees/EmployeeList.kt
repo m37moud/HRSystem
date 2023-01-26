@@ -1,6 +1,7 @@
-@file:OptIn(ExperimentalComposeUiApi::class)
+@file:OptIn(ExperimentalComposeUiApi::class, ExperimentalFoundationApi::class)
 
 import androidx.compose.animation.AnimatedVisibility
+import androidx.compose.animation.core.LinearOutSlowInEasing
 import androidx.compose.animation.core.tween
 import androidx.compose.animation.expandVertically
 import androidx.compose.animation.shrinkVertically
@@ -14,7 +15,9 @@ import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.grid.GridCells
 import androidx.compose.foundation.lazy.grid.LazyVerticalGrid
 import androidx.compose.foundation.lazy.grid.items
+import androidx.compose.foundation.lazy.grid.itemsIndexed
 import androidx.compose.foundation.lazy.items
+import androidx.compose.foundation.lazy.rememberLazyListState
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.material.*
 import androidx.compose.material.icons.Icons
@@ -41,10 +44,12 @@ import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.input.TextFieldValue
 import androidx.compose.ui.text.style.TextAlign
+import androidx.compose.ui.text.toLowerCase
 import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.hrappv.Department
+import com.hrappv.GetAllEmployees
 import com.hrappv.GetEmployeeByName
 import com.hrappv.ui.components.MenuDropDown
 import com.hrappv.ui.feature.view_employees.ViewEmpViewModel
@@ -52,8 +57,10 @@ import compose.icons.FontAwesomeIcons
 import compose.icons.fontawesomeicons.Solid
 import compose.icons.fontawesomeicons.solid.CashRegister
 import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
 import utils.LCE
+import java.util.*
 
 //https://johncodeos.com/how-to-add-search-in-list-with-jetpack-compose/
 
@@ -63,21 +70,14 @@ fun ViewEmpScreen(viewEmployee: ViewEmpViewModel) {
     val scope = rememberCoroutineScope()
     val scaffoldState = rememberScaffoldState()
 
-    val textState = remember { mutableStateOf(TextFieldValue("")) }
-//    val textState =viewEmployee.queries.collectAsState()
     var deletedEmpName = remember { mutableStateOf("-") }
 
 
-
-
-    val empName = textState.value.text
-//    val empName = textState.value
-    viewEmployee.getQueries(empName)
-
     val departments = viewEmployee.departments.collectAsState(emptyList()).value
 
-    val employees = viewEmployee.empResults.collectAsState()
-//    val allEmployee = viewEmployee.allEmployees.collectAsState(emptyList()).value
+    val employees = viewEmployee.allEmps.collectAsState()
+    val allEmployee = viewEmployee.allEmployees.collectAsState(emptyList()).value
+
     val deleteEmployee = viewEmployee.employee.collectAsState()
     deletedEmpName.value = deleteEmployee.value.fname
 
@@ -113,71 +113,22 @@ fun ViewEmpScreen(viewEmployee: ViewEmpViewModel) {
         modifier = Modifier.fillMaxSize(),
         scaffoldState = scaffoldState
     ) {
+
         Column(modifier = Modifier.padding(6.dp), horizontalAlignment = Alignment.CenterHorizontally) {
-            Card(
-                modifier = Modifier.fillMaxWidth().padding(top = 12.dp, bottom = 12.dp),
-                elevation = 10.dp,
-                backgroundColor = MaterialTheme.colors.onBackground
-            ) {
-                Row {
-                    Spacer(Modifier.width(12.dp))
-                    Card(
-                        modifier = Modifier.padding(8.dp),
-                        elevation = 10.dp,
-//                    backgroundColor = MaterialTheme.colors.onBackground
-                    )
-                    {
-                        Text(
-                            text = "Employees Number : ${viewEmployee.empNumber.value.toString()}",
-                            modifier = Modifier.padding(10.dp)
-                        )
-                    }
+            /**
+             *
+             */
+            scope.launch(Dispatchers.IO) {
+                delay(1000)
+                if (allEmployee.isNotEmpty()) {
+                    viewEmployee.setEmpList(allEmployee)
+                } else {
+//                    viewModel.setDepartError("No Departments is found")
+
 
                 }
 
             }
-            Box(
-                modifier = Modifier
-                    .fillMaxWidth()
-                    .padding(start = 8.dp, end = 8.dp)
-            ) {
-
-
-                SearchView(modifier = Modifier.align(Alignment.CenterStart),
-                    name = "All Departments",departments=departments,
-                    state = textState,menuItemSelected = {id->
-                        id?.let { it1 -> viewEmployee.getEmployeesByDepartment(it1.depart_id!!) }
-
-                    },
-                    onpressEnterSearch = {
-//                search(viewEmployee, empName)
-                        viewEmployee.getEmployees(empName)
-                    }) {
-//                search(viewEmployee, "")
-                    viewEmployee.getEmployees("")
-                }
-
-
-
-
-
-
-                selectPreviewBtn(
-                    Modifier.align(Alignment.CenterEnd),
-                    selectGrid = selectedGrid,
-                    selectMenu = selectedMenu,
-                    selectedGrid = {
-                        selectedGrid = true
-                        selectedMenu = false
-                    },
-                    selectedMenu = {
-                        selectedMenu = true
-                        selectedGrid = false
-                    }
-                )
-
-            }
-
 
 
             when (val state = employees.value) {
@@ -185,6 +136,7 @@ fun ViewEmpScreen(viewEmployee: ViewEmpViewModel) {
                 is LCE.CONTENT -> {
                     ContentUI(
                         state.data,
+                        departments = departments,
 //                        allEmployee.value,
                         selectedGrid = selectedGrid,
                         selectedMenu = selectedMenu,
@@ -286,7 +238,7 @@ private fun SearchView(
     departments: List<com.hrappv.data.models.Department>,
     name: String,
     onpressEnterSearch: () -> Unit,
-    menuItemSelected : (com.hrappv.data.models.Department?) -> Unit,
+    menuItemSelected: (com.hrappv.data.models.Department?) -> Unit,
     onCloseSearch: () -> Unit,
 ) {
     Row(
@@ -313,7 +265,7 @@ private fun SearchView(
                     } else {
                         false
                     }
-                }.testTag("password"),
+                }.testTag("search"),
             textStyle = TextStyle(fontSize = 18.sp),
             placeholder = { Text("Search by name or ID") },
             label = { Text(text = "Search") },
@@ -350,7 +302,7 @@ private fun SearchView(
 
             )
 
-        MenuDropDown(name = name, departments = departments ,menuItemSelected = menuItemSelected )
+        MenuDropDown(name = name, departments = departments, menuItemSelected = menuItemSelected)
 
 
 //        OutlinedTextField(
@@ -523,34 +475,144 @@ private fun SearchView(
 @OptIn(ExperimentalFoundationApi::class)
 @Composable
 fun ContentUI(
-    data: List<GetEmployeeByName>,
+    data: List<GetAllEmployees>,
+    departments: List<com.hrappv.data.models.Department>,
     selectedGrid: Boolean,
     selectedMenu: Boolean,
     onDeleteClick: (id: Long) -> Unit,
 
 
     ) {
+    val textState = remember { mutableStateOf(TextFieldValue("")) }
+    val departTextState = remember { mutableStateOf("") }
+    val listState = rememberLazyListState()
+    val searchTxt = textState.value.text
+    val searchDepartTxt = departTextState.value
+
+    var selectedGrid by remember { mutableStateOf(true) }
+    var selectedMenu by remember { mutableStateOf(false) }
+
+    val filteredItems = if (searchDepartTxt.isEmpty() && searchTxt.isEmpty()) { //searchTxt.isEmpty()||
+        println(" empty  = $searchDepartTxt")
+
+        data
+    } else {
+        println("not empty $searchDepartTxt")
+        val resultList = data.filter { emp ->
+            emp.fname.lowercase(Locale.getDefault())
+                .contains(searchTxt.lowercase(Locale.getDefault()))
+                    || emp.emp_id.toString().contains(searchTxt)
+
+
+        }.filter { emp ->
+            emp.department_name.contains(searchDepartTxt)
+        }
+
+        resultList
+    }
+
+    /**
+     * show number of employees
+     */
+    Card(
+        modifier = Modifier.fillMaxWidth().padding(top = 12.dp, bottom = 12.dp),
+        elevation = 10.dp,
+        backgroundColor = MaterialTheme.colors.onBackground
+    ) {
+        Row {
+            Spacer(Modifier.width(12.dp))
+            Card(
+                modifier = Modifier.padding(8.dp),
+                elevation = 10.dp,
+//                    backgroundColor = MaterialTheme.colors.onBackground
+            )
+            {
+                Text(
+                    text = "Employees Number : ${filteredItems.size}",//${viewEmployee.empNumber.value.toString()}",
+                    modifier = Modifier.padding(10.dp)
+                )
+            }
+
+        }
+
+    }
+
+
+    Box(
+        modifier = Modifier
+            .fillMaxWidth()
+            .padding(start = 8.dp, end = 8.dp)
+    ) {
+
+
+        SearchView(modifier = Modifier.align(Alignment.CenterStart),
+            name = "All Departments",
+            departments = departments,
+            state = textState,
+            menuItemSelected = { department ->
+                if (department != null) {
+                    println(department.department)
+
+//                    departTextState.value =  TextFieldValue(department.department.toString())
+                    departTextState.value = department.department.toString()
+                }
+//                id?.let { it1 -> viewEmployee.getEmployeesByDepartment(it1.depart_id!!) }
+
+            },
+            onpressEnterSearch = {
+//                search(viewEmployee, empName)
+//                viewEmployee.getEmployees(empName)
+            }) {
+            /**
+             * on press close search
+             */
+            textState.value = TextFieldValue("")
+//                search(viewEmployee, "")
+//            viewEmployee.getEmployees("")
+        }
+
+
+
+
+
+
+        selectPreviewBtn(
+            Modifier.align(Alignment.CenterEnd),
+            selectGrid = selectedGrid,
+            selectMenu = selectedMenu,
+            selectedGrid = {
+                selectedGrid = true
+                selectedMenu = false
+            },
+            selectedMenu = {
+                selectedMenu = true
+                selectedGrid = false
+            }
+        )
+
+    }
+
 
     if (selectedGrid)
         EmployeeGridLazyColumn(
-            data, onDeleteClick
+            filteredItems, onDeleteClick
         )
 
 
 
     if (selectedMenu)
-        EmployeeLazyColumn(data)
+        EmployeeLazyColumn(filteredItems)
 
 
 }
 
-@OptIn(ExperimentalFoundationApi::class)
 @Composable
 fun EmployeeGridLazyColumn(
-    data: List<GetEmployeeByName>,
+    data: List<GetAllEmployees>,
     onDeleteClick: (id: Long) -> Unit,
 
     ) {
+    var list = data
     LazyVerticalGrid(
         modifier = Modifier
             .fillMaxWidth()
@@ -562,7 +624,15 @@ fun EmployeeGridLazyColumn(
         verticalArrangement = Arrangement.spacedBy(8.dp),
         horizontalArrangement = Arrangement.spacedBy(8.dp)
     ) {
-        items(data, itemContent = { employee ->
+//        item {
+//            Button(onClick = { list = list.shuffled() }) {
+//                Text("Shuffle")
+//            }
+//        }
+
+        itemsIndexed(items = list, key = { _, item -> item.emp_id }
+        ) { _, employee ->
+
             AnimatedVisibility(
                 visible = true//!deletedPersonList.contains(person),
                 , enter = expandVertically(),
@@ -572,23 +642,27 @@ fun EmployeeGridLazyColumn(
                     )
                 )
             ) {
+
                 EmployeeCardGrid(
                     Modifier.animateItemPlacement(
-                        tween(durationMillis = 2000)
+                        animationSpec = tween(
+                            durationMillis = 500,
+                            easing = LinearOutSlowInEasing,
+                        )
                     ),
-                    employee, onDeleteClick
+                    employee = employee, onDeleteClick = onDeleteClick
                 )
             }
 
 
-        })
+        }
     }
 }
 
 @OptIn(ExperimentalFoundationApi::class)
 @Composable
 fun EmployeeLazyColumn(
-    data: List<GetEmployeeByName>,
+    data: List<GetAllEmployees>,
 ) {
     Column(
         modifier = Modifier.fillMaxSize()
@@ -603,16 +677,20 @@ fun EmployeeLazyColumn(
 //                .padding(vertical = 4.dp) // this can change for contentPadding = PaddingValues(horizontal = 16.dp)
             , contentPadding = PaddingValues(vertical = 4.dp)
         ) {
-            items(items = data, itemContent = { employee ->
-                EmployeeCardMenu(
-                    Modifier.animateItemPlacement(
-                        tween(durationMillis = 1000)
-                    ),
-                    employee,
-                )
+            items(items = data, key = { it },
+                itemContent =
+                { employee ->
+
+                    EmployeeCardMenu(
+                        Modifier.animateItemPlacement(
+                            tween(durationMillis = 1000)
+                        ),
+                        employee,
+                    )
 
 
-            })
+                }
+            )
         }
 
 
@@ -646,7 +724,7 @@ private fun Header(modifier: Modifier = Modifier) {
 @Composable
 fun EmployeeCardGrid(
     modifier: Modifier = Modifier,
-    employee: GetEmployeeByName,
+    employee: GetAllEmployees,
     onDeleteClick: (id: Long) -> Unit,
 ) {
     Card(
@@ -663,7 +741,7 @@ fun EmployeeCardGrid(
 @Preview
 fun EmployeeCardMenu(
     modifier: Modifier = Modifier,
-    employee: GetEmployeeByName,
+    employee: GetAllEmployees,
 ) {
     Card(
 //        backgroundColor = Color.LightGray,
@@ -676,7 +754,7 @@ fun EmployeeCardMenu(
 }
 
 @Composable
-fun EmployeeItemGrid(employee: GetEmployeeByName, onDeleteClick: (id: Long) -> Unit) {
+fun EmployeeItemGrid(employee: GetAllEmployees, onDeleteClick: (id: Long) -> Unit) {
     var expanded by remember {
         mutableStateOf(false)
     }
@@ -692,8 +770,8 @@ fun EmployeeItemGrid(employee: GetEmployeeByName, onDeleteClick: (id: Long) -> U
         Spacer(modifier = Modifier.height(8.dp))
 
         Row() {
-            IconButton(onClick = {}){
-                Icon(Icons.Outlined.Create , contentDescription = null)
+            IconButton(onClick = {}) {
+                Icon(Icons.Outlined.Create, contentDescription = null)
             }
             Spacer(modifier = Modifier.weight(1f))
             Column {
@@ -783,7 +861,7 @@ private fun ItemGrid(modifier: Modifier = Modifier, icon: ImageVector, txt: Stri
         )
         Spacer(modifier = Modifier.height(8.dp))
 
-        Text(text = txt , style = MaterialTheme.typography.body2)
+        Text(text = txt, style = MaterialTheme.typography.body2)
 
     }
 
@@ -791,7 +869,7 @@ private fun ItemGrid(modifier: Modifier = Modifier, icon: ImageVector, txt: Stri
 
 @Composable
 @Preview
-fun EmployeeItemMenu(employee: GetEmployeeByName) {
+fun EmployeeItemMenu(employee: GetAllEmployees) {
 
 
     Row(
@@ -867,11 +945,3 @@ fun LoadingUI() {
     }
 }
 
-@Composable
-private fun search(viewEmployee: ViewEmpViewModel, empName: String) {
-    val scope = rememberCoroutineScope()
-
-    scope.launch(Dispatchers.IO) {
-        viewEmployee.getEmployees(empName)
-    }
-}

@@ -8,7 +8,7 @@ import kotlinx.coroutines.flow.Flow
 interface ViewEmpDataSource {
 
 
-    fun getAllEmployees(): List<GetAllEmployees>
+    fun getAllEmployees(): Flow<List<GetAllEmployees>>
     fun getEmployeeByName(name: String): List<GetEmployeeByName>
     fun getEmployeeByDepartment(departmentID: Long): List<GetEmployeeByDepartment>
     fun getEmployeeLikeID(name: String): List<GetEmployeeLikeID>

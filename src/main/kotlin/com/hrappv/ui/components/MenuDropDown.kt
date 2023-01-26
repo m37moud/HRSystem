@@ -63,6 +63,7 @@ fun MenuDropDown(
             trailingIcon = {
                 Icon(icon, "contentDescription", Modifier.clickable { expanded = !expanded })
             }
+        ,
         )
         DropdownMenu(
             expanded = expanded,
@@ -71,6 +72,14 @@ fun MenuDropDown(
                 .height(200.dp)
                 .width(with(LocalDensity.current) { dropDownWidth.toDp() })
         ) {
+            DropdownMenuItem(onClick = {
+                selectedText = "All Departments"
+                menuItemSelected(Department())
+                expanded = false
+
+            }) {
+                Text(text = "All Departments")
+            }
             departments.forEach { label ->
                 DropdownMenuItem(onClick = {
                     selectedText = label.department

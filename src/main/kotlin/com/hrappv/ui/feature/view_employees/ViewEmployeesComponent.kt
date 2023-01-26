@@ -27,15 +27,8 @@ class ViewEmployeesComponent (
         val scope = rememberCoroutineScope()
         LaunchedEffect(viewModel) {
             viewModel.init(scope)
-            viewModel.getEmployees("")
-//            viewModel.getAllEmployees()
-//            viewModel.deleteEmployee(3)
-//            mainViewModel.init(scope)
         }
-//        val folderPath by viewModel.folderPath.collectAsState()
-//        if(folderPath.isNotBlank()){
-//
-//        }
+
         val backToMain by viewModel.backToMain.collectAsState()
 //        val backToMain by mainViewModel.startEmpResult.collectAsState()
 

@@ -43,10 +43,10 @@ class ViewEmpViewModel @Inject constructor(
     private val _delete = MutableStateFlow(false)
     val delete: StateFlow<Boolean> = _delete
 
-    private val _allEmps: MutableStateFlow<LCE<List<GetAllEmployees>>> = MutableStateFlow(LCE.NOACTION)
+    private val _allEmps: MutableStateFlow<LCE<List<GetAllEmployees>>> = MutableStateFlow(LCE.LOADING)
     val allEmps: StateFlow<LCE<List<GetAllEmployees>>> = _allEmps
 
-//    val allEmployees = myRepo.viewEmployees.getAllEmployees()
+    val allEmployees = myRepo.viewEmployees.getAllEmployees()
 
      val empNumber = MutableStateFlow(0)
 
@@ -120,23 +120,20 @@ class ViewEmpViewModel @Inject constructor(
 //            val result = myRepo.viewEmployees.getEmployeeByID(id)
             val result = dataSource.getEmployeeByID(id)
             println(result.toString())
-            _employee.emit(result!!)
+            if (result != null) {
+                _employee.value = result
+            }
         }
     }
 
-    fun getAllEmployees() {
-//            println(data.toString())
-//        val data = myRepo.viewEmployees.getAllEmployees()
-        val data = dataSource.getAllEmployees()
+    fun setEmpList(employees : List<GetAllEmployees>) {
+        _allEmps.value =  LCE.LOADING
+        _allEmps.value = LCE.CONTENT(employees)
 
-        if (data.isEmpty()) {
-            _allEmps.value = LCE.ERROR("Employee Not Found")
+    }
+    fun setEmpError(msg: String) {
+        _allEmps.value = LCE.ERROR(msg)
 
-        } else
-            _allEmps.value = LCE.CONTENT(data)
-
-        println(data.toString())
-//        _allEmps.value = LCE.CONTENT(data)
     }
 
     fun getQueries(queries: String) {

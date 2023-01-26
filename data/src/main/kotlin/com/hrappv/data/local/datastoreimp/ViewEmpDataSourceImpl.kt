@@ -20,8 +20,8 @@ class ViewEmpDataSourceImpl @Inject constructor(
     val queries = hrAppDb.employeQueries
 
 
-    override fun getAllEmployees(): List<GetAllEmployees> {
-        return queries.getAllEmployees().executeAsList()
+    override fun getAllEmployees(): Flow<List<GetAllEmployees>> {
+        return queries.getAllEmployees().asFlow().mapToList()
     }
 
     override fun getEmployeeByName(name: String): List<GetEmployeeByName> {

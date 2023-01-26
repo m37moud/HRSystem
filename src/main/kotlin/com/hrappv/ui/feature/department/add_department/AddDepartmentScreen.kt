@@ -166,16 +166,18 @@ fun AddDepartmentScreen(viewModel: AddDepartmentViewModel) {
                     /**
                      * top app bar
                      */
-//                    Card(
-//                        modifier = Modifier.padding(start = 6.dp, end = 6.dp),
-//                        shape = RoundedCornerShape(4.dp),
-//                        elevation = 4.dp
-//                    ) {
+                    Card(
+                        modifier = Modifier.padding(start = 6.dp, end = 6.dp),
+                        shape = RoundedCornerShape(16.dp),
+                        elevation = 10.dp
+                    ) {
                         Column(
-                            modifier = Modifier.border(
-                                shape = RectangleShape,
-                                border = BorderStroke(2.dp, MaterialTheme.colors.onPrimary)
-                            ).padding(4.dp)
+                            modifier = Modifier
+//                                .border(
+//                                shape = RectangleShape,
+//                                border = BorderStroke(2.dp, MaterialTheme.colors.onPrimary)
+//                            )
+                            .padding(4.dp)
                         ) {
                             Box(
                                 modifier = Modifier
@@ -249,7 +251,7 @@ fun AddDepartmentScreen(viewModel: AddDepartmentViewModel) {
                         }
 
 
-//                    }
+                    }
 
                     Column(
                         Modifier.padding(top = 8.dp).verticalScroll(state = rememberScrollState(0), enabled = true),

@@ -1,18 +1,20 @@
 package com.hrappv.ui.feature.department.show_departments
 
-import FileDialog
 import androidx.compose.animation.AnimatedVisibility
+import androidx.compose.animation.core.FastOutLinearInEasing
+import androidx.compose.animation.core.TweenSpec
 import androidx.compose.animation.core.tween
 import androidx.compose.animation.expandVertically
+import androidx.compose.animation.fadeOut
 import androidx.compose.animation.shrinkVertically
 import androidx.compose.desktop.ui.tooling.preview.Preview
-import androidx.compose.foundation.BorderStroke
 import androidx.compose.foundation.ExperimentalFoundationApi
 import androidx.compose.foundation.background
-import androidx.compose.foundation.border
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.LazyColumn
+import androidx.compose.foundation.lazy.LazyListState
 import androidx.compose.foundation.lazy.items
+import androidx.compose.foundation.lazy.rememberLazyListState
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.material.*
@@ -20,6 +22,7 @@ import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.AccountBox
 import androidx.compose.material.icons.filled.Close
 import androidx.compose.material.icons.filled.Search
+import androidx.compose.material.icons.outlined.AddCircle
 import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.ExperimentalComposeUiApi
@@ -44,10 +47,8 @@ import utils.LCE
 
 @Composable
 fun DepartmentScreen(viewModel: DepartmentViewModel) {
-    var path by remember { mutableStateOf("") }
+//    var path by remember { mutableStateOf("") }
 
-    var showPathDialog by remember { mutableStateOf(false) }
-    var showAddDepartmentDialog by remember { mutableStateOf(false) }
     val scope = rememberCoroutineScope()
     val scaffoldState = rememberScaffoldState()
 
@@ -55,16 +56,6 @@ fun DepartmentScreen(viewModel: DepartmentViewModel) {
     val departments = viewModel.departments.collectAsState(emptyList()).value
 
 
-    if (showPathDialog) {
-        FileDialog(
-//                                showDialogState = { showPathDialog = false },
-            title = "Select Folder",
-            isLoad = true
-        ) {
-            if (it.toString().isNotEmpty()) path = it.toString()
-            showPathDialog = false
-        }
-    }
 
     Surface(modifier = Modifier.fillMaxSize()) {
 
@@ -73,55 +64,55 @@ fun DepartmentScreen(viewModel: DepartmentViewModel) {
             horizontalAlignment = Alignment.CenterHorizontally,
 //            verticalArrangement = Arrangement.Center
         ) {
-            Card(
+//            Card(
+//
+////                modifier = Modifier.fillMaxWidth(),
+//                shape = RoundedCornerShape(16.dp),
+//
+//                elevation = 8.dp
+//            ) {
 
-//                modifier = Modifier.fillMaxWidth(),
-                shape = RoundedCornerShape(4.dp),
-                elevation = 8.dp
+            Box(
+                modifier = Modifier.background(MaterialTheme.colors.surface)
+
+                    .fillMaxWidth()
+                    .padding(start = 8.dp, end = 8.dp)
             ) {
 
-                Box(
-                    modifier = Modifier
-                        .fillMaxWidth()
-//                    .border(
-//                        shape = RoundedCornerShape(16.dp),
-//                        border = BorderStroke(1.dp, MaterialTheme.colors.onPrimary)
-//                    )
-                        .padding(start = 8.dp, end = 8.dp)
-                ) {
+
+                Row(modifier = Modifier.align(Alignment.CenterEnd))
+                {
 
 
-                    Row(modifier = Modifier.align(Alignment.CenterEnd))
-                    {
+                    Button(
+                        onClick = {
 
+                            scope.launch(Dispatchers.IO) {
 
-                        Button(
-                            onClick = {
+                                viewModel.onAddDepartment()
+                            }
+                        },
+                        modifier = Modifier.padding(horizontal = 16.dp),
+                        // Provide a custom shape for this button. In this example. we specify the button to have
+                        // round corners of 16dp radius.
+                        shape = RoundedCornerShape(16.dp),
+                        elevation = ButtonDefaults.elevation(5.dp),
+                    ) {
+                        Icon(imageVector = Icons.Outlined.AddCircle, contentDescription = "Add Department Screen")
 
-                                scope.launch(Dispatchers.IO) {
+                        Spacer(modifier = Modifier.width(6.dp))
 
-                                    viewModel.onAddDepartment()
-                                }
-                            },
-                            modifier = Modifier.padding(horizontal = 16.dp),
-                            // Provide a custom shape for this button. In this example. we specify the button to have
-                            // round corners of 16dp radius.
-                            shape = RoundedCornerShape(16.dp),
-                            elevation = ButtonDefaults.elevation(5.dp),
-                        ) {
-                            Text(text = "Add Department")
-                        }
-
-
+                        Text(text = "Add Department")
                     }
 
 
                 }
-
             }
 
+//            }
 
-            Spacer(modifier = Modifier.height(8.dp))
+
+//            Spacer(modifier = Modifier.height(8.dp))
 
             scope.launch(Dispatchers.IO) {
                 delay(1000)
@@ -247,15 +238,6 @@ private fun SearchView(
             )
 
 
-//        Button(onClick = {
-////                    importState = LCE.LOADING
-//
-////                search(viewEmployee, empName)
-//            onpressEnterSearch()
-//        }) {
-//            Icon(Icons.Outlined.Search, "Search")
-//        }
-
     }
 
 }
@@ -270,45 +252,61 @@ private fun ContentUI(
     ) {
 
     val textState = remember { mutableStateOf(TextFieldValue("")) }
-
-    Card(
-
-//                modifier = Modifier.fillMaxWidth(),
-        shape = RoundedCornerShape(4.dp),
-        elevation = 8.dp
+    val listState = rememberLazyListState()
+//    Card(
+//        modifier = Modifier.fillMaxWidth().padding(start = 8.dp, end = 8.dp, bottom = 8.dp),
+//        shape = RoundedCornerShape(16.dp),
+//        backgroundColor = MaterialTheme.colors.surface,
+//        elevation = 8.dp,
+//
+//    ) {
+    val showSearch by remember {
+        derivedStateOf {
+            listState.firstVisibleItemIndex > 2
+        }
+    }
+//    if(showSearch) {
+    AnimatedVisibility(
+        visible = !showSearch,
+        enter = expandVertically(),
+        exit = shrinkVertically(
+            animationSpec = tween(
+                durationMillis = 250,
+            )
+        )
     ) {
         Box(
             modifier = Modifier.background(MaterialTheme.colors.surface)
                 .fillMaxWidth()
+
 //            .border(
 //                shape = RoundedCornerShape(16.dp),
 //                border = BorderStroke(1.dp, MaterialTheme.colors.onSurface.copy(alpha = 0.9f))
 //            )
-                .padding(start = 8.dp, end = 8.dp)
-        ) {
+                .padding(start = 8.dp, end = 8.dp, bottom = 6.dp),
+
+            ) {
 
 
             SearchView(modifier = Modifier.align(Alignment.CenterStart),
                 state = textState, onpressEnterSearch = {
-//                search(viewEmployee, empName)
-//                                viewModel.getEmployees(empName)
                 }) {
                 textState.value = TextFieldValue("")
-//                            viewModel.getEmployees("")
             }
         }
-
     }
+//        }
+
+//    }
 
     val searchTxt = textState.value.text
-
 
 
     val filteredItems = if (searchTxt.isEmpty()) {
         data
     } else {
         val resultList = data.filter { department ->
-            department.department.contains(searchTxt)  || department.depart_id.toString().contains(searchTxt)
+            department.department.contains(searchTxt) || department.depart_id.toString().contains(searchTxt)
 
         }
 
@@ -316,7 +314,7 @@ private fun ContentUI(
     }
 
 
-    DepartmentLazyColumn(filteredItems, onDeleteClick)
+    DepartmentLazyColumn(filteredItems, listState = listState, onDeleteClick)
 
 
 }
@@ -326,8 +324,10 @@ private fun ContentUI(
 @Composable
 private fun DepartmentLazyColumn(
     data: List<Department>,
+    listState: LazyListState,
     onDeleteClick: (id: Long) -> Unit,
-) {
+
+    ) {
     Column(
         modifier = Modifier.fillMaxSize()
 //            .horizontalScroll(rememberScrollState())
@@ -337,10 +337,12 @@ private fun DepartmentLazyColumn(
         Header()
 
         LazyColumn(
-            modifier = Modifier.fillMaxSize()
+            modifier = Modifier.fillMaxSize(),
+            state = listState
 //                .padding(vertical = 4.dp) // this can change for contentPadding = PaddingValues(horizontal = 16.dp)
             , contentPadding = PaddingValues(vertical = 4.dp)
         ) {
+
             items(items = data, itemContent = { department ->
                 AnimatedVisibility(
                     visible = true//!deletedPersonList.contains(person),
@@ -350,12 +352,16 @@ private fun DepartmentLazyColumn(
                             durationMillis = 1000,
                         )
                     )
+//                    exit = fadeOut(
+//                        animationSpec = TweenSpec(200, 200, FastOutLinearInEasing)
+//                    )
                 ) {
+
                     DepartmentCardMenu(
                         Modifier.animateItemPlacement(
-                            tween(durationMillis = 3000)
+                            animationSpec = tween(durationMillis = 250)
                         ),
-                        department,
+                        department = department,
                     )
                 }
 
