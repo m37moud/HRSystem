@@ -66,6 +66,7 @@ fun FileDialog( //FrameWindowScope.
 //            this.iconImages = painterResource("drawables/logo.png") //Icons.Default.Menu//painterResource("drawables/logo.png")
             this.title = title
             this.file = "" // to select only folder
+            this.directory
 //            this.fileFilter = FileNameExtensionFilter("folders", "") // to
 
 //            painterResource("drawables/logo.png")

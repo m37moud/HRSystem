@@ -1,30 +1,30 @@
 @file:OptIn(ExperimentalComposeUiApi::class, ExperimentalFoundationApi::class)
 
+package com.hrappv.ui.feature.employees.view_employees
+
 import androidx.compose.animation.AnimatedVisibility
 import androidx.compose.animation.core.LinearOutSlowInEasing
 import androidx.compose.animation.core.tween
 import androidx.compose.animation.expandVertically
 import androidx.compose.animation.shrinkVertically
 import androidx.compose.desktop.ui.tooling.preview.Preview
-import androidx.compose.foundation.BorderStroke
-import androidx.compose.foundation.ExperimentalFoundationApi
-import androidx.compose.foundation.Image
-import androidx.compose.foundation.border
+import androidx.compose.foundation.*
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.grid.GridCells
 import androidx.compose.foundation.lazy.grid.LazyVerticalGrid
-import androidx.compose.foundation.lazy.grid.items
 import androidx.compose.foundation.lazy.grid.itemsIndexed
 import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.lazy.rememberLazyListState
 import androidx.compose.foundation.shape.CircleShape
+import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.*
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.AccountBox
 import androidx.compose.material.icons.filled.Close
 import androidx.compose.material.icons.filled.Menu
 import androidx.compose.material.icons.filled.Search
+import androidx.compose.material.icons.outlined.AddCircle
 import androidx.compose.material.icons.outlined.Create
 import androidx.compose.material.icons.outlined.MoreVert
 import androidx.compose.material.ripple.rememberRipple
@@ -44,15 +44,11 @@ import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.input.TextFieldValue
 import androidx.compose.ui.text.style.TextAlign
-import androidx.compose.ui.text.toLowerCase
 import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
-import com.hrappv.Department
 import com.hrappv.GetAllEmployees
-import com.hrappv.GetEmployeeByName
 import com.hrappv.ui.components.MenuDropDown
-import com.hrappv.ui.feature.view_employees.ViewEmpViewModel
 import compose.icons.FontAwesomeIcons
 import compose.icons.fontawesomeicons.Solid
 import compose.icons.fontawesomeicons.solid.CashRegister
@@ -66,19 +62,19 @@ import java.util.*
 
 
 @Composable
-fun ViewEmpScreen(viewEmployee: ViewEmpViewModel) {
+fun ViewEmpScreen(viewModel: ViewEmpViewModel) {
     val scope = rememberCoroutineScope()
     val scaffoldState = rememberScaffoldState()
 
     var deletedEmpName = remember { mutableStateOf("-") }
 
 
-    val departments = viewEmployee.departments.collectAsState(emptyList()).value
+    val departments = viewModel.departments.collectAsState(emptyList()).value
 
-    val employees = viewEmployee.allEmps.collectAsState()
-    val allEmployee = viewEmployee.allEmployees.collectAsState(emptyList()).value
+    val employees = viewModel.allEmps.collectAsState()
+    val allEmployee = viewModel.allEmployees.collectAsState(emptyList()).value
 
-    val deleteEmployee = viewEmployee.employee.collectAsState()
+    val deleteEmployee = viewModel.employee.collectAsState()
     deletedEmpName.value = deleteEmployee.value.fname
 
 
@@ -86,7 +82,7 @@ fun ViewEmpScreen(viewEmployee: ViewEmpViewModel) {
     var selectedMenu by remember { mutableStateOf(false) }
 
 
-    val deleteEmpState = viewEmployee.delete.collectAsState()
+    val deleteEmpState = viewModel.delete.collectAsState()
     if (deleteEmpState.value) {
         scope.launch { scaffoldState.snackbarHostState.showSnackbar("Employee ${deletedEmpName.value} deleted Sucssessful") }
     }
@@ -115,13 +111,51 @@ fun ViewEmpScreen(viewEmployee: ViewEmpViewModel) {
     ) {
 
         Column(modifier = Modifier.padding(6.dp), horizontalAlignment = Alignment.CenterHorizontally) {
+
+
+            Box(
+                modifier = Modifier.background(MaterialTheme.colors.surface)
+
+                    .fillMaxWidth()
+                    .padding(start = 8.dp, end = 8.dp)
+            ) {
+
+
+                Row(modifier = Modifier.align(Alignment.CenterEnd))
+                {
+
+
+                    Button(
+                        onClick = {
+
+                            scope.launch(Dispatchers.IO) {
+
+                                viewModel.onAddEmployee()
+                            }
+                        },
+                        modifier = Modifier.padding(horizontal = 16.dp),
+                        // Provide a custom shape for this button. In this example. we specify the button to have
+                        // round corners of 16dp radius.
+                        shape = RoundedCornerShape(16.dp),
+                        elevation = ButtonDefaults.elevation(5.dp),
+                    ) {
+                        Icon(imageVector = Icons.Outlined.AddCircle, contentDescription = "Add Department Screen")
+
+                        Spacer(modifier = Modifier.width(6.dp))
+
+                        Text(text = "Add Employee")
+                    }
+
+
+                }
+            }
             /**
              *
              */
             scope.launch(Dispatchers.IO) {
                 delay(1000)
                 if (allEmployee.isNotEmpty()) {
-                    viewEmployee.setEmpList(allEmployee)
+                    viewModel.setEmpList(allEmployee)
                 } else {
 //                    viewModel.setDepartError("No Departments is found")
 
@@ -138,20 +172,20 @@ fun ViewEmpScreen(viewEmployee: ViewEmpViewModel) {
                         state.data,
                         departments = departments,
 //                        allEmployee.value,
-                        selectedGrid = selectedGrid,
-                        selectedMenu = selectedMenu,
                         onDeleteClick = { id ->
                             try {
 
-                                viewEmployee.getSingleEmployee(id)
+                                viewModel.getSingleEmployee(id)
 
-                                viewEmployee.deleteEmployee(id)
+                                viewModel.deleteEmployee(id)
 
                             } catch (exception: Exception) {
                                 scope.launch { scaffoldState.snackbarHostState.showSnackbar("Delete failed") }
                                 println(exception.message)
 
                             }
+                        }, onClick = { emp ->
+                            viewModel.onStartEmpDetails(emp)
                         }
                     )
                 }
@@ -477,8 +511,7 @@ private fun SearchView(
 fun ContentUI(
     data: List<GetAllEmployees>,
     departments: List<com.hrappv.data.models.Department>,
-    selectedGrid: Boolean,
-    selectedMenu: Boolean,
+    onClick: (emp: GetAllEmployees) -> Unit,
     onDeleteClick: (id: Long) -> Unit,
 
 
@@ -566,6 +599,9 @@ fun ContentUI(
             /**
              * on press close search
              */
+            /**
+             * on press close search
+             */
             textState.value = TextFieldValue("")
 //                search(viewEmployee, "")
 //            viewEmployee.getEmployees("")
@@ -595,7 +631,7 @@ fun ContentUI(
 
     if (selectedGrid)
         EmployeeGridLazyColumn(
-            filteredItems, onDeleteClick
+            filteredItems, onDeleteClick = onDeleteClick, onClick = onClick
         )
 
 
@@ -609,10 +645,11 @@ fun ContentUI(
 @Composable
 fun EmployeeGridLazyColumn(
     data: List<GetAllEmployees>,
+    onClick: (emp: GetAllEmployees) -> Unit,
+
     onDeleteClick: (id: Long) -> Unit,
 
     ) {
-    var list = data
     LazyVerticalGrid(
         modifier = Modifier
             .fillMaxWidth()
@@ -630,7 +667,7 @@ fun EmployeeGridLazyColumn(
 //            }
 //        }
 
-        itemsIndexed(items = list, key = { _, item -> item.emp_id }
+        itemsIndexed(items = data, key = { _, item -> item.emp_id }
         ) { _, employee ->
 
             AnimatedVisibility(
@@ -644,7 +681,9 @@ fun EmployeeGridLazyColumn(
             ) {
 
                 EmployeeCardGrid(
-                    Modifier.animateItemPlacement(
+                    Modifier.clickable {
+                        onClick(employee)
+                    }.animateItemPlacement(
                         animationSpec = tween(
                             durationMillis = 500,
                             easing = LinearOutSlowInEasing,
@@ -652,6 +691,7 @@ fun EmployeeGridLazyColumn(
                     ),
                     employee = employee, onDeleteClick = onDeleteClick
                 )
+
             }
 
 

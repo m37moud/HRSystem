@@ -31,12 +31,10 @@ import com.hrappv.ui.components.AppMenuHeader
 import com.hrappv.ui.components.NavigationMenuItem
 import com.hrappv.ui.feature.EmployeResult.EmployResultScreenComponent
 import com.hrappv.ui.feature.about.AboutComponent
-import com.hrappv.ui.feature.department.show_departments.DepartmentComponent
-import com.hrappv.ui.feature.add_employe.AddEmployeScreenComponent
 import com.hrappv.ui.feature.department.DefaultDepartmentComponent
+import com.hrappv.ui.feature.employees.DefaultViewEmpComponent
 import com.hrappv.ui.feature.home_screen.HomeComponent
 import com.hrappv.ui.feature.settings.SettingsComponent
-import com.hrappv.ui.feature.view_employees.ViewEmployeesComponent
 import com.hrappv.ui.navigation.Component
 
 
@@ -94,7 +92,7 @@ fun MainScreen2(
     onNavIconClick: () -> Unit,
     onHomeClick: () -> Unit,
     onDepartmentClick: () -> Unit,
-    onAddEmployeeClick: () -> Unit,
+//    onAddEmployeeClick: () -> Unit,
     onViewEmployeesClick: () -> Unit,
     onEmployeeResultClick: () -> Unit,
     onSettingsClick: () -> Unit,
@@ -171,7 +169,7 @@ fun MainScreen2(
             },
             onHomeClick = onHomeClick,
             onDepartmentClick = onDepartmentClick,
-            onAddEmployeeClick = onAddEmployeeClick,
+//            onAddEmployeeClick = onAddEmployeeClick,
             onViewEmployeesClick = onViewEmployeesClick,
             onEmployeeResultClick = onEmployeeResultClick,
             onSettingsClick = onSettingsClick,
@@ -388,7 +386,7 @@ fun NavMenu(
     onNavIconClick: () -> Unit,
     onHomeClick: () -> Unit,
     onDepartmentClick: () -> Unit,
-    onAddEmployeeClick: () -> Unit,
+//    onAddEmployeeClick: () -> Unit,
     onViewEmployeesClick: () -> Unit,
     onEmployeeResultClick: () -> Unit,
     onSettingsClick: () -> Unit,
@@ -502,20 +500,20 @@ fun NavMenu(
 
 
 
+//                Spacer(modifier = modifier.height(8.dp))
+//                NavigationMenuItem(
+//                    selected = activeComponent is AddEmployeScreenComponent,
+//
+//                    modifier = modifier.fillMaxWidth(),
+//                    icon = Icons.Default.AddCircle,
+//                    label = "Add Employee",
+//                    isMenuPressed = isMenuPressed,
+//                    onClick = { onAddEmployeeClick() }
+//                )
+
                 Spacer(modifier = modifier.height(8.dp))
                 NavigationMenuItem(
-                    selected = activeComponent is AddEmployeScreenComponent,
-
-                    modifier = modifier.fillMaxWidth(),
-                    icon = Icons.Default.AddCircle,
-                    label = "Add Employee",
-                    isMenuPressed = isMenuPressed,
-                    onClick = { onAddEmployeeClick() }
-                )
-
-                Spacer(modifier = modifier.height(8.dp))
-                NavigationMenuItem(
-                    selected = activeComponent is ViewEmployeesComponent,
+                    selected = activeComponent is DefaultViewEmpComponent,
 
                     modifier = modifier.fillMaxWidth(),
                     icon = Icons.Default.Person,

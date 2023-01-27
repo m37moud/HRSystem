@@ -36,13 +36,13 @@ sealed class Config(
         icon = Icons.Rounded.Home
     )
 
+//    @Parcelize
+//    object AddEmployee : Config(
+//        label = R.string.ADD_EMPLOYE,
+//        icon = Icons.Rounded.Home
+//    )
     @Parcelize
-    object AddEmployee : Config(
-        label = R.string.ADD_EMPLOYE,
-        icon = Icons.Rounded.Home
-    )
-    @Parcelize
-    object ViewEmployee : Config(
+    object Employees : Config(
         label = R.string.ADD_EMPLOYE,
         icon = Icons.Rounded.Home
     )

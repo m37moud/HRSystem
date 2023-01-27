@@ -14,11 +14,11 @@ import com.arkivanov.decompose.router.stack.*
 import com.arkivanov.decompose.value.Value
 import com.hrappv.ui.feature.about.AboutComponent
 import com.hrappv.ui.feature.department.DefaultDepartmentComponent
-import com.hrappv.ui.feature.add_employe.AddEmployeScreenComponent
+import com.hrappv.ui.feature.employees.DefaultViewEmpComponent
 import com.hrappv.ui.feature.home_screen.HomeComponent
 import com.hrappv.ui.feature.main.MainScreen2
 import com.hrappv.ui.feature.settings.SettingsComponent
-import com.hrappv.ui.feature.view_employees.ViewEmployeesComponent
+import com.hrappv.ui.feature.employees.view_employees.ViewEmployeesComponent
 import kotlinx.coroutines.launch
 
 /**
@@ -64,7 +64,6 @@ class NavHostComponent(
                 appComponent = appComponent,
                 componentContext = componentContext,
 //                userAuthState = config.userAuthState,
-//                onClickAddEmployee = ::addEmployeScreenStart,
                 onBackPress = ::onBackPress
 
             )
@@ -78,16 +77,16 @@ class NavHostComponent(
 
             )
 
-            is Config.AddEmployee -> AddEmployeScreenComponent(
-                appComponent = appComponent,
-                componentContext = componentContext,
-//                userAuthState = config.userAuthState,
-//                onClickAddEmployee = ::addEmployeScreenStart,
-                onBackPress = ::onBackPress
+//            is Config.AddEmployee -> AddEmployeScreenComponent(
+//                appComponent = appComponent,
+//                componentContext = componentContext,
+////                userAuthState = config.userAuthState,
+////                onClickAddEmployee = ::addEmployeScreenStart,
+//                onBackPress = ::onBackPress
+//
+//            )
 
-            )
-
-            is Config.ViewEmployee -> ViewEmployeesComponent(
+            is Config.Employees -> DefaultViewEmpComponent(
                 appComponent = appComponent,
                 componentContext = componentContext,
 //                userAuthState = config.userAuthState,
@@ -162,7 +161,7 @@ class NavHostComponent(
             },
             onHomeClick = { startHomeScreen() },
             onDepartmentClick = { startDepartmentScreen() },
-            onAddEmployeeClick = ::startAddEmployeeScreen,
+//            onAddEmployeeClick = ::startAddEmployeeScreen,
             onViewEmployeesClick = ::startViewEmployeeScreen,
             onEmployeeResultClick = ::startRegisterAttendsScreen,
             onSettingsClick = ::startSettingsScreen,
@@ -211,12 +210,12 @@ class NavHostComponent(
             when (this) {
                 is HomeComponent -> 0
                 is DefaultDepartmentComponent -> 1
-                is AddEmployeScreenComponent -> 2
-                is ViewEmployeesComponent -> 3
-                is EmployResultScreenComponent -> 4
-                is SettingsComponent -> 5
-                is AboutComponent -> 6
-                is MainScreenComponent -> 7
+//                is AddEmployeScreenComponent -> 2
+                is ViewEmployeesComponent -> 2
+                is EmployResultScreenComponent -> 3
+                is SettingsComponent -> 4
+                is AboutComponent -> 5
+                is MainScreenComponent -> 6
                 else -> {0}
             }
 
@@ -239,10 +238,10 @@ class NavHostComponent(
             Direction.EXIT_BACK -> Direction.EXIT_FRONT
         }
 
-    private fun addEmployeScreenStart() {
-        navigation.bringToFront(Config.AddEmployee)
-//        navigation.push(Config.EmployeResult)
-    }
+//    private fun addEmployeScreenStart() {
+//        navigation.bringToFront(Config.AddEmployee)
+////        navigation.push(Config.EmployeResult)
+//    }
 
     private fun startHomeScreen() {
 //        router.replaceCurrent(Config.Home)
@@ -254,14 +253,14 @@ class NavHostComponent(
         navigation.bringToFront(Config.MainDepartment)
     }
 
-    private fun startAddEmployeeScreen() {
-//        router.replaceCurrent(Config.Home)
-        navigation.bringToFront(Config.AddEmployee)
-    }
+//    private fun startAddEmployeeScreen() {
+////        router.replaceCurrent(Config.Home)
+//        navigation.bringToFront(Config.AddEmployee)
+//    }
 
     private fun startViewEmployeeScreen() {
 //        router.replaceCurrent(Config.Home)
-        navigation.bringToFront(Config.ViewEmployee)
+        navigation.bringToFront(Config.Employees)
     }
 
     private fun startRegisterAttendsScreen() {

@@ -1,6 +1,6 @@
 CREATE TABLE IF NOT EXISTS day_register (
-	emp_name	TEXT,
-	department	TEXT,
+	emp_name	INTEGER,
+	department	INTEGER,
 	ODATE	TEXT,
 	day	TEXT,
 	status	TEXT,
@@ -9,3 +9,9 @@ CREATE TABLE IF NOT EXISTS day_register (
 	late	REAL AS Float,
 	early	REAL AS Float
 );
+
+
+
+insertRegisterDay:
+INSERT INTO day_register
+VALUES ((SELECT emp_id FROM employe WHERE fname = ?),(SELECT depart_id FROM Department WHERE department = ?),?,?,?,?,?,?,?);

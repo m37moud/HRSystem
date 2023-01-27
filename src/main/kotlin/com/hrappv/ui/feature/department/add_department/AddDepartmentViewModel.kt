@@ -22,10 +22,8 @@ class AddDepartmentViewModel @Inject constructor(
     val backToMain: StateFlow<Boolean> = _isBackPressed
 
 
-    fun insertDepartmentFromImporter(department: List<Department>) {
-        launchOnIO {
+   suspend fun insertDepartmentFromImporter(department: List<Department>) {
             myRepo.department.insertMultiDepartment(department)
-        }
     }
 
     fun insertDepartment(department: Department) {

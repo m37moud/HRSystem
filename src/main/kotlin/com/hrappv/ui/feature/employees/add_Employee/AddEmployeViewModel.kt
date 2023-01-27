@@ -1,4 +1,4 @@
-package com.hrappv.ui.feature.add_employe
+package com.hrappv.ui.feature.employees.add_Employee
 
 import com.hrappv.data.models.EmployeeResult
 import com.hrappv.data.models.Employees
@@ -30,6 +30,12 @@ class AddEmployeViewModel @Inject constructor(
     private val _insertEmp = MutableStateFlow("")
     val insertEmp: StateFlow<String> = _insertEmp
 
+
+
+    private val _isMultiInsertFinish = MutableStateFlow(false)
+    val isMultiInsertFinish: StateFlow<Boolean> = _isMultiInsertFinish
+
+
     private val _isBackPressed = MutableStateFlow(false)
     val backToMain: StateFlow<Boolean> = _isBackPressed
 
@@ -42,10 +48,10 @@ class AddEmployeViewModel @Inject constructor(
         _EmpResults.value = myRepo.importer.getEmployReport(folderPath)
     }
 
-    fun insertEmpFromImporter(emplist :List<Employees>){
-        launchOnIO {
-            myRepo.viewEmployees.insertMultiEmployee(emplist)
-        }
+    suspend fun insertEmpFromImporter(emplist :List<Employees>){
+//        launchOnIO {
+        _isMultiInsertFinish.value =   myRepo.viewEmployees.insertMultiEmployee(emplist)
+//        }
     }
 
     fun insertNewEmp(employee : Employees){

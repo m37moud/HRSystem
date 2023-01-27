@@ -1,22 +1,23 @@
-package com.hrappv.ui.feature.view_employees
+package com.hrappv.ui.feature.employees.add_Employee
 
-import ViewEmpScreen
 import androidx.compose.runtime.*
 import com.arkivanov.decompose.ComponentContext
 import com.hrappv.di.AppComponent
-import com.hrappv.ui.feature.add_employe.AddEmployeViewModel
-import com.hrappv.ui.feature.add_employe.AddEmployeeScreen
 import com.hrappv.ui.navigation.Component
 import javax.inject.Inject
 
-class ViewEmployeesComponent (
+
+class AddEmployeScreenComponent(
     appComponent: AppComponent,
     private val componentContext: ComponentContext,
     private val onBackPress: () ->Unit
-): Component, ComponentContext by componentContext{
+): Component, ComponentContext by componentContext {
 
     @Inject
-    lateinit var viewModel: ViewEmpViewModel
+    lateinit var viewModel: AddEmployeViewModel
+//
+//    @Inject
+//    lateinit var mainViewModel: EditEmployeViewModel
 
     init {
         appComponent.inject(this)
@@ -27,12 +28,14 @@ class ViewEmployeesComponent (
         val scope = rememberCoroutineScope()
         LaunchedEffect(viewModel) {
             viewModel.init(scope)
+//            mainViewModel.init(scope)
         }
-
+//        val folderPath by viewModel.folderPath.collectAsState()
+//        if(folderPath.isNotBlank()){
+//
+//        }
         val backToMain by viewModel.backToMain.collectAsState()
 //        val backToMain by mainViewModel.startEmpResult.collectAsState()
-
-
 
 
         if (backToMain)
@@ -42,6 +45,9 @@ class ViewEmployeesComponent (
 
         }
 
-        ViewEmpScreen(viewModel)
+        AddEmployeeScreen(
+            viewModel
+        )
     }
+
 }

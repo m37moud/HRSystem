@@ -177,7 +177,7 @@ fun AddDepartmentScreen(viewModel: AddDepartmentViewModel) {
 //                                shape = RectangleShape,
 //                                border = BorderStroke(2.dp, MaterialTheme.colors.onPrimary)
 //                            )
-                            .padding(4.dp)
+                                .padding(4.dp)
                         ) {
                             Box(
                                 modifier = Modifier
@@ -185,10 +185,55 @@ fun AddDepartmentScreen(viewModel: AddDepartmentViewModel) {
                                     .padding(start = 8.dp, end = 8.dp, bottom = 6.dp)
                             ) {
                                 Row(
-                                    modifier = Modifier.align(Alignment.CenterEnd).animateContentSize(),
+                                    modifier = Modifier.align(Alignment.CenterStart)
+                                        .animateContentSize(),
                                     verticalAlignment = Alignment.CenterVertically
                                 )
                                 {
+
+                                    Button(
+                                        onClick = {
+                                            showPathDialog = true
+                                        },
+                                        modifier = Modifier.padding(start = 8.dp, end = 8.dp),
+                                        shape = RoundedCornerShape(16.dp),
+                                        elevation = ButtonDefaults.elevation(5.dp),
+                                    ) {
+                                        Text(text = "Import From Excel")
+                                    }
+
+
+                                    /**
+                                     * if path text field is not empty anew button will appear
+                                     */
+                                    if (path.isNotEmpty()) {
+                                        Button(
+                                            onClick = {
+
+                                               scope.launch(Dispatchers.IO) {
+                                                startImport = true
+
+                                                    departmentList = excelImporterDepartment(path).distinct()
+                                                    println(departmentList.toString())
+                                                    if (departmentList.isNotEmpty()) {
+                                                        startImport = scope.launch(Dispatchers.IO) {
+                                                            viewModel.insertDepartmentFromImporter(departmentList)
+                                                        }.isCompleted
+                                                    }
+                                                }
+
+
+                                            },
+                                            modifier = Modifier.padding(start = 8.dp, end = 8.dp),
+                                            // Provide a custom shape for this button. In this example. we specify the button to have
+                                            // round corners of 16dp radius.
+                                            shape = RoundedCornerShape(16.dp),
+                                            elevation = ButtonDefaults.elevation(5.dp),
+                                        ) {
+                                            Icon(imageVector = Icons.Outlined.AddCircle, contentDescription = null)
+                                        }
+                                    }
+
 
 
                                     OutlinedTextField(
@@ -204,46 +249,6 @@ fun AddDepartmentScreen(viewModel: AddDepartmentViewModel) {
 //                            elevation = ButtonDefaults.elevation(5.dp),
 
                                     )
-                                    /**
-                                     * if path text field is not empty anew button will appear
-                                     */
-                                    if (path.isNotEmpty()) {
-                                        Button(
-                                            onClick = {
-
-                                                startImport = scope.launch(Dispatchers.IO) {
-//                                                startImport = true
-
-                                                    departmentList = excelImporterDepartment(path).distinct()
-                                                    println(departmentList.toString())
-                                                    if (departmentList.isNotEmpty()) {
-                                                        viewModel.insertDepartmentFromImporter(departmentList)
-                                                    }
-                                                }.isActive
-
-
-                                            },
-                                            modifier = Modifier.padding(start = 8.dp, end = 8.dp),
-                                            // Provide a custom shape for this button. In this example. we specify the button to have
-                                            // round corners of 16dp radius.
-                                            shape = RoundedCornerShape(16.dp),
-                                            elevation = ButtonDefaults.elevation(5.dp),
-                                        ) {
-                                            Icon(imageVector = Icons.Outlined.AddCircle, contentDescription = null)
-                                        }
-                                    }
-
-
-                                    Button(
-                                        onClick = {
-                                            showPathDialog = true
-                                        },
-                                        modifier = Modifier.padding(start = 8.dp, end = 8.dp),
-                                        shape = RoundedCornerShape(16.dp),
-                                        elevation = ButtonDefaults.elevation(5.dp),
-                                    ) {
-                                        Text(text = "Import From Excel")
-                                    }
                                 }
 
                             }

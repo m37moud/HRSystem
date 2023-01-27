@@ -18,7 +18,7 @@ fun SideBarMenu(modifier: Modifier = Modifier,
 ) {
     val screens = listOf(
         Config.Home,
-        Config.AddEmployee,
+//        Config.AddEmployee,
 //        Screens.RegisterAttends,
 //        Screens.Settings,
 //        Screens.About,

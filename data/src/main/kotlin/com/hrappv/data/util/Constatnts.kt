@@ -1,15 +1,17 @@
 package util
 
-import com.hrappv.GetAllEmployees
+import com.hrappv.Day_register
 import com.hrappv.data.models.Department
-import com.hrappv.data.models.Employee
 import com.hrappv.data.models.Employees
+import com.hrappv.data.models.RegisterAttends
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.withContext
 import org.apache.poi.ss.usermodel.WorkbookFactory
-import java.awt.Dialog
-import java.awt.FileDialog
 import java.io.File
 import java.io.FileInputStream
 import java.nio.file.Files
+import java.time.LocalDateTime
+import java.time.format.DateTimeFormatter
 
 class Constatnts {
     companion object {
@@ -92,8 +94,146 @@ class Constatnts {
 
         }
 
+        /**
+         * start
+         * register days from excel
+         */
 
-        suspend fun excelImporter(path: String): List<Employees> {
+         fun registerDayExcelImporter(path: String): List<RegisterAttends> {
+            val dayRegister = mutableListOf<RegisterAttends>()
+            val pathList = getPath(path)
+            try {
+
+                pathList.let { it ->
+                    it?.forEach { path ->
+                        val tempList = registerDayExcelFile(path)
+                        dayRegister.addAll(tempList)
+                    }
+                }
+
+            } catch (e: Exception) {
+                println(e.message.toString())
+                return emptyList()
+
+
+            }
+
+
+
+            return dayRegister
+        }
+
+        private  fun registerDayExcelFile(filePath: String): List<RegisterAttends> {//, inputDialog: FileDialog
+            val dayRegister = mutableListOf<RegisterAttends>()
+            val dayRegisterMap = mutableMapOf<LocalDateTime, RegisterAttends>()
+            val pattern = DateTimeFormatter.ofPattern("yyyy-MM-dd")
+
+            try {
+//                val inputStream = withContext(Dispatchers.IO) {
+                val inputStream = FileInputStream(filePath)
+//                }
+//            val file = File(filePath)
+                //Instantiate Excel workbook using existing file:
+                val xlWb = WorkbookFactory.create(inputStream)
+//            val xlWb = WorkbookFactory.create(file)
+
+                //Row index specifies the row in the worksheet (starting at 0):
+                var rowNumber = 0
+                //Cell index specifies the column within the chosen row (starting at 0):
+
+                //Get reference to first sheet:
+                val xlWs = xlWb.getSheetAt(0)
+                var stop: String?
+                println(xlWs.lastRowNum)
+                xlWs.forEach { row ->
+                    val status = mutableMapOf<String, String>()
+                    if (row.rowNum >= 1) {
+                        for (columnNumber in 0..4) {
+                            val value = xlWs.getRow(row.rowNum).getCell(columnNumber).toString()
+                            when (columnNumber) {
+                                1 -> { // empName
+                                    status["empName"] = value
+                                }
+
+                                2 -> {//department
+                                    val ll = value.split("/")
+                                    status["department"] = ll[1]
+
+//                                    status.add(ll[1])
+
+                                }
+
+                                3 -> {//date
+                                    val ll = value.split(" ")
+                                    status["date"] = ll[0]
+                                    status["timeIn"] = ll[1]
+                                    status["timeOut"] = ll[1]
+
+//                                    status.add(ll[0])
+//                                    status.add(ll[1])
+
+                                }
+
+                                4 -> {//date
+                                    status["attendState"] = value
+
+                                }
+
+
+                            }
+
+                        }
+
+
+                        val registerAttends = RegisterAttends(
+                            emp_name = status["empName"],
+                            department = status["department"],
+                            oDate = status["date"],
+                            day = null,
+                            status = null,
+                            in_time = if (status["attendState"].equals("Check-in")) status["timeIn"] else null,
+                            out_time = if (status["attendState"].equals("Check-out")) status["timeOut"] else null,
+                            late = null,
+                            early = null,
+
+                            )
+//                        dayRegister.add(registerAttends)
+
+//                        dayRegisterMap[LocalDateTime.parse(status["date"])] = registerAttends
+
+                        if (!dayRegisterMap.containsKey(LocalDateTime.parse(status["date"]))) {
+                            dayRegisterMap[LocalDateTime.parse(status["date"],pattern)] = registerAttends
+                        } else {
+                            dayRegisterMap[LocalDateTime.parse(status["date"],pattern)] = registerAttends
+//                            dayRegisterMap.merge(LocalDateTime.parse(status["date"]) , registerAttends)
+//
+                        }
+
+
+                    }
+
+
+                }
+
+
+            } catch (e: Exception) {
+                println("import error : ${e.message}")
+                return emptyList()
+
+            }
+
+            println(dayRegisterMap.toString())
+            return dayRegister
+        }
+
+
+        /**
+         * end
+         * register days from excel
+         */
+
+
+        suspend fun empExcelImporter(path: String): List<Employees> {
             val empList = mutableListOf<Employees>()
 
             val pathList = getPath(path)
@@ -103,7 +243,7 @@ class Constatnts {
 
                 pathList.let { it ->
                     it?.forEach { path ->
-                        val tempList = readFromExcelFile(path)
+                        val tempList = addEmpExcelFile(path)
                         empList.addAll(tempList)
                     }
                 }
@@ -144,7 +284,7 @@ class Constatnts {
 
         }
 
-        private suspend fun readFromExcelFile(filePath: String): List<Employees> {//, inputDialog: FileDialog
+        private suspend fun addEmpExcelFile(filePath: String): List<Employees> {//, inputDialog: FileDialog
             val empList = mutableListOf<Employees>()
             try {
                 val inputStream = FileInputStream(filePath)
@@ -176,7 +316,6 @@ class Constatnts {
                                     emp.add(ll[1])
 
                                 }
-
 
 
                                 else -> emp.add(value)
