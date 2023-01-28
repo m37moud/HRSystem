@@ -1,6 +1,6 @@
 CREATE TABLE IF NOT EXISTS day_register (
-	emp_name	INTEGER,
-	department	INTEGER,
+	emp_id	INTEGER,
+	depart_id	INTEGER,
 	ODATE	TEXT,
 	day	TEXT,
 	status	TEXT,
@@ -11,7 +11,63 @@ CREATE TABLE IF NOT EXISTS day_register (
 );
 
 
+getDayRegister:
+SELECT employe.fname AS empName, Department.department AS department_name,
+day_register.ODATE,day_register.day,day_register.status,day_register.in_time,
+day_register.out_time,day_register.late,day_register.early
+FROM day_register
+JOIN employe ON day_register.emp_id = employe.emp_id
+JOIN Department ON day_register.depart_id = Department.depart_id
+WHERE day_register.emp_id = ?  ORDER BY day_register.emp_id ASC ; --'%'+:name+'%'
+
 
 insertRegisterDay:
 INSERT INTO day_register
 VALUES ((SELECT emp_id FROM employe WHERE fname = ?),(SELECT depart_id FROM Department WHERE department = ?),?,?,?,?,?,?,?);
+
+getRegisterDay:
+SELECT *
+FROM day_register
+WHERE day_register.emp_id = ? ;
+
+
+updateTheDay:
+UPDATE day_register
+SET
+day_register.emp_id = (SELECT emp_id FROM employe WHERE fname =?),
+day_register.depart_id = (SELECT depart_id FROM Department WHERE department = ?),
+ODATE = ?,
+day = ?,
+status = ?,
+in_time=?,
+out_time = ?,
+late = ?,
+early= ?
+WHERE emp_name = (SELECT emp_id FROM employe WHERE fname = ?)
+AND department = (SELECT depart_id FROM Department WHERE department = ?)
+AND ODATE = ?;
+
+
+--
+-- INSERT OR REPLACE INTO day_register
+-- VALUES ((SELECT emp_id FROM employe WHERE fname = 'Mohamed Elsaye Elsayed'),
+-- (SELECT depart_id FROM Department WHERE department = 'ديكور')
+-- ,'2022-07-22',null,null,'07:37:30',null,null,null);
+
+
+--
+-- UPDATE day_register
+-- set
+-- emp_name = (SELECT emp_id FROM employe WHERE fname = 'Mohamed Elsaye Elsayed'),
+-- department = (SELECT depart_id FROM Department WHERE department = 'ديكور'),
+-- ODATE = '2022-07-22',
+-- day = null,
+-- status = 'Attend',
+-- in_time=null,
+-- out_time = '15:52:16',
+-- late = null,
+-- early= null
+-- WHERE emp_name = (SELECT emp_id FROM employe WHERE fname = "Mohamed Elsaye Elsayed")
+-- AND department = (SELECT depart_id FROM Department WHERE department = 'ديكور')
+-- AND ODATE = '2022-07-22'
+

@@ -175,7 +175,7 @@ class ImportExcelFile
         return empList
     }
 
-    fun getEmpReport(list: List<Employee>, empName: String = ""): EmployeeResult? {
+    private fun getEmpReport(list: List<Employee>, empName: String = ""): EmployeeResult? {
 
 
         val l = list.filter {

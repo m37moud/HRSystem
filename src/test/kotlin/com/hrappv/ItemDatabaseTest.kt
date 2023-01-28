@@ -47,8 +47,8 @@ class ItemDatabaseTest {
 //        commetion_month = "8"
 //        )
 //        coroutineRule.launch {
-            val departmentList =  Constatnts.registerDayExcelImporter("F:\\8")
-        println(departmentList)
+            val departmentList =  Constatnts.registerDayExcelImporter("D:\\desk\\شغل لعهد\\tutorial audting\\2022\\شهراغسطس8\\8\\8")
+        println(departmentList.joinToString("\n"))
 //        }
 ////        d.insertDepart(
 ////            depart

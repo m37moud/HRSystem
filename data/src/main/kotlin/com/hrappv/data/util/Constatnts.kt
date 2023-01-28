@@ -1,15 +1,14 @@
 package util
 
 import com.hrappv.Day_register
-import com.hrappv.data.models.Department
-import com.hrappv.data.models.Employees
-import com.hrappv.data.models.RegisterAttends
+import com.hrappv.data.models.*
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.withContext
 import org.apache.poi.ss.usermodel.WorkbookFactory
 import java.io.File
 import java.io.FileInputStream
 import java.nio.file.Files
+import java.time.LocalDate
 import java.time.LocalDateTime
 import java.time.format.DateTimeFormatter
 
@@ -98,8 +97,66 @@ class Constatnts {
          * start
          * register days from excel
          */
+//        private suspend fun doSomeWork(list: List<Employee>): List<RegisterAttends> {
+//            val employeeResultList = mutableListOf<RegisterAttends>()
+//
+//            val empNameList =
+//                list.map {
+//                    it.name
+//                }.distinct()
+//            println("empNameList size = ${empNameList.size}")
+//            var i = 0
+//            empNameList.forEach { empName ->
+////            val empName = it.name
+////            if (!empNameList.contains(empName)) {
+////            println("empName = $empName")
+//                val empResult = getEmpReport(list, empName = empName)!!
+//                employeeResultList.add(empResult)
+//                i++
+////            println("done${i}")
+////           getEmpReport(list, empName)
+//
+//
+//            }
+//
+//            return employeeResultList
+//
+//        }
+//        private fun getEmpReport(list: List<Employee>, empName: String = ""): EmployeeResult? {
+//
+//
+//            val l = list.filter {
+//                it.name == empName
+//            }
+//            if (l.isNotEmpty()) {
+//
+//                val ll = l.filter {
+//
+//                    val date = LocalDate.parse(it.day)
+//                    date in startDate..endDate
+//                }
+//                return if (ll.isNotEmpty()) {
+//                    getAbsentDays(ll)
+//                } else {
+//                    println("please enter month  :::: \n ll size = ${ll.size} ")
+//                    null
+//
+//                }
+//
+//            } else {
+//                println("employee ( $empName ) not found please enter right name")
+//                return null
+//            }
+//
+//
+////        println(getAbsentDays(l).toString())
+//            println(l.size)
+//
+//            return null
+//        }
 
-         fun registerDayExcelImporter(path: String): List<RegisterAttends> {
+
+        fun registerDayExcelImporter(path: String): List<RegisterAttends> {
             val dayRegister = mutableListOf<RegisterAttends>()
             val pathList = getPath(path)
             try {
@@ -123,9 +180,77 @@ class Constatnts {
             return dayRegister
         }
 
-        private  fun registerDayExcelFile(filePath: String): List<RegisterAttends> {//, inputDialog: FileDialog
+        private fun readFromExcelFile(filePath: String): List<Employee> {
+            val empList = mutableListOf<Employee>()
+            try {
+                val inputStream = FileInputStream(filePath)
+//            val file = File(filePath)
+                //Instantiate Excel workbook using existing file:
+                val xlWb = WorkbookFactory.create(inputStream)
+//            val xlWb = WorkbookFactory.create(file)
+
+                //Row index specifies the row in the worksheet (starting at 0):
+                var rowNumber = 0
+                //Cell index specifies the column within the chosen row (starting at 0):
+
+                //Get reference to first sheet:
+                val xlWs = xlWb.getSheetAt(0)
+                var stop: String?
+                println(xlWs.lastRowNum)
+                xlWs.forEach { row ->
+                    val emp = mutableListOf<String>()
+                    if (row.rowNum >= 1) {
+                        for (columnNumber in 0..4) {
+                            val value = xlWs.getRow(row.rowNum).getCell(columnNumber).toString()
+                            when (columnNumber) {
+                                0 -> {
+                                    emp.add(value.substringAfter("'"))
+                                }
+
+                                2 -> {
+                                    val ll = value.split("/")
+                                    emp.add(ll[1])
+
+                                }
+
+                                3 -> {
+                                    val ll = value.split(" ")
+                                    emp.add(ll[0])
+                                    emp.add(ll[1])
+
+                                }
+
+                                else -> emp.add(value)
+                            }
+
+                        }
+
+                        val employ = Employee(emp[0], emp[1], emp[2], emp[3], emp[4], emp[5])
+                        empList.add(employ)
+
+
+                    }
+
+
+                }
+
+
+            } catch (e: Exception) {
+                println("import error : ${e.message}")
+                return emptyList()
+
+            }
+
+
+//            println("period = ${daysOfMonth}")
+//        getEmpReport(empList,"Mahmoud Ali")
+
+            return empList
+        }
+
+        private fun registerDayExcelFile(filePath: String): List<RegisterAttends> {//, inputDialog: FileDialog
             val dayRegister = mutableListOf<RegisterAttends>()
-            val dayRegisterMap = mutableMapOf<LocalDateTime, RegisterAttends>()
+            val dayRegisterMap = mutableMapOf<LocalDate, RegisterAttends>()
             val pattern = DateTimeFormatter.ofPattern("yyyy-MM-dd")
 
             try {
@@ -190,24 +315,34 @@ class Constatnts {
                             department = status["department"],
                             oDate = status["date"],
                             day = null,
-                            status = null,
+                            status = if (status["attendState"].equals("Check-in")) "Attend" else "",
                             in_time = if (status["attendState"].equals("Check-in")) status["timeIn"] else null,
                             out_time = if (status["attendState"].equals("Check-out")) status["timeOut"] else null,
                             late = null,
                             early = null,
 
                             )
-//                        dayRegister.add(registerAttends)
-
-//                        dayRegisterMap[LocalDateTime.parse(status["date"])] = registerAttends
-
-                        if (!dayRegisterMap.containsKey(LocalDateTime.parse(status["date"]))) {
-                            dayRegisterMap[LocalDateTime.parse(status["date"],pattern)] = registerAttends
-                        } else {
-                            dayRegisterMap[LocalDateTime.parse(status["date"],pattern)] = registerAttends
-//                            dayRegisterMap.merge(LocalDateTime.parse(status["date"]) , registerAttends)
+//                        if(!dayRegister.contains(registerAttends)) {
+                            dayRegister.add(registerAttends)
+//                        }else{
 //
-                        }
+//                        }
+
+
+//                        dayRegisterMap[LocalDate.parse(status["date"] , pattern)] = registerAttends
+
+//                        if (!dayRegisterMap.containsKey(LocalDate.parse(status["date"]))) {
+//                            dayRegisterMap[LocalDate.parse(status["date"], pattern)] = registerAttends
+//                        } else {
+//                            var tempDay = dayRegisterMap[LocalDate.parse(status["date"], pattern)]
+//                            if (!tempDay!!.emp_name.equals(registerAttends.emp_name)) {
+//                                dayRegisterMap[LocalDate.parse(status["date"], pattern)] = registerAttends
+//                            }
+//
+//
+////                            dayRegisterMap.merge(LocalDateTime.parse(status["date"]) , registerAttends)
+////
+//                        }
 
 
                     }
