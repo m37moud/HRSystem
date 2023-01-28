@@ -1,7 +1,7 @@
 CREATE TABLE IF NOT EXISTS day_register (
-	emp_id	INTEGER,
-	depart_id	INTEGER,
-	ODATE	TEXT,
+	emp_id	INTEGER REFERENCES employe (emp_id) ON DELETE RESTRICT ON UPDATE CASCADE,
+	depart_id	INTEGER REFERENCES Department (depart_id) ON DELETE RESTRICT ON UPDATE CASCADE,
+	oDATE	TEXT,
 	day	TEXT,
 	status	TEXT,
 	in_time	TEXT,
@@ -11,41 +11,45 @@ CREATE TABLE IF NOT EXISTS day_register (
 );
 
 
-getDayRegister:
+getAllDaysRegister:
 SELECT employe.fname AS empName, Department.department AS department_name,
-day_register.ODATE,day_register.day,day_register.status,day_register.in_time,
+day_register.oDATE,day_register.day,day_register.status,day_register.in_time,
 day_register.out_time,day_register.late,day_register.early
 FROM day_register
 JOIN employe ON day_register.emp_id = employe.emp_id
 JOIN Department ON day_register.depart_id = Department.depart_id
-WHERE day_register.emp_id = ?  ORDER BY day_register.emp_id ASC ; --'%'+:name+'%'
+-- WHERE day_register.emp_id = ?
+ORDER BY day_register.emp_id ASC ; --'%'+:name+'%'
 
 
 insertRegisterDay:
 INSERT INTO day_register
-VALUES ((SELECT emp_id FROM employe WHERE fname = ?),(SELECT depart_id FROM Department WHERE department = ?),?,?,?,?,?,?,?);
+VALUES ( (SELECT emp_id FROM employe WHERE fname = ?), (SELECT depart_id FROM Department WHERE department = ?),?,?,?,?,?,?,?);
 
-getRegisterDay:
+checkRegisterDay:
 SELECT *
 FROM day_register
-WHERE day_register.emp_id = ? ;
+WHERE day_register.emp_id =  (SELECT emp_id FROM employe WHERE fname = ?)
+AND day_register.depart_id =  (SELECT depart_id FROM Department WHERE department = ?)
+AND oDATE = ?;
+
 
 
 updateTheDay:
 UPDATE day_register
 SET
-day_register.emp_id = (SELECT emp_id FROM employe WHERE fname =?),
-day_register.depart_id = (SELECT depart_id FROM Department WHERE department = ?),
-ODATE = ?,
+-- emp_id = (SELECT emp_id FROM employe WHERE fname =?),
+-- depart_id = (SELECT depart_id FROM Department WHERE department = ?),
+-- ODATE = ?,
 day = ?,
 status = ?,
 in_time=?,
 out_time = ?,
 late = ?,
 early= ?
-WHERE emp_name = (SELECT emp_id FROM employe WHERE fname = ?)
-AND department = (SELECT depart_id FROM Department WHERE department = ?)
-AND ODATE = ?;
+WHERE day_register.emp_id =  (SELECT emp_id FROM employe WHERE fname = ?)
+AND day_register.depart_id =  (SELECT depart_id FROM Department WHERE department = ?)
+AND oDATE = ?;
 
 
 --

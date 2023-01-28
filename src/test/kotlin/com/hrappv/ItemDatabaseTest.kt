@@ -1,13 +1,16 @@
 import com.hrappv.HrAppDb
+import com.hrappv.data.local.datastoreimp.DayRegisterDataSourceImpl
 import com.hrappv.data.local.datastoreimp.DepartmentDataSourceImpl
 import com.hrappv.data.models.Department
 import com.hrappv.di.AppComponent
 import com.hrappv.test.DaggerTestComponent
 import com.hrappv.test.MainCoroutineRule
 import com.hrappv.test.MyDaggerMockRule
+import com.nhaarman.mockitokotlin2.mock
 import com.squareup.sqldelight.sqlite.driver.JdbcSqliteDriver
 import junit.framework.TestCase.assertEquals
 import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
 import org.junit.Rule
@@ -30,14 +33,17 @@ class ItemDatabaseTest {
 
     private val queries = HrAppDb(inMemorySqlDriver).departmentQueries
     private val empQueries = HrAppDb(inMemorySqlDriver).employeQueries
+    private val registerQueries = HrAppDb(inMemorySqlDriver).day_registerQueries
 
 
+    @OptIn(ExperimentalCoroutinesApi::class)
     @Test
     fun smokeTest() {
 //        val emptyItems = queries.getAllDepartments().executeAsList()
 ////        assertEquals(emptyItems.size, 0)
 ////        withContext(Dispatchers.IO) {
 //        val d = DepartmentDataSourceImpl(HrAppDb(inMemorySqlDriver))
+        val d = DayRegisterDataSourceImpl(HrAppDb(inMemorySqlDriver), mock())
 //
 //        val depart = Department(
 //                department = "a ",
@@ -47,8 +53,11 @@ class ItemDatabaseTest {
 //        commetion_month = "8"
 //        )
 //        coroutineRule.launch {
-            val departmentList =  Constatnts.registerDayExcelImporter("D:\\desk\\شغل لعهد\\tutorial audting\\2022\\شهراغسطس8\\8\\8")
-        println(departmentList.joinToString("\n"))
+            val departmentList = Constatnts.registerDayExcelImporter("F:\\8")
+
+//            println(departmentList.joinToString("\n"))
+            d.insertMultiDaysRegister(departmentList)
+
 //        }
 ////        d.insertDepart(
 ////            depart

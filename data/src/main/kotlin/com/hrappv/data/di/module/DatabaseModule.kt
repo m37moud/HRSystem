@@ -1,9 +1,11 @@
 package com.hrappv.data.di.module
 
 import com.hrappv.HrAppDb
+import com.hrappv.data.local.datastore.DayRegisterDataSource
 import com.hrappv.data.local.datastore.DepartmentDataSource
 import com.hrappv.data.local.datastore.UserDataSource
 import com.hrappv.data.local.datastore.ViewEmpDataSource
+import com.hrappv.data.local.datastoreimp.DayRegisterDataSourceImpl
 import com.hrappv.data.local.datastoreimp.DepartmentDataSourceImpl
 import com.hrappv.data.local.datastoreimp.UserDataSourceImpl
 import com.hrappv.data.local.datastoreimp.ViewEmpDataSourceImpl
@@ -140,5 +142,20 @@ class DatabaseModule {
 
     @Provides
     @Singleton
-    fun providesDispatcher(): CoroutineDispatcher = Dispatchers.IO
+    fun provideDayRegisterDataSource(
+        sqliteDriver: SqlDriver,
+
+//        hrDb: HrAppDb,
+        dispatcher: CoroutineDispatcher
+    ): DayRegisterDataSource {
+        return DayRegisterDataSourceImpl(
+            HrAppDb(sqliteDriver),
+            dispatcher
+        )
+    }
+
+
+    @Provides
+    @Singleton
+    fun providesDispatcher(): CoroutineDispatcher = Dispatchers.Main
 }
