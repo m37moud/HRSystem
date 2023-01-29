@@ -252,6 +252,8 @@ class Constatnts {
             val dayRegister = mutableListOf<RegisterAttends>()
             val dayRegisterMap = mutableMapOf<LocalDate, RegisterAttends>()
             val pattern = DateTimeFormatter.ofPattern("yyyy-MM-dd")
+            val patternDnT = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss")
+
 
             try {
 //                val inputStream = withContext(Dispatchers.IO) {
@@ -289,6 +291,7 @@ class Constatnts {
                                 }
 
                                 3 -> {//date
+                                    status["date&time"] = value
                                     val ll = value.split(" ")
                                     status["date"] = ll[0]
                                     status["timeIn"] = ll[1]
@@ -309,12 +312,14 @@ class Constatnts {
 
                         }
 
+                        val date = LocalDateTime.parse("${ status["date&time"]}", patternDnT)
+
 
                         val registerAttends = RegisterAttends(
                             emp_name = status["empName"],
                             department = status["department"],
                             oDate = status["date"],
-                            day = null,
+                            day = LocalDate.parse(status["date"]).dayOfWeek.toString(),
                             status = if (status["attendState"].equals("Check-in")) "Attend" else "",
                             in_time = if (status["attendState"].equals("Check-in")) status["timeIn"] else null,
                             out_time = if (status["attendState"].equals("Check-out")) status["timeOut"] else null,
@@ -390,34 +395,34 @@ class Constatnts {
 
             }
 
-            return empList
+            return empList  private fun getPath(path: String): List<String>? {
+                val pathList = mutableListOf<String>()
+                try {
+                    val file = File(path)
+                    if (file.isDirectory) {
+                        if (file.list()?.isNotEmpty()!!) {
+                            file.list()?.forEach { path ->
+                                val sFile = file.path + File.separator + path
+                                if (!Files.isDirectory(File(sFile).toPath()))
+                                    pathList.add(sFile)
 
-        }
-
-        private fun getPath(path: String): List<String>? {
-            val pathList = mutableListOf<String>()
-            try {
-                val file = File(path)
-                if (file.isDirectory) {
-                    if (file.list()?.isNotEmpty()!!) {
-                        file.list()?.forEach { path ->
-                            val sFile = file.path + File.separator + path
-                            if (!Files.isDirectory(File(sFile).toPath()))
-                                pathList.add(sFile)
-
+                            }
                         }
                     }
+
+                } catch (e: Exception) {
+                    println(e.message.toString())
+                    return emptyList()
+
+
                 }
-
-            } catch (e: Exception) {
-                println(e.message.toString())
-                return emptyList()
-
+                return pathList
 
             }
-            return pathList
 
         }
+
+
 
         private suspend fun addEmpExcelFile(filePath: String): List<Employees> {//, inputDialog: FileDialog
             val empList = mutableListOf<Employees>()

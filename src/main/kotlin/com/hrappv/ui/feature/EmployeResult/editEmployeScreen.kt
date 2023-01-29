@@ -82,7 +82,7 @@ fun EmployeeResultScreen(
 //                    importState = LCE.LOADING
 
                     scope.launch(Dispatchers.IO) {
-                        viewModel.getEmployeResults(path)
+                        viewModel.getEmployeeResults(path)
 //                        scaffoldState.snackbarHostState.showSnackbar("Button Clicked ")
 //                        importState = repository.getEmployReport(path)
                     }

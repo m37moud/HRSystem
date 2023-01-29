@@ -13,7 +13,7 @@ interface DayRegisterDataSource {
 
    suspend fun checkRegisterDay (emp: String, depart: String, oDate: String) : Day_register?
 
-    suspend fun insertRegisterDay(day : RegisterAttends): Boolean
+     fun insertRegisterDay(dayRegister : RegisterAttends): Boolean
 
     suspend fun updateTheDay (day : RegisterAttends) : Boolean
 

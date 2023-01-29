@@ -35,35 +35,48 @@ class DayRegisterDataSourceImpl @Inject constructor(
         }
     }
 
-    override suspend fun insertRegisterDay(day: RegisterAttends): Boolean {
+    override  fun insertRegisterDay(dayRegister: RegisterAttends): Boolean {
         var insert = false
 
-        withContext(dispatcher) {
+//        withContext(dispatcher) {
             queries.transaction {
-                val dayRegister = queries.checkRegisterDay(
-                    fname = day.emp_name!!,
-                    department = day.department!!,
-                    oDATE = day.oDate,
+                val day = queries.checkRegisterDay(
+                    fname = dayRegister.emp_name!!,
+                    department = dayRegister.department!!,
+                    oDATE = dayRegister.oDate,
 
                     ).executeAsOneOrNull()
 
-                if (dayRegister == null) {
+                if (day == null) {
 
-                    insertDay(day)
+                    insertDay(dayRegister)
                 } else {
+                    val temp =  dayRegister.copy(
+//                      fname = day.emp_name!!,
+//                      department = day.department!!,
+//                      oDATE = day.oDate,
+                        day = day.day ?: dayRegister.day ,
+                        status = day.status ?: dayRegister.status,
+                        in_time = day.in_time ?: dayRegister.in_time,
+                        out_time = day.out_time ?: dayRegister.out_time,
+                        late = day.late ?: dayRegister.late,
+                        early = day.early ?: dayRegister.early,
+                    )
+                    println(temp.toString())
 
-                    updateDay(day)
+
+                    updateDay(temp)
                 }
                 afterCommit { insert = true }
                 afterRollback { insert = false }
             }
 
 
-        }
+//        }
         return insert
     }
 
-    private fun insertDay(day: RegisterAttends) {
+     fun insertDay(day: RegisterAttends) {
         queries.insertRegisterDay(
             fname = day.emp_name!!,
             department = day.department!!,
@@ -78,7 +91,7 @@ class DayRegisterDataSourceImpl @Inject constructor(
 
     }
 
-    private fun updateDay(day: RegisterAttends) {
+     fun updateDay(day: RegisterAttends) {
         queries.updateTheDay(
             fname = day.emp_name!!,
             department = day.department!!,
@@ -131,8 +144,20 @@ class DayRegisterDataSourceImpl @Inject constructor(
 
                     insertDay(registerDay)
                 } else { // to update non null variable
-                    registerDay.copy(in_time = day.in_time)
-                    updateDay(registerDay)
+                  val temp =  registerDay.copy(
+//                      fname = day.emp_name!!,
+//                      department = day.department!!,
+//                      oDATE = day.oDate,
+                      day = day.day ?: registerDay.day ,
+                      status = day.status ?: registerDay.status,
+                      in_time = day.in_time ?: registerDay.in_time,
+                      out_time = day.out_time ?: registerDay.out_time,
+                      late = day.late ?: registerDay.late,
+                      early = day.early ?: registerDay.early,
+                  )
+                    println(temp.toString())
+
+                    updateDay(temp)
                 }
 
 

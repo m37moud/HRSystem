@@ -53,7 +53,7 @@ fun DepartmentScreen(viewModel: DepartmentViewModel) {
     val scaffoldState = rememberScaffoldState()
 
     val departmentResult = viewModel.departResults.collectAsState().value
-    val departments = viewModel.departments.collectAsState(emptyList()).value
+    val departments = viewModel.departments.collectAsState(null).value
 
 
 
@@ -116,12 +116,13 @@ fun DepartmentScreen(viewModel: DepartmentViewModel) {
 
             scope.launch(Dispatchers.IO) {
                 delay(1000)
-                if (departments.isNotEmpty()) {
-                    viewModel.setDepartments(departments)
-                } else {
-//                    viewModel.setDepartError("No Departments is found")
+                if (departments != null) {
+                    if (departments.isNotEmpty()) {
+                        viewModel.setDepartments(departments)
+                    } else {
+                        viewModel.setDepartError("No Departments is found")
 
-
+                    }
                 }
 
             }

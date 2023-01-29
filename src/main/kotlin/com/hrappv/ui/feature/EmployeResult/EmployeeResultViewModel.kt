@@ -1,5 +1,6 @@
 package com.hrappv.ui.feature.EmployeResult
 
+import com.hrappv.data.models.Employee
 import com.hrappv.data.models.EmployeeResult
 import com.hrappv.data.repo.MyRepo
 import com.hrappv.util.ViewModel
@@ -19,9 +20,13 @@ class EmployeeResultViewModel @Inject constructor(
     private val _folderPath = MutableStateFlow(INIT_FOLDER_PATH)
     val folderPath: StateFlow<String> = _folderPath
 
+    private val _employee: MutableStateFlow<List<Employee?>> = MutableStateFlow(emptyList())
+    val employee: StateFlow<List<Employee?>> = _employee
 
     private val _EmpResults: MutableStateFlow<LCE<List<EmployeeResult>>> = MutableStateFlow(LCE.NOACTION)
     val empResults: StateFlow<LCE<List<EmployeeResult>>> = _EmpResults
+
+
 
 
     private val _isBackPressed = MutableStateFlow(false)
@@ -31,9 +36,16 @@ class EmployeeResultViewModel @Inject constructor(
         _folderPath.value = myRepo.getClickedWelcomeText()
     }
 
-    suspend fun getEmployeResults(folderPath: String) {
+    suspend fun getEmployeeResults(folderPath: String) {
         _EmpResults.value = LCE.LOADING
         _EmpResults.value = myRepo.importer.getEmployReport(folderPath)
+    }
+
+    //TODO insert all exel in database
+    suspend fun registerDayByCam(folderPath: String? = null , pList: List<String>? = null) {
+
+        _employee.value = myRepo.importer.getAllEmployeeInfo(folderPath,pList)
+
     }
     fun onBackPress() {
         _isBackPressed.value = true

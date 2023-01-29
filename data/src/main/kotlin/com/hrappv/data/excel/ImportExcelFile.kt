@@ -21,8 +21,7 @@ import javax.inject.Inject
 import kotlin.math.roundToInt
 
 class ImportExcelFile
-@Inject constructor()
-{
+@Inject constructor() {
     var month: String = "8"
     var year: String = "2022"
     private var startDate = LocalDate.parse("$year-${getMonth((month.toInt() - 1).toString())}-21")
@@ -37,11 +36,12 @@ class ImportExcelFile
      * Reads the value from the cell at the first row and first column of worksheet.
      */
 
-    private suspend fun getAllEmployeeInfo(list: List<String>) : List<Employee>{
+    suspend fun getAllEmployeeInfo(path: String? = null ,list: List<String>? = null): List<Employee> {
+        val pathList = getPath(path, list)
 
         val empList = mutableListOf<Employee>()
 
-        list.forEach { path ->
+        pathList.forEach { path ->
             val tempList = readFromExcelFile(path)
             empList.addAll(tempList)
 //        empList += importer.readFromExcelFile(path)
@@ -49,39 +49,65 @@ class ImportExcelFile
         return empList
     }
 
+    private fun getPath(path: String?  = null , pList: List<String>? = null): List<String> {
+        val pathList = if (pList == null) mutableListOf<String>() else return pList
+        try {
+            val file = File(path)
+            if (file.isDirectory) {
+                if (file.list()?.isNotEmpty()!!) {
+                    file.list()?.forEach { path ->
+                        val sFile = file.path + File.separator + path
+                        if (!Files.isDirectory(File(sFile).toPath()))
+                            pathList.add(sFile)
 
-    suspend fun getEmployReport(path: String): LCE<List<EmployeeResult>> {
-        val pathList = mutableListOf<String>()
+                    }
+                }
+            }
+
+        } catch (e: Exception) {
+            println(e.message.toString())
+            return emptyList()
+
+
+        }
+        return pathList
+
+    }
+
+    suspend fun getEmployReport(path: String? = null , pList: List<String>? = null): LCE<List<EmployeeResult>> {
+        val pathList = getPath(path, pList)
 
         return try {
-            val file = File(path);
-            println("file name is ( ${file.name} )")
-            if (file.isDirectory){   if(file.list()?.isNotEmpty()!!){
-                file.list()?.forEach {
-                    println("file ...\n ${it}")
-                    val sFile = file.path + File.separator + it
-                    if (!Files.isDirectory(File(sFile).toPath()))
-                        pathList.add(sFile)
 
-                }
-                val empList =  getAllEmployeeInfo(pathList)
+//            val file = File(path);
+//            println("file name is ( ${file.name} )")
+//            if (file.isDirectory) {
+            if (pathList.isNotEmpty()!!) {
+
+//                    file.list()?.forEach {
+//                        println("file ...\n ${it}")
+//                        val sFile = file.path + File.separator + it
+//                        if (!Files.isDirectory(File(sFile).toPath()))
+//                            pathList.add(sFile)
+//
+//                    }
+                val empList = getAllEmployeeInfo(path,pathList)
                 println("empList = ${empList.size}")
 
 
                 if (empList.isNotEmpty()) {
                     println("excel imported succssesful")
                     val employeeResultList = doSomeWork(empList)
-                    if (employeeResultList.isNotEmpty()){
+                    if (employeeResultList.isNotEmpty()) {
                         println("extracted employee result sucssesful")
 //                    empList.clear()
                         LCE.CONTENT(employeeResultList)
 
-                    }else{
+                    } else {
                         println("No Employee Details Found")
                         LCE.ERROR("No Employee Details Found")
 
                     }
-
 
 
                 } else {
@@ -89,27 +115,30 @@ class ImportExcelFile
                     LCE.ERROR("No Results Details Found")
 
                 }
-            }else{
+            } else {
                 println("Folder is Empty")
                 LCE.ERROR("Folder is Empty")
             }
 //
-            }else{
-//                Arbor.sow(Seedling())
-                Arbor.d("Invalid Path Please check path again!")
-//                println("Invalid Path Please check path again")
-                LCE.ERROR("Invalid Path Please check path again")
-            }
+//        }
+//          else {
+////                Arbor.sow(Seedling())
+//                Arbor.d("Invalid Path Please check path again!")
+////                println("Invalid Path Please check path again")
+//                LCE.ERROR("Invalid Path Please check path again")
+//            }
 
 
-
-        } catch (e: Exception) {
+        }
+    catch (e: Exception) {
             e.printStackTrace()
             LCE.ERROR(e.message.toString())
         }
     }
+
+
     @Throws
-    suspend  fun readFromExcelFile(filePath: String): List<Employee> {
+    suspend fun readFromExcelFile(filePath: String): List<Employee> {
         val empList = mutableListOf<Employee>()
         try {
             val inputStream = FileInputStream(filePath)
@@ -135,11 +164,13 @@ class ImportExcelFile
                             0 -> {
                                 emp.add(value.substringAfter("'"))
                             }
+
                             2 -> {
                                 val ll = value.split("/")
                                 emp.add(ll[1])
 
                             }
+
                             3 -> {
                                 val ll = value.split(" ")
                                 emp.add(ll[0])

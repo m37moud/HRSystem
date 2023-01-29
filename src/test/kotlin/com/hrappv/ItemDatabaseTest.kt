@@ -2,6 +2,7 @@ import com.hrappv.HrAppDb
 import com.hrappv.data.local.datastoreimp.DayRegisterDataSourceImpl
 import com.hrappv.data.local.datastoreimp.DepartmentDataSourceImpl
 import com.hrappv.data.models.Department
+import com.hrappv.data.models.RegisterAttends
 import com.hrappv.di.AppComponent
 import com.hrappv.test.DaggerTestComponent
 import com.hrappv.test.MainCoroutineRule
@@ -16,6 +17,7 @@ import kotlinx.coroutines.withContext
 import org.junit.Rule
 import org.junit.Test
 import util.Constatnts
+import java.time.LocalDate
 import java.util.*
 
 class ItemDatabaseTest {
@@ -45,18 +47,37 @@ class ItemDatabaseTest {
 //        val d = DepartmentDataSourceImpl(HrAppDb(inMemorySqlDriver))
         val d = DayRegisterDataSourceImpl(HrAppDb(inMemorySqlDriver), mock())
 //
-//        val depart = Department(
-//                department = "a ",
-//        commetion_rate = 15,
-//        commetion_type = null,
-//        depart_type = "",
-//        commetion_month = "8"
-//        )
-//        coroutineRule.launch {
-            val departmentList = Constatnts.registerDayExcelImporter("F:\\8")
+        val day = RegisterAttends(
+            emp_name = "Mohamed Elsaye Elsayed",
+            department = "ديكور",
+            oDate = "2022-07-22",
+            day =  LocalDate.parse("2022-07-22").dayOfWeek.toString(),
+            status = "Attend",
+            in_time = "07:37:30",
+            out_time = null,
+            late = null,
+            early = null,
+        )
 
+        val dayUpdate = RegisterAttends(
+            emp_name = "Mohamed Elsaye Elsayed",
+            department = "ديكور",
+            oDate = "2022-07-22",
+            day = null,
+            status = null,
+            in_time =null,
+            out_time = "15:52:16",
+            late = null,
+            early = null,
+        )
+
+//        coroutineRule.launch{
+            val departmentList = Constatnts.registerDayExcelImporter("D:\\desk\\شغل لعهد\\tutorial audting\\2022\\شهراغسطس8\\8\\8")
 //            println(departmentList.joinToString("\n"))
-            d.insertMultiDaysRegister(departmentList)
+
+//          val result =  d.insertRegisterDay(dayUpdate)
+          val result =  d.insertMultiDaysRegister(departmentList)
+            println("result = $result")
 
 //        }
 ////        d.insertDepart(

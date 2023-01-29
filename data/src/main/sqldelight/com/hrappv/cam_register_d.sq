@@ -1,0 +1,21 @@
+CREATE TABLE IF NOT EXISTS cam_register_d (
+	emp_id	INTEGER REFERENCES employe (emp_id) ON DELETE RESTRICT ON UPDATE CASCADE,
+	depart_id	INTEGER REFERENCES Department (depart_id) ON DELETE RESTRICT ON UPDATE CASCADE,
+	oDATE	TEXT,
+	day	TEXT,
+	status	TEXT,
+	time	TEXT
+
+);
+
+
+insertRegisterCam:
+INSERT INTO cam_register_d
+VALUES ( (SELECT emp_id FROM employe WHERE fname = ?), (SELECT depart_id FROM Department WHERE department = ?),?,?,?,?);
+
+checkRegisterCam:
+SELECT *
+FROM cam_register_d
+WHERE cam_register_d.emp_id =  (SELECT emp_id FROM employe WHERE fname = ?)
+AND cam_register_d.depart_id =  (SELECT depart_id FROM Department WHERE department = ?)
+AND oDATE = ?;
