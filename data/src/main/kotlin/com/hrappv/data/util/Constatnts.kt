@@ -395,33 +395,34 @@ class Constatnts {
 
             }
 
-            return empList  private fun getPath(path: String): List<String>? {
-                val pathList = mutableListOf<String>()
-                try {
-                    val file = File(path)
-                    if (file.isDirectory) {
-                        if (file.list()?.isNotEmpty()!!) {
-                            file.list()?.forEach { path ->
-                                val sFile = file.path + File.separator + path
-                                if (!Files.isDirectory(File(sFile).toPath()))
-                                    pathList.add(sFile)
+            return empList
 
-                            }
-                        }
-                    }
-
-                } catch (e: Exception) {
-                    println(e.message.toString())
-                    return emptyList()
-
-
-                }
-                return pathList
-
-            }
 
         }
+        private fun getPath(path: String): List<String>? {
+            val pathList = mutableListOf<String>()
+            try {
+                val file = File(path)
+                if (file.isDirectory) {
+                    if (file.list()?.isNotEmpty()!!) {
+                        file.list()?.forEach { path ->
+                            val sFile = file.path + File.separator + path
+                            if (!Files.isDirectory(File(sFile).toPath()))
+                                pathList.add(sFile)
 
+                        }
+                    }
+                }
+
+            } catch (e: Exception) {
+                println(e.message.toString())
+                return emptyList()
+
+
+            }
+            return pathList
+
+        }
 
 
         private suspend fun addEmpExcelFile(filePath: String): List<Employees> {//, inputDialog: FileDialog

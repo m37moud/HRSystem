@@ -1,14 +1,8 @@
 package com.hrappv.data.di.module
 
 import com.hrappv.HrAppDb
-import com.hrappv.data.local.datastore.DayRegisterDataSource
-import com.hrappv.data.local.datastore.DepartmentDataSource
-import com.hrappv.data.local.datastore.UserDataSource
-import com.hrappv.data.local.datastore.ViewEmpDataSource
-import com.hrappv.data.local.datastoreimp.DayRegisterDataSourceImpl
-import com.hrappv.data.local.datastoreimp.DepartmentDataSourceImpl
-import com.hrappv.data.local.datastoreimp.UserDataSourceImpl
-import com.hrappv.data.local.datastoreimp.ViewEmpDataSourceImpl
+import com.hrappv.data.local.datastore.*
+import com.hrappv.data.local.datastoreimp.*
 import com.squareup.sqldelight.db.SqlDriver
 import com.squareup.sqldelight.sqlite.driver.JdbcSqliteDriver
 import dagger.Module
@@ -152,6 +146,16 @@ class DatabaseModule {
             HrAppDb(sqliteDriver),
             dispatcher
         )
+    }
+
+    @Provides
+    @Singleton
+    fun provideCamRegister(sqliteDriver: SqlDriver,
+    dispatcher: CoroutineDispatcher) : CamRegisterDataSource{
+        return CamRegisterDataSourceImpl(
+            HrAppDb(sqliteDriver),dispatcher
+        )
+
     }
 
 
