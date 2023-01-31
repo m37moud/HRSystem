@@ -1,5 +1,6 @@
 package com.hrappv.ui.feature.EmployeResult
 
+import com.hrappv.data.models.CamRegisterDay
 import com.hrappv.data.models.Employee
 import com.hrappv.data.models.EmployeeResult
 import com.hrappv.data.repo.MyRepo
@@ -20,8 +21,8 @@ class EmployeeResultViewModel @Inject constructor(
     private val _folderPath = MutableStateFlow(INIT_FOLDER_PATH)
     val folderPath: StateFlow<String> = _folderPath
 
-    private val _employee: MutableStateFlow<List<Employee?>> = MutableStateFlow(emptyList())
-    val employee: StateFlow<List<Employee?>> = _employee
+    private val _employee: MutableStateFlow<List<CamRegisterDay?>> = MutableStateFlow(emptyList())
+    val employee: StateFlow<List<CamRegisterDay?>> = _employee
 
     private val _EmpResults: MutableStateFlow<LCE<List<EmployeeResult>>> = MutableStateFlow(LCE.NOACTION)
     val empResults: StateFlow<LCE<List<EmployeeResult>>> = _EmpResults
@@ -40,6 +41,7 @@ class EmployeeResultViewModel @Inject constructor(
         _EmpResults.value = LCE.LOADING
         _EmpResults.value = myRepo.importer.getEmployReport(folderPath)
     }
+
 
     //TODO insert all exel in database
     suspend fun registerDayByCam(folderPath: String? = null , pList: List<String>? = null) {

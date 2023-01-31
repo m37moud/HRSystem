@@ -1,5 +1,6 @@
 package excel
 
+import com.hrappv.data.models.CamRegisterDay
 import org.apache.poi.ss.usermodel.WorkbookFactory
 import com.hrappv.data.models.DayDetails
 import com.hrappv.data.models.Employee
@@ -36,10 +37,10 @@ class ImportExcelFile
      * Reads the value from the cell at the first row and first column of worksheet.
      */
 
-    suspend fun getAllEmployeeInfo(path: String? = null ,list: List<String>? = null): List<Employee> {
+    fun getAllEmployeeInfo(path: String? = null, list: List<String>? = null): List<CamRegisterDay> {
         val pathList = getPath(path, list)
 
-        val empList = mutableListOf<Employee>()
+        val empList = mutableListOf<CamRegisterDay>()
 
         pathList.forEach { path ->
             val tempList = readFromExcelFile(path)
@@ -49,20 +50,23 @@ class ImportExcelFile
         return empList
     }
 
-    private fun getPath(path: String?  = null , pList: List<String>? = null): List<String> {
+    private fun getPath(path: String? = null, pList: List<String>? = null): List<String> {
         val pathList = if (pList == null) mutableListOf<String>() else return pList
         try {
-            val file = File(path)
-            if (file.isDirectory) {
-                if (file.list()?.isNotEmpty()!!) {
-                    file.list()?.forEach { path ->
-                        val sFile = file.path + File.separator + path
-                        if (!Files.isDirectory(File(sFile).toPath()))
-                            pathList.add(sFile)
+            path.let {
+                val file = File(it)
+                if (file.isDirectory) {
+                    if (file.list()?.isNotEmpty()!!) {
+                        file.list()?.forEach { path ->
+                            val sFile = file.path + File.separator + path
+                            if (!Files.isDirectory(File(sFile).toPath()))
+                                pathList.add(sFile)
 
+                        }
                     }
                 }
             }
+
 
         } catch (e: Exception) {
             println(e.message.toString())
@@ -74,7 +78,7 @@ class ImportExcelFile
 
     }
 
-    suspend fun getEmployReport(path: String? = null , pList: List<String>? = null): LCE<List<EmployeeResult>> {
+    suspend fun getEmployReport(path: String? = null, pList: List<String>? = null): LCE<List<EmployeeResult>> {
         val pathList = getPath(path, pList)
 
         return try {
@@ -91,15 +95,15 @@ class ImportExcelFile
 //                            pathList.add(sFile)
 //
 //                    }
-                val empList = getAllEmployeeInfo(path,pathList)
+                val empList = getAllEmployeeInfo(path, pathList)
                 println("empList = ${empList.size}")
 
 
                 if (empList.isNotEmpty()) {
-                    println("excel imported succssesful")
+                    println("excel imported successful")
                     val employeeResultList = doSomeWork(empList)
                     if (employeeResultList.isNotEmpty()) {
-                        println("extracted employee result sucssesful")
+                        println("extracted employee result successful")
 //                    empList.clear()
                         LCE.CONTENT(employeeResultList)
 
@@ -129,8 +133,7 @@ class ImportExcelFile
 //            }
 
 
-        }
-    catch (e: Exception) {
+        } catch (e: Exception) {
             e.printStackTrace()
             LCE.ERROR(e.message.toString())
         }
@@ -138,8 +141,8 @@ class ImportExcelFile
 
 
     @Throws
-    suspend fun readFromExcelFile(filePath: String): List<Employee> {
-        val empList = mutableListOf<Employee>()
+    fun readFromExcelFile(filePath: String): List<CamRegisterDay> {
+        val empList = mutableListOf<CamRegisterDay>()
         try {
             val inputStream = FileInputStream(filePath)
 //            val file = File(filePath)
@@ -157,33 +160,76 @@ class ImportExcelFile
             println(xlWs.lastRowNum)
             xlWs.forEach { row ->
                 val emp = mutableListOf<String>()
+                val status = mutableMapOf<String, String>()
+
                 if (row.rowNum >= 1) {
                     for (columnNumber in 0..4) {
                         val value = xlWs.getRow(row.rowNum).getCell(columnNumber).toString()
+//                        when (columnNumber) {
+//                            0 -> {
+//                                emp.add(value.substringAfter("'"))
+//                            }
+//
+//                            2 -> {
+//                                val ll = value.split("/")
+//                                emp.add(ll[1])
+//
+//                            }
+//
+//                            3 -> {
+//                                val ll = value.split(" ")
+//                                emp.add(ll[0])
+//                                emp.add(ll[1])
+//
+//                            }
+//
+//                            else -> emp.add(value)
+//                        }
                         when (columnNumber) {
-                            0 -> {
-                                emp.add(value.substringAfter("'"))
+                            1 -> { // empName
+                                status["empName"] = value
                             }
 
-                            2 -> {
+                            2 -> {//department
                                 val ll = value.split("/")
-                                emp.add(ll[1])
+                                status["department"] = ll[1]
+
+//                                    status.add(ll[1])
 
                             }
 
-                            3 -> {
+                            3 -> {//date
+                                status["date&time"] = value
                                 val ll = value.split(" ")
-                                emp.add(ll[0])
-                                emp.add(ll[1])
+                                status["date"] = ll[0]
+                                status["time"] = ll[1]
+                                status["hour"] = ll[1].split(":")[0]
+
+//                                    status.add(ll[0])
+//                                    status.add(ll[1])
 
                             }
 
-                            else -> emp.add(value)
+                            4 -> {//date
+                                status["attendState"] = value
+
+                            }
+
+
                         }
+
 
                     }
 
-                    val employ = Employee(emp[0], emp[1], emp[2], emp[3], emp[4], emp[5])
+                    val employ = CamRegisterDay(
+                        empName = status["empName"],
+                        departName = status["department"],
+                        oDATE = status["date"],
+                        day = LocalDate.parse(status["date"]).dayOfWeek.toString(),
+                        time = status["time"],
+                        hour =  status["hour"],
+                        status = status["attendState"]
+                    )
                     empList.add(employ)
 
 
@@ -206,11 +252,11 @@ class ImportExcelFile
         return empList
     }
 
-    private fun getEmpReport(list: List<Employee>, empName: String = ""): EmployeeResult? {
+    private fun getEmpReport(list: List<CamRegisterDay>, empName: String = ""): EmployeeResult? {
 
 
         val l = list.filter {
-            it.name == empName
+            it.empName == empName
         }
         if (l.isNotEmpty()) {
             val ll = l.filter {
@@ -238,16 +284,17 @@ class ImportExcelFile
         return null
     }
 
-    fun getEmpReportById(list: List<Employee>, id: String = "", empName: String = ""): EmployeeResult? {
+    fun getEmpReportById(list: List<CamRegisterDay>, id: String = "", empName: String = ""): EmployeeResult? {
 
 
         val l = list.filter {
-            it.id == id || it.name == empName
+//            it.id == id ||
+            it.empName == empName
         }
         if (l.isNotEmpty()) {
             val ll = l.filter {
 
-                val date = LocalDate.parse(it.day)
+                val date = LocalDate.parse(it.oDATE)
                 date in startDate..endDate
             }
             return if (ll.isNotEmpty()) {
@@ -271,12 +318,12 @@ class ImportExcelFile
     }
 
 
-    private fun getDayDetails(employee: Employee): String {
+    private fun getDayDetails(employee: CamRegisterDay): String {
         var wardia = ""
 
         val date = LocalDateTime.parse("${employee.day} ${employee.time}", pattern)
 
-        val state = employee.statue
+        val state = employee.status
 
         val time = date.toLocalTime()
         date.withHour(8).withMinute(30)
@@ -349,12 +396,12 @@ class ImportExcelFile
     }
 
     //    fun doSomeWork(list: List<Employee>){
-    private suspend fun doSomeWork(list: List<Employee>): List<EmployeeResult> {
+    private suspend fun doSomeWork(list: List<CamRegisterDay>): List<EmployeeResult> {
         val employeeResultList = mutableListOf<EmployeeResult>()
 
         val empNameList =
             list.map {
-                it.name
+                it.empName
             }.distinct()
         println("empNameList size = ${empNameList.size}")
         var i = 0
@@ -362,7 +409,7 @@ class ImportExcelFile
 //            val empName = it.name
 //            if (!empNameList.contains(empName)) {
 //            println("empName = $empName")
-            val empResult = getEmpReport(list, empName = empName)!!
+            val empResult = getEmpReport(list, empName = empName!!)!!
             employeeResultList.add(empResult)
             i++
 //            println("done${i}")
@@ -376,7 +423,7 @@ class ImportExcelFile
     }
 
 
-    private fun getAbsentDays(list: List<Employee>): EmployeeResult {
+    private fun getAbsentDays(list: List<CamRegisterDay>): EmployeeResult {
         var empList = list.toMutableList()
         var numberOfAttendantDays = 0
         var attendDays = mutableListOf<DayDetails>()
@@ -402,7 +449,7 @@ class ImportExcelFile
         var pTime = 0.0
         var dayType = ""
         while (i < empList.size) {
-            if (empList[i].statue == "Check-in") {
+            if (empList[i].status == "Check-in") {
                 if (i + 1 < empList.size) {
                     val dayIn = LocalDateTime.parse("${empList[i].day} ${empList[i].time}", pattern)
                     val dayOut = LocalDateTime.parse("${empList[i + 1].day} ${empList[i + 1].time}", pattern)
@@ -410,14 +457,14 @@ class ImportExcelFile
 
 //                    println("timeWork = $timeWork")
 
-                    if (empList[i + 1].statue == "Check-out") {
+                    if (empList[i + 1].status == "Check-out") {
 
                         wardia = getDayDetails(empList[i])
 
                         val intWardia = getWardiaAsNum(wardia)
 
                         if (temp != dayIn.dayOfMonth) {
-                            if (empList[i + 1].statue == "Check-out") {
+                            if (empList[i + 1].status == "Check-out") {
 //                                pTime = getPartTimeDetails(dayOut, intWardia)
 //                                earlyAccess = getEarlyTimeAccess(dayOut, intWardia)
                                 pTime = (getPartTimeDetails(dayOut, intWardia) * 100.0).roundToInt() / 100.0
@@ -533,7 +580,7 @@ class ImportExcelFile
                         daysToCheckNoted += dayOut.dayOfMonth.toString() + " , "
                         if (temp != dayOut.dayOfMonth) {
                             if (i + 1 < empList.size) {
-                                if (empList[i + 1].statue == "Check-out") {
+                                if (empList[i + 1].status == "Check-out") {
                                     empList.removeAt(i)
                                 } else {
                                     pTime = (getPartTimeDetails(dayOut, intWardia) * 100.0).roundToInt() / 100.0
@@ -588,7 +635,7 @@ class ImportExcelFile
 
 
                 } else if (i + 1 < empList.size) {
-                    if (empList[i + 1].statue == "Check-in") {
+                    if (empList[i + 1].status == "Check-in") {
 
                         i++
 
@@ -606,7 +653,7 @@ class ImportExcelFile
                             val intWardia = getWardiaAsNum(wardia)
 
                             if (temp != dayOut.dayOfMonth) {
-                                if (empList[i + 1].statue == "Check-out") {
+                                if (empList[i + 1].status == "Check-out") {
                                     pTime = (getPartTimeDetails(dayOut, intWardia) * 100.0).roundToInt() / 100.0
                                     earlyAccess = (getEarlyTimeAccess(dayOut, intWardia) * 100.0).roundToInt() / 100.0
 
@@ -719,9 +766,9 @@ class ImportExcelFile
         val totalPartTime = (partTime * 100.0).roundToInt() / 100.0
         val totalAccessTime = (totalEarlyAccessTime * 100.0).roundToInt() / 100.0
         val employeeResult = EmployeeResult(
-            list[0].id,
-            list[0].name,
-            list[0].department,
+//            list[0].id,
+            list[0].empName!!,
+            list[0].departName!!,
             numberOfAttendantDays,
             daysToCheckNoted,
             numberOfAbsentDays,

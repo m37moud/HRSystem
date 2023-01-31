@@ -1,6 +1,8 @@
 import com.hrappv.HrAppDb
+import com.hrappv.data.local.datastoreimp.CamRegisterDataSourceImpl
 import com.hrappv.data.local.datastoreimp.DayRegisterDataSourceImpl
 import com.hrappv.data.local.datastoreimp.DepartmentDataSourceImpl
+import com.hrappv.data.models.CamRegisterDay
 import com.hrappv.data.models.Department
 import com.hrappv.data.models.RegisterAttends
 import com.hrappv.di.AppComponent
@@ -9,6 +11,7 @@ import com.hrappv.test.MainCoroutineRule
 import com.hrappv.test.MyDaggerMockRule
 import com.nhaarman.mockitokotlin2.mock
 import com.squareup.sqldelight.sqlite.driver.JdbcSqliteDriver
+import excel.ImportExcelFile
 import junit.framework.TestCase.assertEquals
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.ExperimentalCoroutinesApi
@@ -19,6 +22,7 @@ import org.junit.Test
 import util.Constatnts
 import java.time.LocalDate
 import java.util.*
+import javax.inject.Inject
 
 class ItemDatabaseTest {
 
@@ -36,7 +40,28 @@ class ItemDatabaseTest {
     private val queries = HrAppDb(inMemorySqlDriver).departmentQueries
     private val empQueries = HrAppDb(inMemorySqlDriver).employeQueries
     private val registerQueries = HrAppDb(inMemorySqlDriver).day_registerQueries
+val importer = ImportExcelFile()
 
+    @Test
+    fun camRegTest() {
+
+        val camDaysList = importer.getAllEmployeeInfo(path = "D:\\desk\\شغل لعهد\\tutorial audting\\2022\\شهراغسطس8\\8\\8")
+        val camDayDataSource = CamRegisterDataSourceImpl(HrAppDb(inMemorySqlDriver), mock())
+        camDayDataSource.insertMultiCamRegDay(camDaysList)
+
+//        CamRegisterDay(
+//            empName = "Mohamed Elsaye Elsayed",
+//            departName = "ديكور",
+//            oDATE = "2022-07-22",
+//            day =  LocalDate.parse("2022-07-22").dayOfWeek.toString(),
+//            time = "07:37:30",
+//            hour = "07",
+//            status ="Check-out" //Check-out
+//        ).apply {
+//            camDayDataSource.insertCamRegisterDay(this)
+//        }
+
+    }
 
     @OptIn(ExperimentalCoroutinesApi::class)
     @Test
@@ -46,12 +71,14 @@ class ItemDatabaseTest {
 ////        withContext(Dispatchers.IO) {
 //        val d = DepartmentDataSourceImpl(HrAppDb(inMemorySqlDriver))
         val d = DayRegisterDataSourceImpl(HrAppDb(inMemorySqlDriver), mock())
+
+
 //
         val day = RegisterAttends(
             emp_name = "Mohamed Elsaye Elsayed",
             department = "ديكور",
             oDate = "2022-07-22",
-            day =  LocalDate.parse("2022-07-22").dayOfWeek.toString(),
+            day = LocalDate.parse("2022-07-22").dayOfWeek.toString(),
             status = "Attend",
             in_time = "07:37:30",
             out_time = null,
@@ -65,19 +92,20 @@ class ItemDatabaseTest {
             oDate = "2022-07-22",
             day = null,
             status = null,
-            in_time =null,
+            in_time = null,
             out_time = "15:52:16",
             late = null,
             early = null,
         )
 
 //        coroutineRule.launch{
-            val departmentList = Constatnts.registerDayExcelImporter("D:\\desk\\شغل لعهد\\tutorial audting\\2022\\شهراغسطس8\\8\\8")
+        val departmentList =
+            Constatnts.registerDayExcelImporter("D:\\desk\\شغل لعهد\\tutorial audting\\2022\\شهراغسطس8\\8\\8")
 //            println(departmentList.joinToString("\n"))
 
 //          val result =  d.insertRegisterDay(dayUpdate)
-          val result =  d.insertMultiDaysRegister(departmentList)
-            println("result = $result")
+        val result = d.insertMultiDaysRegister(departmentList)
+        println("result = $result")
 
 //        }
 ////        d.insertDepart(

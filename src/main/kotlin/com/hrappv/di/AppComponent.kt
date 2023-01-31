@@ -46,7 +46,7 @@ interface AppComponent {
     fun inject(settingsComponent: SettingsComponent)
     fun inject(aboutComponent: AboutComponent)
 
-    fun getImporter() :ImportExcelFile
+//    fun getImporter() :ImportExcelFile
 
     fun getLoginViewModel() :LoginViewModel
     fun getMainViewModel() : MainViewModel

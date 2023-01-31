@@ -177,7 +177,7 @@ fun EmployeeItem(employeeResult: EmployeeResult) {
         horizontalArrangement = Arrangement.SpaceBetween //this can change for Arrangement.spacedBy()
 
     ) {
-        Item(text = employeeResult.id, width = 55.dp)
+//        Item(text = employeeResult.id, width = 55.dp)
         Item(text = employeeResult.name, width = 450.dp)
         Item(text = employeeResult.department, width = 200.dp)
         Item(text = employeeResult.numberOfAttendDays.toString(), width = 200.dp)

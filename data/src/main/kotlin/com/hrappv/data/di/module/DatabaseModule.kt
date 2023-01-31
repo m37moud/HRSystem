@@ -7,6 +7,7 @@ import com.squareup.sqldelight.db.SqlDriver
 import com.squareup.sqldelight.sqlite.driver.JdbcSqliteDriver
 import dagger.Module
 import dagger.Provides
+import excel.ImportExcelFile
 import kotlinx.coroutines.CoroutineDispatcher
 import kotlinx.coroutines.Dispatchers
 import java.util.*
@@ -157,6 +158,8 @@ class DatabaseModule {
         )
 
     }
+
+    fun getImporter() : ImportExcelFile = ImportExcelFile()
 
 
     @Provides

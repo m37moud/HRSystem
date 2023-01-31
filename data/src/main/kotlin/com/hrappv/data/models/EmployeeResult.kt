@@ -1,7 +1,7 @@
 package com.hrappv.data.models
 
 data class EmployeeResult(
-    val id: String = "",
+//    val id: String = "",
     var name: String = "",
     val department: String = "",
     val numberOfAttendDays: Int = 0,
@@ -16,7 +16,7 @@ data class EmployeeResult(
 
     ) {
     fun getMembers() = listOf(
-        id,
+//        id,
         name,
         department,
         numberOfAttendDays,
