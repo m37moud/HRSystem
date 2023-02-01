@@ -66,7 +66,7 @@ class CamRegisterDataSourceImpl @Inject constructor(
         return multiResult
     }
 
-    fun insertDay(camReg: CamRegisterDay) {
+    private fun insertDay(camReg: CamRegisterDay) {
         queries.insertRegisterCam(
             fname = camReg.empName!!,
             department = camReg.departName!!,
@@ -75,6 +75,7 @@ class CamRegisterDataSourceImpl @Inject constructor(
             status = camReg.status,
             time = camReg.time,
             hour = camReg.hour,
+            shift = camReg.shift
 
             )
 

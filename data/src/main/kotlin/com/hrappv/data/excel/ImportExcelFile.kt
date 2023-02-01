@@ -220,6 +220,9 @@ class ImportExcelFile
 
 
                     }
+                    //
+
+                    val shift = getTimeShift(dateTime = status["date&time"]!!, status["attendState"]!!)
 
                     val employ = CamRegisterDay(
                         empName = status["empName"],
@@ -227,8 +230,9 @@ class ImportExcelFile
                         oDATE = status["date"],
                         day = LocalDate.parse(status["date"]).dayOfWeek.toString(),
                         time = status["time"],
-                        hour =  status["hour"],
-                        status = status["attendState"]
+                        hour = status["hour"],
+                        status = status["attendState"],
+                        shift = shift
                     )
                     empList.add(employ)
 
@@ -315,6 +319,80 @@ class ImportExcelFile
         println(l.size)
 
         return null
+    }
+
+    private fun getTimeShift(dateTime: String, state: String): String {
+        var shift = ""
+
+        val date = LocalDateTime.parse(dateTime, this.pattern)
+
+
+        date.withHour(8).withMinute(30)
+
+
+//        println(time)
+
+        if (state == "Check-in") {
+            if (date.isAfter(date.withHour(7).withMinute(30)) && date.isBefore(date.withHour(8).withMinute(15))) {
+//                println("check 1 ")
+
+                shift = "اولى"
+            } else if (date.isAfter(date.withHour(13).withMinute(0)) && date.isBefore(
+                    date.withHour(17).withMinute(0)
+                )
+            ) {
+//                println("check 2 ")
+
+                shift = "ثانية"
+            } else if (date.isAfter(
+                    date.withHour(22).withMinute(0)
+                ) && date.isBefore(date.withHour(23).withMinute(59))
+            ) {
+//                println("check 3 ")
+
+                shift = "ثالثة"
+            } else if (date.isAfter(date.withHour(7).withMinute(30)) && date.isBefore(
+                    date.withHour(8).withMinute(45)
+                )
+            ) {
+
+                shift = "اولى متاخر"
+
+            } else {
+                shift = "متاخر"
+
+            }
+        } else {
+
+            if (date.isAfter(date.withHour(15).withMinute(0)) && date.isBefore(date.withHour(16).withMinute(30))) {
+//                println("check 1 ")
+
+                shift = "اولى"
+            } else if (date.isAfter(date.withHour(22).withMinute(0)) && date.isBefore(
+                    date.withHour(23).withMinute(0)
+                )
+            ) {
+//                println("check 2 ")
+
+                shift = "ثانية"
+            } else if (date.isAfter(//date.dayOfMonth + 1
+                    date.withDayOfMonth(date.minusDays(1).dayOfMonth).withHour(7).withMinute(0)
+                ) && date.withDayOfMonth(date.minusDays(1).dayOfMonth).isBefore(date.withHour(8).withMinute(30))
+            ) {
+//                println("check 3 ")
+
+                shift = "ثالثة"
+            } else if (date.isAfter(//date.dayOfMonth + 1
+                    date.withHour(7).withMinute(0)
+                ) && date.isBefore(date.withHour(8).withMinute(30))
+            ) {
+//                println("check 3 ")
+
+                shift = "ثالثة"
+            }
+        }
+
+        return shift
     }
 
 

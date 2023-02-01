@@ -5,7 +5,9 @@ CREATE TABLE IF NOT EXISTS cam_register_d (
 	day	TEXT,
 	time	TEXT,
 	hour	TEXT,
-	status	TEXT
+	status	TEXT,
+	shift TEXT
+
 
 );
 
@@ -21,7 +23,7 @@ ORDER BY day_register.emp_id ASC ;
 
 insertRegisterCam:
 INSERT INTO cam_register_d
-VALUES ( (SELECT emp_id FROM employe WHERE fname = ?), (SELECT depart_id FROM Department WHERE department = ?),?,?,?,?,?);
+VALUES ( (SELECT emp_id FROM employe WHERE fname = ?), (SELECT depart_id FROM Department WHERE department = ?),?,?,?,?,?,?);
 
 checkRegisterCam:
 SELECT *

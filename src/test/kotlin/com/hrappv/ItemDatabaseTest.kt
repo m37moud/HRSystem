@@ -43,9 +43,11 @@ class ItemDatabaseTest {
 val importer = ImportExcelFile()
 
     @Test
-    fun camRegTest() {
+    fun camRegTest() { //successful
+
 
         val camDaysList = importer.getAllEmployeeInfo(path = "D:\\desk\\شغل لعهد\\tutorial audting\\2022\\شهراغسطس8\\8\\8")
+//       println(camDaysList.joinToString("\n"))
         val camDayDataSource = CamRegisterDataSourceImpl(HrAppDb(inMemorySqlDriver), mock())
         camDayDataSource.insertMultiCamRegDay(camDaysList)
 

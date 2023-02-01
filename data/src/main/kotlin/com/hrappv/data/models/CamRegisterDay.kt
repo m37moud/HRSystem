@@ -8,5 +8,6 @@ data class CamRegisterDay(
      val time: String?,
      val hour: String?,
      val status: String?,
+     val shift : String?,
 
      )
