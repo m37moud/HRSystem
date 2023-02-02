@@ -151,15 +151,42 @@ class DatabaseModule {
 
     @Provides
     @Singleton
-    fun provideCamRegister(sqliteDriver: SqlDriver,
-    dispatcher: CoroutineDispatcher) : CamRegisterDataSource{
+    fun provideCamRegister(
+        sqliteDriver: SqlDriver,
+        dispatcher: CoroutineDispatcher
+    ): CamRegisterDataSource {
         return CamRegisterDataSourceImpl(
-            HrAppDb(sqliteDriver),dispatcher
+            HrAppDb(sqliteDriver), dispatcher
         )
 
     }
 
-    fun getImporter() : ImportExcelFile = ImportExcelFile()
+    @Provides
+    @Singleton
+    fun provideDayDetails(
+        sqliteDriver: SqlDriver,
+        dispatcher: CoroutineDispatcher
+    ): DayDetailsDataSource {
+        return DayDetailsDataSourceImpl(
+            HrAppDb(sqliteDriver), dispatcher
+        )
+
+    }
+
+
+    @Provides
+    @Singleton
+    fun provideEmpResult(
+        sqliteDriver: SqlDriver,
+        dispatcher: CoroutineDispatcher
+    ): EmpResultDataSource {
+        return EmpResultDataSourceImpl(
+            HrAppDb(sqliteDriver), dispatcher
+        )
+
+    }
+
+    fun getImporter(): ImportExcelFile = ImportExcelFile()
 
 
     @Provides

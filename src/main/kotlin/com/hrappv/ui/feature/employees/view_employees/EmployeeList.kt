@@ -667,32 +667,35 @@ fun EmployeeGridLazyColumn(
 //            }
 //        }
 
-        itemsIndexed(items = data, key = { _, item -> item.emp_id }
+        itemsIndexed(items = data, key = { _, item -> item }
         ) { _, employee ->
-
-            AnimatedVisibility(
-                visible = true//!deletedPersonList.contains(person),
-                , enter = expandVertically(),
-                exit = shrinkVertically(
-                    animationSpec = tween(
-                        durationMillis = 1000,
-                    )
-                )
-            ) {
-
-                EmployeeCardGrid(
-                    Modifier.clickable {
-                        onClick(employee)
-                    }.animateItemPlacement(
+            EmployeeCardGrid(
+                Modifier
+                    .animateItemPlacement(
                         animationSpec = tween(
                             durationMillis = 500,
                             easing = LinearOutSlowInEasing,
                         )
-                    ),
-                    employee = employee, onDeleteClick = onDeleteClick
-                )
-
-            }
+                    )
+                    .clickable {
+                        onClick(employee)
+                    },
+                employee = employee, onDeleteClick = onDeleteClick
+            )
+//            AnimatedVisibility(
+//                visible = true//!deletedPersonList.contains(person),
+//                , enter = expandVertically(),
+//                exit = shrinkVertically(
+//                    animationSpec = tween(
+//                        durationMillis = 1000,
+//                    )
+//                )
+//            )
+//            {
+//
+//
+//
+//            }
 
 
         }
@@ -706,8 +709,8 @@ fun EmployeeLazyColumn(
 ) {
     Column(
         modifier = Modifier.fillMaxSize()
-//            .horizontalScroll(rememberScrollState())
-        ,
+//            .horizontalScroll(state = rememberScrollState(0), enabled = true)
+         ,
         horizontalAlignment = Alignment.CenterHorizontally // this can change for verticalAlignment
     ) {
         Header()

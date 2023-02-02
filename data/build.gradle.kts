@@ -43,6 +43,7 @@ dependencies {
     implementation("com.squareup.sqldelight:sqlite-driver:$sqlDelight")
 //    implementation("com.squareup.sqldelight:native-driver:$sqlDelight")
     implementation("com.squareup.sqldelight:coroutines-extensions-jvm:$sqlDelight")
+//    implementation("app.cash.sqldelight:primitive-adapters:2.0.0-alpha05")
 
 
 }
