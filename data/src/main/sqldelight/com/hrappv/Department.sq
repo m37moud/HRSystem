@@ -33,5 +33,9 @@ VALUES((CASE (SELECT COUNT(*) FROM Department) WHEN 0 THEN 1 ELSE (SELECT MAX(de
 delteAll:
 DELETE FROM Department;
 
+checkIfnoDepart:
+SELECT count(1) WHERE EXISTS (SELECT * FROM Department);
+-- SELECT CASE WHEN EXISTS(SELECT 1 FROM Department) THEN 0 ELSE 1 END AS IsEmpty;
+
 
 

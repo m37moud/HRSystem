@@ -5,7 +5,7 @@ import com.arkivanov.decompose.extensions.compose.jetbrains.stack.Children
 import com.hrappv.di.AppComponent
 import com.arkivanov.decompose.ComponentContext
 import com.hrappv.di.DaggerAppComponent
-import com.hrappv.ui.feature.EmployeResult.EmployResultScreenComponent
+import com.hrappv.ui.feature.employe_result.EmployResultScreenComponent
 import com.hrappv.ui.feature.main.MainScreenComponent
 import com.arkivanov.decompose.*
 import com.arkivanov.decompose.extensions.compose.jetbrains.stack.animation.*

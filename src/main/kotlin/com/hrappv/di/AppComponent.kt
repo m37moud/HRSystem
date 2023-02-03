@@ -1,13 +1,12 @@
 package com.hrappv.di
 
 import com.hrappv.data.di.module.DatabaseModule
-import com.hrappv.ui.feature.EmployeResult.EditEmployeScreenComponent
-import com.hrappv.ui.feature.EmployeResult.EmployResultScreenComponent
+import com.hrappv.ui.feature.employe_result.EditEmployeScreenComponent
+import com.hrappv.ui.feature.employe_result.EmployResultScreenComponent
 import com.hrappv.ui.feature.login.LoginComponent
 import com.hrappv.ui.feature.main.MainScreenComponent
 import com.hrappv.ui.feature.splash.SplashScreenComponent
 import dagger.Component
-import excel.ImportExcelFile
 import javax.inject.Singleton
 
 import com.hrappv.ui.feature.about.AboutComponent

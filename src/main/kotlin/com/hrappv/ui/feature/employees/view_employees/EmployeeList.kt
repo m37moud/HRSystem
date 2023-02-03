@@ -72,7 +72,7 @@ fun ViewEmpScreen(viewModel: ViewEmpViewModel) {
     val departments = viewModel.departments.collectAsState(emptyList()).value
 
     val employees = viewModel.allEmps.collectAsState()
-    val allEmployee = viewModel.allEmployees.collectAsState(emptyList()).value
+    val allEmployee = viewModel.allEmployees.collectAsState(null).value
 
     val deleteEmployee = viewModel.employee.collectAsState()
     deletedEmpName.value = deleteEmployee.value.fname
@@ -127,17 +127,17 @@ fun ViewEmpScreen(viewModel: ViewEmpViewModel) {
 
                     Button(
                         onClick = {
+                                scope.launch(Dispatchers.IO) {
 
-                            scope.launch(Dispatchers.IO) {
-
-                                viewModel.onAddEmployee()
-                            }
+                                    viewModel.onAddEmployee()
+                                }
                         },
                         modifier = Modifier.padding(horizontal = 16.dp),
                         // Provide a custom shape for this button. In this example. we specify the button to have
                         // round corners of 16dp radius.
                         shape = RoundedCornerShape(16.dp),
                         elevation = ButtonDefaults.elevation(5.dp),
+                        enabled =  viewModel.checkIfNoDepartment() > 0
                     ) {
                         Icon(imageVector = Icons.Outlined.AddCircle, contentDescription = "Add Department Screen")
 
@@ -154,12 +154,20 @@ fun ViewEmpScreen(viewModel: ViewEmpViewModel) {
              */
             scope.launch(Dispatchers.IO) {
                 delay(1000)
-                if (allEmployee.isNotEmpty()) {
-                    viewModel.setEmpList(allEmployee)
-                } else {
-//                    viewModel.setDepartError("No Departments is found")
+
+                if (allEmployee != null) {
+                    if (allEmployee.isNotEmpty()) {
+                        viewModel.setEmpList(allEmployee)
+                    } else {
+                        val message =  if(viewModel.checkIfNoDepartment() > 0)  "No Employee is found "
+                                else  "No Employee is found \n" +
+                                "insert Department first"
+                        viewModel.setEmpError(
+                            message
+                        )
 
 
+                    }
                 }
 
             }
@@ -710,7 +718,7 @@ fun EmployeeLazyColumn(
     Column(
         modifier = Modifier.fillMaxSize()
 //            .horizontalScroll(state = rememberScrollState(0), enabled = true)
-         ,
+        ,
         horizontalAlignment = Alignment.CenterHorizontally // this can change for verticalAlignment
     ) {
         Header()

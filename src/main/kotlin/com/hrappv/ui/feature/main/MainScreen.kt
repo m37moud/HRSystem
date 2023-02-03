@@ -29,7 +29,7 @@ import androidx.compose.foundation.lazy.items
 import androidx.compose.ui.text.font.FontWeight
 import com.hrappv.ui.components.AppMenuHeader
 import com.hrappv.ui.components.NavigationMenuItem
-import com.hrappv.ui.feature.EmployeResult.EmployResultScreenComponent
+import com.hrappv.ui.feature.employe_result.EmployResultScreenComponent
 import com.hrappv.ui.feature.about.AboutComponent
 import com.hrappv.ui.feature.department.DefaultDepartmentComponent
 import com.hrappv.ui.feature.employees.DefaultViewEmpComponent

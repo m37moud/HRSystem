@@ -1,4 +1,4 @@
-package com.hrappv.ui.feature.EmployeResult
+package com.hrappv.ui.feature.employe_result
 
 import androidx.compose.runtime.*
 import com.hrappv.di.AppComponent

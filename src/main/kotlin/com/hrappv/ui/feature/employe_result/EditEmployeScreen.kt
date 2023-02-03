@@ -1,4 +1,4 @@
-package com.hrappv.ui.feature.EmployeResult
+package com.hrappv.ui.feature.employe_result
 
 import androidx.compose.desktop.ui.tooling.preview.Preview
 import androidx.compose.foundation.layout.*

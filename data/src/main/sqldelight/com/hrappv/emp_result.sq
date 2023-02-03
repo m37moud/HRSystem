@@ -7,9 +7,11 @@ CREATE TABLE IF NOT EXISTS emp_result (
 	 depart_id	INTEGER REFERENCES Department (depart_id) ON DELETE RESTRICT ON UPDATE CASCADE,
 --      name TEXT ,
 --      department TEXT,
-     numberOfAttendDays INTEGER,
+     month TEXT,
+     year TEXT,
+     numberOfAttendDays INTEGER AS Int,
      daysToCheckNoted TEXT,
-     numberOfAbsentDays INTEGER,
+     numberOfAbsentDays INTEGER AS Int ,
      totalPartTime REAL AS Double  ,
      partTimeDays TEXT,
      totalEarlyTime REAL AS Double,
@@ -22,14 +24,10 @@ CREATE TABLE IF NOT EXISTS emp_result (
 
 
 
-insertEmpDayDetails:
-INSERT INTO day_details
-VALUES ((SELECT emp_id FROM employe WHERE fname = ?), (SELECT depart_id FROM Department WHERE department = ?) , ?,?,?,?,?,?,?) ;
-
 
 getEmpResult:
 SELECT employe.fname AS empName, Department.department AS department_name ,
-numberOfAttendDays,daysToCheckNoted,numberOfAbsentDays,totalPartTime,
+month,year,numberOfAttendDays,daysToCheckNoted,numberOfAbsentDays,totalPartTime,
 partTimeDays,totalEarlyTime,totalEarlyAccessTimeDays,absentDays
 -- ,(SELECT * FROM day_details WHERE day_details.emp_id = (SELECT emp_id FROM employe WHERE fname = ?))
 -- ,day_details.day,day_details.wardia,day_details.typeOfDay,
@@ -44,5 +42,15 @@ ORDER BY emp_result.emp_id ASC ;
 
 insertEmployeeResult:
 INSERT INTO emp_result
-VALUES ( (SELECT emp_id FROM employe WHERE fname = ?), (SELECT depart_id FROM Department WHERE department = ?),?,?,?,?,?,?,?,?);
+VALUES ( (SELECT emp_id FROM employe WHERE fname = ?), (SELECT depart_id FROM Department WHERE department = ?),?,?,?,?,?,?,?,?,?,?);
+
+
+checkEmpResult:
+SELECT *
+FROM emp_result
+WHERE emp_result.emp_id =  (SELECT emp_id FROM employe WHERE fname = ?)
+AND month = ?;
+
+
+
 

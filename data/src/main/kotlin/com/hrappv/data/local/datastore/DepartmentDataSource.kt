@@ -17,5 +17,8 @@ interface DepartmentDataSource {
 
     fun getAllDepartments() : Flow<List<Department>>
 
+
+    fun checkIfNoDepart() : Long
+
 //    fun getDepartment() : List<>
 }

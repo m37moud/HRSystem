@@ -39,22 +39,29 @@ class ImportExcelFile
 
     fun getAllEmployeeInfo(path: String? = null, list: List<String>? = null): List<CamRegisterDay> {
         val pathList = getPath(path, list)
-
         val empList = mutableListOf<CamRegisterDay>()
 
-        pathList.forEach { path ->
-            val tempList = readFromExcelFile(path)
-            empList.addAll(tempList)
+
+        if (pathList.isNotEmpty()) {
+
+            pathList.forEach { pathFile ->
+                val tempList = readFromExcelFile(pathFile)
+                empList.addAll(tempList)
 //        empList += importer.readFromExcelFile(path)
+            }
+        } else {
+            println("Folder is Empty")
+            LCE.ERROR("Folder is Empty")
         }
+
         return empList
     }
 
     private fun getPath(path: String? = null, pList: List<String>? = null): List<String> {
         val pathList = if (pList == null) mutableListOf<String>() else return pList
         try {
-            path.let {
-                val file = File(it)
+            path.let { isPath ->
+                val file = File(isPath.toString())
                 if (file.isDirectory) {
                     if (file.list()?.isNotEmpty()!!) {
                         file.list()?.forEach { path ->
@@ -78,15 +85,14 @@ class ImportExcelFile
 
     }
 
-    suspend fun getEmployReport(path: String? = null, pList: List<String>? = null): LCE<List<EmployeeResult>> {
-        val pathList = getPath(path, pList)
+    suspend fun getEmployReport(empList: List<CamRegisterDay>): LCE<List<EmployeeResult>> {
 
         return try {
 
 //            val file = File(path);
 //            println("file name is ( ${file.name} )")
+
 //            if (file.isDirectory) {
-            if (pathList.isNotEmpty()!!) {
 
 //                    file.list()?.forEach {
 //                        println("file ...\n ${it}")
@@ -95,34 +101,31 @@ class ImportExcelFile
 //                            pathList.add(sFile)
 //
 //                    }
-                val empList = getAllEmployeeInfo(path, pathList)
-                println("empList = ${empList.size}")
+//                val empList = getAllEmployeeInfo(path, pathList)
+            println("empList = ${empList.size}")
 
 
-                if (empList.isNotEmpty()) {
-                    println("excel imported successful")
-                    val employeeResultList = doSomeWork(empList)
-                    if (employeeResultList.isNotEmpty()) {
-                        println("extracted employee result successful")
+            if (empList.isNotEmpty()) {
+                println("excel imported successful")
+                val employeeResultList = doSomeWork(empList)
+                if (employeeResultList.isNotEmpty()) {
+                    println("extracted employee result successful")
 //                    empList.clear()
-                        LCE.CONTENT(employeeResultList)
-
-                    } else {
-                        println("No Employee Details Found")
-                        LCE.ERROR("No Employee Details Found")
-
-                    }
-
+                    LCE.CONTENT(employeeResultList)
 
                 } else {
-                    println("No Results Details Found")
-                    LCE.ERROR("No Results Details Found")
+                    println("No Employee Details Found")
+                    LCE.ERROR("No Employee Details Found")
 
                 }
+
+
             } else {
-                println("Folder is Empty")
-                LCE.ERROR("Folder is Empty")
+                println("No Results Details Found")
+                LCE.ERROR("No Results Details Found")
+
             }
+
 //
 //        }
 //          else {
@@ -847,6 +850,7 @@ class ImportExcelFile
 //            list[0].id,
             list[0].empName!!,
             list[0].departName!!,
+            month,
             numberOfAttendantDays,
             daysToCheckNoted,
             numberOfAbsentDays,

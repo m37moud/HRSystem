@@ -20,12 +20,12 @@ class DepartmentDataSourceImpl @Inject constructor(
 
     override suspend fun insertMultiDepartment(departments: List<Department>): Boolean {
         var insert = false
-
         withContext(dispatcher) {
             queries.transaction {
                 departments.forEach { depart ->
                     println(depart.department)
-                    val department = depart.department.let { queries.selectDepartmentByName(it!!).executeAsOneOrNull() }
+                    val department =
+                        depart.department.let { queries.selectDepartmentByName(it!!).executeAsOneOrNull() }
                     println(department.toString())
                     if (department == null) {
                         insertDepart(depart)
@@ -42,6 +42,7 @@ class DepartmentDataSourceImpl @Inject constructor(
                 }
             }
         }
+
         return insert
     }
 
@@ -49,6 +50,10 @@ class DepartmentDataSourceImpl @Inject constructor(
         return queries.getAllDepartments(mapper = { depart_id, department, commetion_rate, depart_type, commetion_type, commetion_month ->
             Department(depart_id, department, commetion_rate, depart_type, commetion_type, commetion_month)
         }).asFlow().mapToList()
+    }
+
+    override fun checkIfNoDepart(): Long {
+        return queries.checkIfnoDepart().executeAsOne()
     }
 
     override suspend fun checkDepartment(id: Long) {
@@ -60,14 +65,22 @@ class DepartmentDataSourceImpl @Inject constructor(
         department: Department
     ) {
         println(department.toString())
-        queries.insertDepartMent(
+        try {
+            queries.insertDepartMent(
 //            depart_id = department.depart_id,
-            department = department.department!!,
-            commetion_rate = department.commetion_rate,
-            depart_type = department.depart_type,
-            commetion_type = department.commetion_type,
-            commetion_month = department.commetion_month,
-        )
+                department = department.department!!,
+                commetion_rate = department.commetion_rate,
+                depart_type = department.depart_type,
+                commetion_type = department.commetion_type,
+                commetion_month = department.commetion_month,
+            )
+        } catch (exc: Exception) {
+
+
+            println(exc.message.toString())
+            return
+        }
+
     }
 
 
@@ -81,15 +94,15 @@ class DepartmentDataSourceImpl @Inject constructor(
 
                     val depart = department.let { queries.selectDepartmentByName(it.department).executeAsOneOrNull() }
                     println(depart.toString())
-                    if (depart == null) {
+                    result = if (depart == null) {
                         insertDepart(department)
                         println("department is inserted")
 
-                        result = " department is inserted"
+                        " department is inserted"
                     } else {
                         println("this department is already found ")
 
-                        result = "this department is already found"
+                        "this department is already found"
                     }
 
                     afterRollback {

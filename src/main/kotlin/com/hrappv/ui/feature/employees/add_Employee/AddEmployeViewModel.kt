@@ -45,7 +45,7 @@ class AddEmployeViewModel @Inject constructor(
 
     suspend fun getEmployeResults(folderPath: String) {
         _EmpResults.value = LCE.LOADING
-        _EmpResults.value = myRepo.importer.getEmployReport(folderPath)
+//        _EmpResults.value = myRepo.importer.getEmployReport(folderPath)
     }
 
     suspend fun insertEmpFromImporter(emplist :List<Employees>){

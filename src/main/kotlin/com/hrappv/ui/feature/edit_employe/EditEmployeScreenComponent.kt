@@ -1,8 +1,7 @@
-package com.hrappv.ui.feature.EmployeResult
+package com.hrappv.ui.feature.employe_result
 
 import androidx.compose.runtime.*
 import com.hrappv.di.AppComponent
-import com.hrappv.ui.feature.main.MainViewModel
 import com.hrappv.ui.navigation.Component
 import com.arkivanov.decompose.ComponentContext
 import com.hrappv.ui.feature.edit_employe.EditEmployeScreen

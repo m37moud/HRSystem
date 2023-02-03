@@ -1,4 +1,4 @@
-package com.hrappv.ui.feature.EmployeResult
+package com.hrappv.ui.feature.employe_result
 
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
@@ -46,7 +46,7 @@ class EmployeeResultViewModel @Inject constructor(
 
     suspend fun getEmployeeResults(folderPath: String) {
         _empResults.value = LCE.LOADING
-        _empResults.value = myRepo.importer.getEmployReport(folderPath)
+//        _empResults.value = myRepo.importer.getEmployReport(folderPath)
     }
 
 
@@ -61,6 +61,11 @@ class EmployeeResultViewModel @Inject constructor(
         }
 
         _employee.value = myRepo.importer.getAllEmployeeInfo(folderPath,pList)
+
+    }
+
+    fun insertEmpResult(empList: List<CamRegisterDay>){
+
 
     }
 
