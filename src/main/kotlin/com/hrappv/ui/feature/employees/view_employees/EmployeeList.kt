@@ -109,8 +109,7 @@ fun ViewEmpScreen(viewModel: ViewEmpViewModel) {
         modifier = Modifier.fillMaxSize(),
         scaffoldState = scaffoldState
     ) {
-
-        Column(modifier = Modifier.padding(6.dp), horizontalAlignment = Alignment.CenterHorizontally) {
+        Surface {         Column(modifier = Modifier.padding(6.dp), horizontalAlignment = Alignment.CenterHorizontally) {
 
 
             Box(
@@ -127,10 +126,10 @@ fun ViewEmpScreen(viewModel: ViewEmpViewModel) {
 
                     Button(
                         onClick = {
-                                scope.launch(Dispatchers.IO) {
+                            scope.launch(Dispatchers.IO) {
 
-                                    viewModel.onAddEmployee()
-                                }
+                                viewModel.onAddEmployee()
+                            }
                         },
                         modifier = Modifier.padding(horizontal = 16.dp),
                         // Provide a custom shape for this button. In this example. we specify the button to have
@@ -160,7 +159,7 @@ fun ViewEmpScreen(viewModel: ViewEmpViewModel) {
                         viewModel.setEmpList(allEmployee)
                     } else {
                         val message =  if(viewModel.checkIfNoDepartment() > 0)  "No Employee is found "
-                                else  "No Employee is found \n" +
+                        else  "No Employee is found \n" +
                                 "insert Department first"
                         viewModel.setEmpError(
                             message
@@ -204,6 +203,8 @@ fun ViewEmpScreen(viewModel: ViewEmpViewModel) {
 
 //        ItemList(state = textState, viewEmployee)
         }
+        }
+
     }
 }
 
@@ -681,8 +682,8 @@ fun EmployeeGridLazyColumn(
                 Modifier
                     .animateItemPlacement(
                         animationSpec = tween(
-                            durationMillis = 500,
-                            easing = LinearOutSlowInEasing,
+                            durationMillis = 1000,
+//                            easing = LinearOutSlowInEasing,
                         )
                     )
                     .clickable {

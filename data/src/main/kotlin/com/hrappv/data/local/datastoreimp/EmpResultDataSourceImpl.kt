@@ -52,11 +52,12 @@ class EmpResultDataSourceImpl @Inject constructor(
         TODO("Not yet implemented")
     }
 
-     fun insertEmployeeResult(empResult: GetEmpResult) {
+     private fun insertEmployeeResult(empResult: GetEmpResult) {
             queries.insertEmployeeResult(
                 fname = empResult.empName,
                 department = empResult.department_name,
                 month = empResult.month,
+                year =empResult.year,
                 numberOfAttendDays = empResult.numberOfAttendDays,
                 daysToCheckNoted = empResult.daysToCheckNoted,
                 numberOfAbsentDays = empResult.numberOfAbsentDays,

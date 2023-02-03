@@ -5,9 +5,7 @@ import androidx.compose.foundation.Image
 import androidx.compose.foundation.border
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.shape.CircleShape
-import androidx.compose.material.Card
-import androidx.compose.material.MaterialTheme
-import androidx.compose.material.Text
+import androidx.compose.material.*
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Person
 import androidx.compose.material.icons.twotone.Favorite
@@ -22,9 +20,12 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 
 @Composable
- fun HomeContent(homeViewModel: HomeViewModel, modifier: Modifier = Modifier) {
+fun HomeContent(homeViewModel: HomeViewModel, modifier: Modifier = Modifier) {
+//    Surface(modifier = Modifier.fillMaxSize()) {
+//
+//    }
     Row(
-        modifier = modifier.padding(8.dp),
+        modifier = modifier.fillMaxSize().padding(8.dp),
         horizontalArrangement = Arrangement.Center
     ) {
         Spacer(modifier = Modifier.width(8.dp))
@@ -42,7 +43,6 @@ import androidx.compose.ui.unit.dp
         Spacer(modifier = Modifier.width(8.dp))
 
     }
-
 
 }
 

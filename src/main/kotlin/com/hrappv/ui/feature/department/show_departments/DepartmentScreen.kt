@@ -57,7 +57,6 @@ fun DepartmentScreen(viewModel: DepartmentViewModel) {
 
 
 
-    Surface(modifier = Modifier.fillMaxSize()) {
 
         Column(
 
@@ -157,7 +156,6 @@ fun DepartmentScreen(viewModel: DepartmentViewModel) {
             }
 
         }
-    }
 
 }
 

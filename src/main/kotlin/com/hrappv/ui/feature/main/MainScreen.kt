@@ -1,5 +1,6 @@
 package com.hrappv.ui.feature.main
 
+import androidx.compose.animation.Crossfade
 import androidx.compose.animation.animateContentSize
 import androidx.compose.desktop.ui.tooling.preview.Preview
 import androidx.compose.foundation.*
@@ -26,6 +27,11 @@ import com.hrappv.ui.value.R
 import kotlinx.coroutines.launch
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
+import androidx.compose.foundation.shape.RoundedCornerShape
+import androidx.compose.material.icons.outlined.ArrowBack
+import androidx.compose.material.icons.outlined.ArrowForward
+import androidx.compose.material.icons.outlined.KeyboardArrowRight
+import androidx.compose.ui.draw.shadow
 import androidx.compose.ui.text.font.FontWeight
 import com.hrappv.ui.components.AppMenuHeader
 import com.hrappv.ui.components.NavigationMenuItem
@@ -150,43 +156,59 @@ fun MainScreen2(
 ////        }
 //        drawerGesturesEnabled = false
 //    ) {
+    Surface {
+        Row(
+            modifier = modifier.fillMaxSize()
+        ) {
+            Card(
+                modifier.shadow(
+                    elevation = 20.dp,
+                    shape = RoundedCornerShape(topEnd = 50.dp, bottomEnd = 50.dp)
+                )
+                    .animateContentSize(),
+                shape = RoundedCornerShape(topEnd = 50.dp, bottomEnd = 50.dp), elevation = 10.dp,
 
-    Row(
-        modifier = Modifier.fillMaxSize()
-    ) {
-        NavMenu(
+                )
+            {
+                NavMenu(
 //                modifier = Modifier
 //                    .weight(0.15f),
-            isMenuPressed = isMenuPressed,
-            activeComponent = activeComponent,
-            onNavIconClick = {
-                coroutineScope.launch {
+                    isMenuPressed = isMenuPressed,
+                    activeComponent = activeComponent,
+                    onNavIconClick = {
+//                coroutineScope.launch {
 //                    scaffoldState.drawerState.open()
-                    isMenuPressed = !isMenuPressed
+                        isMenuPressed = !isMenuPressed
 
+
+//                }
+                    },
+                    onHomeClick = onHomeClick,
+                    onDepartmentClick = onDepartmentClick,
+//            onAddEmployeeClick = onAddEmployeeClick,
+                    onViewEmployeesClick = onViewEmployeesClick,
+                    onEmployeeResultClick = onEmployeeResultClick,
+                    onSettingsClick = onSettingsClick,
+                    onAboutClick = onAboutClick,
+                    onLogoutClick = onLogoutClick
+                )
+            }
+
+            Spacer(modifier = Modifier.width(6.dp))
+
+//            Box(
+////                modifier = Modifier.fillMaxHeight()
+////                    .weight(0.85f)
+//            ) {
+                Surface{
+
+                    content()
 
                 }
-            },
-            onHomeClick = onHomeClick,
-            onDepartmentClick = onDepartmentClick,
-//            onAddEmployeeClick = onAddEmployeeClick,
-            onViewEmployeesClick = onViewEmployeesClick,
-            onEmployeeResultClick = onEmployeeResultClick,
-            onSettingsClick = onSettingsClick,
-            onAboutClick = onAboutClick,
-            onLogoutClick = onLogoutClick
-        )
-
-        Box(
-//                modifier = Modifier.fillMaxHeight()
-//                    .weight(0.85f)
-        ) {
-            Surface {
-
-                content()
-            }
+//            }
         }
     }
+
 
 //    }
 
@@ -395,19 +417,25 @@ fun NavMenu(
 
     ) {
     NavigationRail(
-        modifier = modifier //.width(IntrinsicSize.Max)
+        modifier = modifier
+//            .shadow(
+//            elevation = 10.dp,
+//            shape = RoundedCornerShape(topEnd = 10.dp, bottomEnd = 10.dp)
+//        ) //.width(IntrinsicSize.Max)
 
-//            .border(shape = RectangleShape, border = BorderStroke(2.dp, MaterialTheme.colors.onPrimary)).padding(4.dp)
+//            .border(shape = RoundedCornerShape(topEnd = 10.dp, bottomEnd = 10.dp)//RectangleShape
+//               , border = BorderStroke(2.dp, MaterialTheme.colors.onPrimary)
+//            ).padding(4.dp)
 
             .fillMaxHeight()
 //            .padding(end = 6.dp)
             .animateContentSize(),
-        elevation = 10.dp,
+//        elevation = 10.dp,
         header = {
             Row(
                 modifier = modifier
 //                    .fillMaxWidth()
-                    .padding(4.dp),
+                    .padding(start = 6.dp,end = 6.dp, top = 10.dp),
                 verticalAlignment = Alignment.CenterVertically
 
             ) {
@@ -423,17 +451,42 @@ fun NavMenu(
                 } else {
                     Spacer(modifier = modifier.width(8.dp))
                 }
-
-                Icon(
-                    imageVector = Icons.Default.Menu,
-                    modifier = Modifier.size(25.dp).clickable {
-                        onNavIconClick()
-                    },
-                    contentDescription = null,
+                Crossfade(targetState = isMenuPressed) { isMenuPressed ->
+                    if (isMenuPressed) {
+                        Icon(
+                            imageVector = Icons.Outlined.ArrowBack,
+                            modifier = Modifier.size(25.dp).clickable {
+                                onNavIconClick()
+                            },
+                            contentDescription = null,
 //                colorFilter = ColorFilter.tint(MaterialTheme.colors.onPrimary)
-                    tint = MaterialTheme.colors.onPrimary
+                            tint = MaterialTheme.colors.onPrimary
 
-                )
+                        )
+                    } else {
+                        Icon(
+                            imageVector = Icons.Outlined.ArrowForward,
+                            modifier = Modifier.size(25.dp).clickable {
+                                onNavIconClick()
+                            },
+                            contentDescription = null,
+//                colorFilter = ColorFilter.tint(MaterialTheme.colors.onPrimary)
+                            tint = MaterialTheme.colors.onPrimary
+
+                        )
+                    }
+                }
+//                Icon(
+//                    imageVector = if(isMenuPressed) Icons.Outlined.ArrowForward else Icons.Outlined.ArrowBack,
+//                    modifier = Modifier.size(25.dp).clickable {
+//                        onNavIconClick()
+//                    },
+//                    contentDescription = null,
+////                colorFilter = ColorFilter.tint(MaterialTheme.colors.onPrimary)
+//                    tint = MaterialTheme.colors.onPrimary
+//
+//                )
+
                 Spacer(modifier = Modifier.width(8.dp))
 
 
@@ -497,7 +550,6 @@ fun NavMenu(
                     ,
                     onClick = { onDepartmentClick() }
                 )
-
 
 
 //                Spacer(modifier = modifier.height(8.dp))

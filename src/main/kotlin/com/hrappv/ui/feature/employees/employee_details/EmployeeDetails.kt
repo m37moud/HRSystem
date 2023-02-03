@@ -24,7 +24,7 @@ fun EmployeeDetails(viewModel: EmployeeDetailsViewModel, employee: GetAllEmploye
             }
         })
     }, content = {
-        Surface {
+        Surface(modifier = Modifier.fillMaxSize()) {
             Box {
                 Text("$employee")
             }

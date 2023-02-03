@@ -56,7 +56,8 @@ fun AddDepartmentScreen(viewModel: AddDepartmentViewModel) {
 
     Scaffold(
         modifier = Modifier.fillMaxSize(),
-        scaffoldState = scaffoldState, topBar = {
+        scaffoldState = scaffoldState,
+        topBar = {
             TopAppBar(
                 backgroundColor = MaterialTheme.colors.surface,
                 title = {

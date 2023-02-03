@@ -40,8 +40,11 @@ fun EmployeeResultScreen(
 
     val scaffoldState = rememberScaffoldState()
     Scaffold(
-        modifier = Modifier.fillMaxSize(),
-        scaffoldState = scaffoldState, topBar = {
+        modifier = Modifier.fillMaxSize()
+//            .background(MaterialTheme.colors.surface)
+        ,
+        scaffoldState = scaffoldState,
+        topBar = {
             TopAppBar(backgroundColor = MaterialTheme.colors.surface,
                 title = {
                     Text(text = "Register Attends")
@@ -52,51 +55,54 @@ fun EmployeeResultScreen(
                 }
             )
         }
-    ) {
-        Column(horizontalAlignment = Alignment.CenterHorizontally) {// pest padding dp is 8.dp and //modifier.verticalScroll(rememberScrollState())
+    )
+    {
+        Surface(modifier = Modifier.fillMaxSize()) {
+            Column(horizontalAlignment = Alignment.CenterHorizontally) {// pest padding dp is 8.dp and //modifier.verticalScroll(rememberScrollState())
 
 
-            Row(
-                modifier = Modifier
-                    .fillMaxWidth()
-                    .padding(
-                        horizontal = 16.dp,
-                        vertical = 16.dp
-                    ), // this can change for contentPadding = PaddingValues(horizontal = 16.dp)
-                verticalAlignment = Alignment.CenterVertically, // this modifier for column
-                horizontalArrangement = Arrangement.Center      // this can change for Arrangement.spacedBy()
+                Row(
+                    modifier = Modifier
+                        .fillMaxWidth()
+                        .padding(
+                            horizontal = 16.dp,
+                            vertical = 16.dp
+                        ), // this can change for contentPadding = PaddingValues(horizontal = 16.dp)
+                    verticalAlignment = Alignment.CenterVertically, // this modifier for column
+                    horizontalArrangement = Arrangement.Center      // this can change for Arrangement.spacedBy()
 
-            ) {
+                ) {
 
-                OutlinedTextField(
-                    value = path,
-                    onValueChange = { path = it },
-                    modifier = Modifier.padding(end = 16.dp).weight(1f),
-                    placeholder = { Text("put url excel folder") },
-                    label = { Text(text = "paste here ...") },
-                    leadingIcon = { Icon(Icons.Filled.Refresh, "search location") }
+                    OutlinedTextField(
+                        value = path,
+                        onValueChange = { path = it },
+                        modifier = Modifier.padding(end = 16.dp).weight(1f),
+                        placeholder = { Text("put url excel folder") },
+                        label = { Text(text = "paste here ...") },
+                        leadingIcon = { Icon(Icons.Filled.Refresh, "search location") }
 
-                )
+                    )
 
-                Button(onClick = {
+                    Button(onClick = {
 //                    importState = LCE.LOADING
 
-                    scope.launch(Dispatchers.IO) {
-                        viewModel.getEmployeeResults(path)
+                        scope.launch(Dispatchers.IO) {
+                            viewModel.getEmployeeResults(path)
 //                        scaffoldState.snackbarHostState.showSnackbar("Button Clicked ")
 //                        importState = repository.getEmployReport(path)
+                        }
+                    }) {
+                        Icon(Icons.Outlined.Search, "Search")
                     }
-                }) {
-                    Icon(Icons.Outlined.Search, "Search")
                 }
-            }
 
 
-            when (val state = importState.value) {
-                is LCE.LOADING -> LoadingUI()
-                is LCE.CONTENT -> ContentUI(state.data)
-                is LCE.ERROR -> ErrorUI(state.error)
-                else -> {}
+                when (val state = importState.value) {
+                    is LCE.LOADING -> LoadingUI()
+                    is LCE.CONTENT -> ContentUI(state.data)
+                    is LCE.ERROR -> ErrorUI(state.error)
+                    else -> {}
+                }
             }
         }
     }
