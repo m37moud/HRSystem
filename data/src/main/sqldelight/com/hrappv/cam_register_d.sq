@@ -13,13 +13,13 @@ CREATE TABLE IF NOT EXISTS cam_register_d (
 
 getAllCamRegisterDay:
 SELECT employe.fname AS empName, Department.department AS department_name,
-day_register.oDATE,day_register.day,day_register.status,day_register.in_time,
-day_register.out_time,day_register.late,day_register.early
-FROM day_register
-JOIN employe ON day_register.emp_id = employe.emp_id
-JOIN Department ON day_register.depart_id = Department.depart_id
+cam_register_d.oDATE,cam_register_d.day,cam_register_d.time,cam_register_d.hour,cam_register_d.status,
+cam_register_d.shift
+FROM cam_register_d
+JOIN employe ON cam_register_d.emp_id = employe.emp_id
+JOIN Department ON cam_register_d.depart_id = Department.depart_id
 -- WHERE day_register.emp_id = ?
-ORDER BY day_register.emp_id ASC ;
+ORDER BY cam_register_d.emp_id ASC ;
 
 insertRegisterCam:
 INSERT INTO cam_register_d

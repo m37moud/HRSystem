@@ -2,7 +2,11 @@ package com.hrappv.data.models
 
 
 data class DayDetails(
+    var name: String = "",
+    val department: String = "",
     var day: String = "",
+    val month: String = "",
+    val year: String = "",
     var wardia: String = "",
     var typeOfDay: String = "",
     var partTime: Double = 0.0,
@@ -11,7 +15,11 @@ data class DayDetails(
     var notes: String = ""
 ){
     fun getMembersDayDetails() = listOf(
+        name,
+        department,
         day,
+        month,
+        year,
         wardia,
         typeOfDay,
         partTime,

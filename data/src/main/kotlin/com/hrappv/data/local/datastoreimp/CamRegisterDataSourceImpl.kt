@@ -24,6 +24,12 @@ class CamRegisterDataSourceImpl @Inject constructor(
         return queries.getAllCamRegisterDay().asFlow().mapToList()
     }
 
+    override fun getAllCameraRegister(): List<CamRegisterDay> {
+        return queries.getAllCamRegisterDay(mapper = {empName, department_name, oDATE, day, time, hour, status, shift ->
+            CamRegisterDay(empName=empName,departName=department_name,oDATE=oDATE,day=day,time=time,hour=hour,status=status, shift = shift)
+        }).executeAsList()
+    }
+
     override  fun insertCamRegisterDay(camRegister: CamRegisterDay): String {
         var result = ""
 //        withContext(dispatcher) {

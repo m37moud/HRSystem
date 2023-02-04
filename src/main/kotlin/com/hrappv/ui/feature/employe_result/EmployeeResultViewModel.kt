@@ -29,12 +29,12 @@ class EmployeeResultViewModel @Inject constructor(
     private val _empResults: MutableStateFlow<LCE<List<EmployeeResult>>> = MutableStateFlow(LCE.NOACTION)
     val empResults: StateFlow<LCE<List<EmployeeResult>>> = _empResults
 
- var insert by mutableStateOf(false)
-    private set
- var message by mutableStateOf("")
-    private set
- var result by mutableStateOf("")
-    private set
+    var insert by mutableStateOf(false)
+        private set
+    var message by mutableStateOf("")
+        private set
+    var result by mutableStateOf("")
+        private set
 
 
     private val _isBackPressed = MutableStateFlow(false)
@@ -51,27 +51,31 @@ class EmployeeResultViewModel @Inject constructor(
 
 
     /* TODO insert all exel in database */
-     fun registerDayByCam(folderPath: String? = null , pList: List<String>? = null) {
-    val camRegisterDay = myRepo.importer.getAllEmployeeInfo(folderPath,pList)
-        if (camRegisterDay.isNotEmpty()){
+    fun registerDayByCam(folderPath: String? = null, pList: List<String>? = null) {
+        val camRegisterDay = myRepo.importer.getAllEmployeeInfo(folderPath, pList)
+        launchOnMain {
+            myRepo.importer.getEmployReport(camRegisterDay)
+        }
+        if (camRegisterDay.isNotEmpty()) {
             message = "import successful do you want to insert it ?"
-            if(insert){
-               result =  myRepo.camRegister.insertMultiCamRegDay(camRegisterDay)
+            if (insert) {
+                result = myRepo.camRegister.insertMultiCamRegDay(camRegisterDay)
             }
         }
 
-        _employee.value = myRepo.importer.getAllEmployeeInfo(folderPath,pList)
+//        _employee.value = myRepo.importer.getAllEmployeeInfo(folderPath,pList)
 
     }
 
-    fun insertEmpResult(empList: List<CamRegisterDay>){
+    fun insertEmpResult(empList: List<CamRegisterDay>) {
 
 
     }
 
-    fun insert(){
+    fun insert() {
         insert = true
     }
+
     fun onBackPress() {
         _isBackPressed.value = true
     }

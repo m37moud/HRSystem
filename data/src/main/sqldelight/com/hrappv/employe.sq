@@ -59,6 +59,9 @@ DELETE FROM employe
 WHERE emp_id = :id;
 
 
+checkIfnoDepart:
+SELECT count(1) WHERE EXISTS (SELECT * FROM Department);
+-- SELECT CASE WHEN EXISTS(SELECT 1 FROM Department) THEN 0 ELSE 1 END AS IsEmpty;
 --
 --  selectAllLaunchesInfo:
 --  SELECT Launch.*, Rocket.*

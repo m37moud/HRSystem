@@ -22,4 +22,9 @@ interface ViewEmpDataSource {
     suspend fun insertMultiEmployee(employees: List<Employees>): Boolean
 
 
+    fun checkIfNoDepart() : Long
+
+
+
+
 }

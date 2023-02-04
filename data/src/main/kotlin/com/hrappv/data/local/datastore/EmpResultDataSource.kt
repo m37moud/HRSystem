@@ -1,20 +1,31 @@
 package com.hrappv.data.local.datastore
 
 import com.hrappv.GetEmpResult
+import com.hrappv.data.models.DayDetails
 import com.hrappv.data.models.EmployeeResult
 import kotlinx.coroutines.flow.Flow
 
 
 interface EmpResultDataSource {
 
-    fun getAllEmpResults() : Flow<List<GetEmpResult>>
+    fun getAllEmpResults(): Flow<List<GetEmpResult>>
+    fun getAllEmployeeResults(): List<GetEmpResult>
 
-    suspend fun insertEmpResult(empResult: GetEmpResult)
+    suspend fun insertEmpResult(empResult: EmployeeResult)
 
-    suspend fun insertMultiEmpResult(empResultList: List<GetEmpResult>)
+    fun insertMultiEmpResult(empResultList: List<EmployeeResult>)
 
-    fun checkEmpResult(emp : String , month : String) : GetEmpResult?
+    fun checkEmpResult(emp: String, month: String): GetEmpResult?
 
+    /**
+     * Day Details
+     */
+    fun getAllDayDetails(): Flow<List<DayDetails>>
+    fun getAllEmpDayDetails(): List<DayDetails>
+    suspend fun insertEmpDayDetails(dayDetail: DayDetails)
+
+    fun insertMultiEmpDayDetails(dayDetail: List<DayDetails>)
+    fun checkEmpDayDetail(emp: String,day: String, month: String, year: String): DayDetails?
 
 
 }

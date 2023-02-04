@@ -4,7 +4,9 @@ import com.github.theapache64.expekt.should
 import com.hrappv.test.MainCoroutineRule
 import com.hrappv.test.MyDaggerMockRule
 import com.hrappv.ui.feature.department.show_departments.DepartmentViewModel
+import com.hrappv.ui.feature.employe_result.EmployeeResultViewModel
 import com.nhaarman.mockitokotlin2.mock
+import excel.ImportExcelFile
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.launch
 import org.junit.Rule
@@ -32,6 +34,11 @@ class SplashViewModelTest {
             init(coroutineRule)
         }
     }
+    private val employeeResultViewModel by lazy {
+        EmployeeResultViewModel(mock()).apply {
+            init(coroutineRule)
+        }
+    }
 
 //
 //    private val addEmployeViewModel by lazy {
@@ -49,6 +56,10 @@ class SplashViewModelTest {
 
     @Test
     fun `insert`() {
+//        val import = ImportExcelFile()
+//        val result = import.getAllEmployeeInfo(path = "F:\\8")
+//        import.getEmployReport(result)
+//        employeeResultViewModel.registerDayByCam(folderPath = "F:\\8")
 ////        val departmentList =  Constatnts.excelImporterDepartment("F:\\8").distinct()
 ////        d.insertDepart(
 ////            depart

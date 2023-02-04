@@ -151,7 +151,7 @@ class ViewEmpViewModel @Inject constructor(
         _isAddEmployeePressed.value = true
     }
 
-    fun checkIfNoDepartment() = myRepo.department.checkIfNoDepart()
+    fun checkIfNoDepartment() = myRepo.viewEmployees.checkIfNoDepart()
 
 
     fun onBackPress() {

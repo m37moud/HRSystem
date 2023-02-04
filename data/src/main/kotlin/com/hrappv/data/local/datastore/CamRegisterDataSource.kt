@@ -9,6 +9,7 @@ interface CamRegisterDataSource {
 
 
     fun getAllCamRegister(): Flow<List<GetAllCamRegisterDay>>
+    fun getAllCameraRegister(): List<CamRegisterDay>
 
     fun insertCamRegisterDay(camRegister: CamRegisterDay): String
 

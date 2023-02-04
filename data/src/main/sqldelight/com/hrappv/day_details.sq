@@ -1,27 +1,27 @@
-CREATE TABLE IF NOT EXISTS day_details (
-     emp_id	INTEGER REFERENCES employe (emp_id) ON DELETE RESTRICT ON UPDATE CASCADE,
-	 depart_id	INTEGER REFERENCES Department (depart_id) ON DELETE RESTRICT ON UPDATE CASCADE,
-     day TEXT ,
-     wardia TEXT,
-     typeOfDay TEXT,
-     partTime REAL AS Double,
-     earlyAccess TEXT,
-     earlyAccessNote TEXT,
-     notes TEXT
-);
-
-
-getAllDayDetails:
-SELECT employe.fname AS empName, Department.department AS department_name
-,day,wardia,typeOfDay,partTime,earlyAccess,earlyAccessNote , notes
-FROM day_details
-JOIN employe ON day_details.emp_id = employe.emp_id
-JOIN Department ON day_details.depart_id = Department.depart_id
--- WHERE day_register.emp_id = ?
-ORDER BY day_details.emp_id ASC ;
-
-
-
-insertEmpDayDetails:
-INSERT INTO day_details
-VALUES ((SELECT emp_id FROM employe WHERE fname = ?), (SELECT depart_id FROM Department WHERE department = ?) , ?,?,?,?,?,?,?) ;
+-- CREATE TABLE IF NOT EXISTS day_details (
+--      emp_id	INTEGER REFERENCES employe (emp_id) ON DELETE RESTRICT ON UPDATE CASCADE,
+-- 	 depart_id	INTEGER REFERENCES Department (depart_id) ON DELETE RESTRICT ON UPDATE CASCADE,
+--      day TEXT ,
+--      wardia TEXT,
+--      typeOfDay TEXT,
+--      partTime REAL AS Double,
+--      earlyAccess TEXT,
+--      earlyAccessNote TEXT,
+--      notes TEXT
+-- );
+--
+--
+-- getAllDayDetails:
+-- SELECT employe.fname AS empName, Department.department AS department_name
+-- ,day,wardia,typeOfDay,partTime,earlyAccess,earlyAccessNote , notes
+-- FROM day_details
+-- JOIN employe ON day_details.emp_id = employe.emp_id
+-- JOIN Department ON day_details.depart_id = Department.depart_id
+-- -- WHERE day_register.emp_id = ?
+-- ORDER BY day_details.emp_id ASC ;
+--
+--
+--
+-- insertEmpDayDetails:
+-- INSERT INTO day_details
+-- VALUES ((SELECT emp_id FROM employe WHERE fname = ?), (SELECT depart_id FROM Department WHERE department = ?) , ?,?,?,?,?,?,?) ;

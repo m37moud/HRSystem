@@ -52,9 +52,6 @@ class DepartmentDataSourceImpl @Inject constructor(
         }).asFlow().mapToList()
     }
 
-    override fun checkIfNoDepart(): Long {
-        return queries.checkIfnoDepart().executeAsOne()
-    }
 
     override suspend fun checkDepartment(id: Long) {
         val department = queries.selectDepartmentById(id)

@@ -178,4 +178,8 @@ class ViewEmpDataSourceImpl @Inject constructor(
         }
 
     }
+    override fun checkIfNoDepart(): Long {
+        return queries.checkIfnoDepart().executeAsOne()
+    }
+
 }

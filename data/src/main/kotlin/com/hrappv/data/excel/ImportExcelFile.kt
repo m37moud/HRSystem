@@ -85,7 +85,7 @@ class ImportExcelFile
 
     }
 
-    suspend fun getEmployReport(empList: List<CamRegisterDay>): LCE<List<EmployeeResult>> {
+     fun getEmployReport(empList: List<CamRegisterDay>): List<EmployeeResult> {
 
         return try {
 
@@ -111,19 +111,20 @@ class ImportExcelFile
                 if (employeeResultList.isNotEmpty()) {
                     println("extracted employee result successful")
 //                    empList.clear()
-                    LCE.CONTENT(employeeResultList)
+//                    LCE.CONTENT(employeeResultList)
+                    employeeResultList
 
                 } else {
                     println("No Employee Details Found")
-                    LCE.ERROR("No Employee Details Found")
-
+//                    LCE.ERROR("No Employee Details Found")
+emptyList()
                 }
 
 
             } else {
                 println("No Results Details Found")
-                LCE.ERROR("No Results Details Found")
-
+//                LCE.ERROR("No Results Details Found")
+                emptyList()
             }
 
 //
@@ -138,7 +139,8 @@ class ImportExcelFile
 
         } catch (e: Exception) {
             e.printStackTrace()
-            LCE.ERROR(e.message.toString())
+//            LCE.ERROR(e.message.toString())
+            emptyList()
         }
     }
 
@@ -268,7 +270,7 @@ class ImportExcelFile
         if (l.isNotEmpty()) {
             val ll = l.filter {
 
-                val date = LocalDate.parse(it.day)
+                val date = LocalDate.parse(it.oDATE)
                 date in startDate..endDate
             }
             return if (ll.isNotEmpty()) {
@@ -402,7 +404,7 @@ class ImportExcelFile
     private fun getDayDetails(employee: CamRegisterDay): String {
         var wardia = ""
 
-        val date = LocalDateTime.parse("${employee.day} ${employee.time}", pattern)
+        val date = LocalDateTime.parse("${employee.oDATE} ${employee.time}", pattern)
 
         val state = employee.status
 
@@ -477,7 +479,7 @@ class ImportExcelFile
     }
 
     //    fun doSomeWork(list: List<Employee>){
-    private suspend fun doSomeWork(list: List<CamRegisterDay>): List<EmployeeResult> {
+    private  fun doSomeWork(list: List<CamRegisterDay>): List<EmployeeResult> {
         val employeeResultList = mutableListOf<EmployeeResult>()
 
         val empNameList =
@@ -532,8 +534,8 @@ class ImportExcelFile
         while (i < empList.size) {
             if (empList[i].status == "Check-in") {
                 if (i + 1 < empList.size) {
-                    val dayIn = LocalDateTime.parse("${empList[i].day} ${empList[i].time}", pattern)
-                    val dayOut = LocalDateTime.parse("${empList[i + 1].day} ${empList[i + 1].time}", pattern)
+                    val dayIn = LocalDateTime.parse("${empList[i].oDATE} ${empList[i].time}", pattern)
+                    val dayOut = LocalDateTime.parse("${empList[i + 1].oDATE} ${empList[i + 1].time}", pattern)
                     val timeWork = ChronoUnit.MINUTES.between(dayIn, dayOut) / 60
 
 //                    println("timeWork = $timeWork")
@@ -573,7 +575,11 @@ class ImportExcelFile
 
                         val dayDetails =
                             DayDetails(
+                                empList[i].empName ?: "",
+                                empList[i].departName?: "",
                                 dayIn.dayOfMonth.toString(),
+                                month,
+                                year,
                                 wardia,
                                 dayType,
                                 pTime,
@@ -594,18 +600,23 @@ class ImportExcelFile
 
                     } else {
 
-                        if (LocalDate.parse(empList[i].day).dayOfMonth == LocalDate.parse(empList[i + 1].day).dayOfMonth && LocalTime.parse(
+                        if (LocalDate.parse(empList[i].oDATE).dayOfMonth == LocalDate.parse(empList[i + 1].oDATE).dayOfMonth && LocalTime.parse(
                                 empList[i].time
                             ).hour == LocalTime.parse(empList[i + 1].time).hour
                         ) {
                             empList.removeAt(i + 1)
                         } else {
-                            val dayIn = LocalDateTime.parse("${empList[i].day} ${empList[i].time}", pattern)
+                            val dayIn = LocalDateTime.parse("${empList[i].oDATE} ${empList[i].time}", pattern)
                             val note = "ناقص خروج"
                             daysToCheckNoted += dayIn.dayOfMonth.toString() + " , "
                             val dayDetails =
                                 DayDetails(
+                                    empList[i].empName ?: "",
+                                    empList[i].departName?: "",
                                     dayIn.dayOfMonth.toString(),
+
+                                    month,
+                                    year,
                                     getDayDetails(empList[i + 1]),
                                     dayType,
                                     pTime,
@@ -626,12 +637,18 @@ class ImportExcelFile
 
                     }
                 } else if (i + 1 == empList.size) {
-                    val dayIn = LocalDateTime.parse("${empList[i].day} ${empList[i].time}", pattern)
+                    val dayIn = LocalDateTime.parse("${empList[i].oDATE} ${empList[i].time}", pattern)
                     val note = "ناقص دخول"
                     daysToCheckNoted += dayIn.dayOfMonth.toString() + " , "
 
                     val dayDetails =
-                        DayDetails(dayIn.dayOfMonth.toString(), getDayDetails(empList[i]), dayType, pTime, note)
+                        DayDetails(empList[i].empName ?: "",
+                            empList[i].departName?: "",
+                            dayIn.dayOfMonth.toString(),
+                            month,
+                            year,
+                            getDayDetails(empList[i]),
+                            dayType, pTime, note)
 
 //                    println(dayDetails)
                     attendDays.add(dayDetails)
@@ -656,7 +673,7 @@ class ImportExcelFile
                     if (intWardia == 3) { // if wardia 3 delete
                         empList.removeAt(i)
                     } else {
-                        val dayOut = LocalDateTime.parse("${empList[i].day} ${empList[i].time}", pattern)
+                        val dayOut = LocalDateTime.parse("${empList[i].oDATE} ${empList[i].time}", pattern)
                         val note = "ناقص دخول"
                         daysToCheckNoted += dayOut.dayOfMonth.toString() + " , "
                         if (temp != dayOut.dayOfMonth) {
@@ -690,7 +707,12 @@ class ImportExcelFile
 
                         val dayDetails =
                             DayDetails(
+                                empList[i].empName ?: "",
+                                empList[i].departName?: "",
                                 dayOut.dayOfMonth.toString(),
+
+                                month,
+                                year,
                                 wardia,
                                 dayType,
                                 pTime,
@@ -721,12 +743,12 @@ class ImportExcelFile
                         i++
 
                     } else {
-                        if (LocalDate.parse(empList[i].day).dayOfMonth == LocalDate.parse(empList[i + 1].day).dayOfMonth
+                        if (LocalDate.parse(empList[i].oDATE).dayOfMonth == LocalDate.parse(empList[i + 1].oDATE).dayOfMonth
                             && LocalTime.parse(empList[i].time).hour == LocalTime.parse(empList[i + 1].time).hour
                         ) {
                             empList.removeAt(i)
                         } else {
-                            val dayOut = LocalDateTime.parse("${empList[i + 1].day} ${empList[i + 1].time}", pattern)
+                            val dayOut = LocalDateTime.parse("${empList[i + 1].oDATE} ${empList[i + 1].time}", pattern)
                             val note = "ناقص دخول"
                             daysToCheckNoted += dayOut.dayOfMonth.toString() + " , "
 
@@ -761,7 +783,12 @@ class ImportExcelFile
 
                             val dayDetails =
                                 DayDetails(
+                                    empList[i+1].empName ?: "",
+                                    empList[i+1].departName?: "",
                                     dayOut.dayOfMonth.toString(),
+
+                                    month,
+                                    year,
                                     wardia,
                                     dayType,
                                     pTime,
@@ -783,16 +810,25 @@ class ImportExcelFile
                             i++
                         }
                     }
-                } else if (i + 1 == empList.size && LocalDate.parse(empList[i].day).dayOfMonth != LocalDate.parse(
-                        empList[i].day
+                } else if (i + 1 == empList.size && LocalDate.parse(empList[i].oDATE).dayOfMonth != LocalDate.parse(
+                        empList[i].oDATE
                     ).dayOfMonth
                 ) {
-                    val dayIn = LocalDateTime.parse("${empList[i].day} ${empList[i].time}", pattern)
+                    val dayIn = LocalDateTime.parse("${empList[i].oDATE} ${empList[i].time}", pattern)
                     val note = "ناقص خروج"
                     daysToCheckNoted += dayIn.dayOfMonth.toString() + " , "
 
                     val dayDetails =
-                        DayDetails(dayIn.dayOfMonth.toString(), getDayDetails(empList[i]), dayType, pTime, note)
+                        DayDetails(empList[i].empName ?: "",
+                            empList[i].departName?: "",
+                            dayIn.dayOfMonth.toString(),
+
+                            month,
+                            year,
+                            getDayDetails(empList[i]),
+                            dayType,
+                            pTime,
+                            note)
 
 //                    println(dayDetails)
                     attendDays.add(dayDetails)
@@ -851,6 +887,7 @@ class ImportExcelFile
             list[0].empName!!,
             list[0].departName!!,
             month,
+            year,
             numberOfAttendantDays,
             daysToCheckNoted,
             numberOfAbsentDays,

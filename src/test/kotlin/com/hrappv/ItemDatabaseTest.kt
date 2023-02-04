@@ -2,6 +2,7 @@ import com.hrappv.HrAppDb
 import com.hrappv.data.local.datastoreimp.CamRegisterDataSourceImpl
 import com.hrappv.data.local.datastoreimp.DayRegisterDataSourceImpl
 import com.hrappv.data.local.datastoreimp.DepartmentDataSourceImpl
+import com.hrappv.data.local.datastoreimp.EmpResultDataSourceImpl
 import com.hrappv.data.models.CamRegisterDay
 import com.hrappv.data.models.Department
 import com.hrappv.data.models.RegisterAttends
@@ -40,16 +41,31 @@ class ItemDatabaseTest {
     private val queries = HrAppDb(inMemorySqlDriver).departmentQueries
     private val empQueries = HrAppDb(inMemorySqlDriver).employeQueries
     private val registerQueries = HrAppDb(inMemorySqlDriver).day_registerQueries
-val importer = ImportExcelFile()
+    val camDayDataSource = CamRegisterDataSourceImpl(HrAppDb(inMemorySqlDriver), mock())
+    val empResultDataSource = EmpResultDataSourceImpl(HrAppDb(inMemorySqlDriver), mock())
+    val importer = ImportExcelFile()
+
+    @Test
+    fun empResult() {
+
+        val cam = camDayDataSource.getAllCameraRegister()
+
+        val listCam = importer.getEmployReport(cam)
+
+//        val list =empResultDataSource.getAllEmployeeResults()
+        if (listCam.isNotEmpty()) {
+            println("list" + listCam[0].toString())
+            empResultDataSource.insertMultiEmpResult(listCam)
+        }
+    }
 
     @Test
     fun camRegTest() { //successful
 
-
-        val camDaysList = importer.getAllEmployeeInfo(path = "D:\\desk\\شغل لعهد\\tutorial audting\\2022\\شهراغسطس8\\8\\8")
+        val camDaysList = importer.getAllEmployeeInfo(path = "F:\\8")
 //       println(camDaysList.joinToString("\n"))
-        val camDayDataSource = CamRegisterDataSourceImpl(HrAppDb(inMemorySqlDriver), mock())
         camDayDataSource.insertMultiCamRegDay(camDaysList)
+
 
 //        CamRegisterDay(
 //            empName = "Mohamed Elsaye Elsayed",
