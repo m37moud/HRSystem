@@ -11,6 +11,7 @@ import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.*
 import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.filled.Close
 import androidx.compose.material.icons.filled.Refresh
 import androidx.compose.material.icons.outlined.AddCircle
 import androidx.compose.material.icons.outlined.ArrowBack
@@ -234,6 +235,25 @@ fun AddEmployeeScreen(
                                             "search location"
                                         )
                                     },
+                                    trailingIcon = {
+                                        if (path != "") {
+                                            IconButton(
+                                                onClick = {
+//                                                    onCloseSearch()
+
+                                                    path = "" // Remove text from TextField when you press the 'X' icon
+                                                }
+                                            ) {
+                                                Icon(
+                                                    Icons.Default.Close,
+                                                    contentDescription = "",
+                                                    modifier = Modifier
+                                                        .padding(15.dp)
+                                                        .size(24.dp)
+                                                )
+                                            }
+                                        }
+                                    },
                                     shape = RoundedCornerShape(16.dp),
 
                                     )
@@ -244,6 +264,9 @@ fun AddEmployeeScreen(
 
                     Spacer(modifier = Modifier.height(8.dp))
 
+                    /**
+                     * insert employee
+                     */
                     Column(
                         //  modifier = Modifier.fillMaxSize(),
                         modifier = Modifier.verticalScroll(state = rememberScrollState(0), enabled = true),

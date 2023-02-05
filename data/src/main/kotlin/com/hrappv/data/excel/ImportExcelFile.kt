@@ -37,14 +37,14 @@ class ImportExcelFile
      * Reads the value from the cell at the first row and first column of worksheet.
      */
 
-    fun getAllEmployeeInfo(path: String? = null, list: List<String>? = null): List<CamRegisterDay> {
-        val pathList = getPath(path, list)
+    suspend fun getAllEmployeeInfo(list: List<String>): List<CamRegisterDay> {
+//        val pathList = getPath(path, list)
         val empList = mutableListOf<CamRegisterDay>()
 
 
-        if (pathList.isNotEmpty()) {
+        if (list.isNotEmpty()) {
 
-            pathList.forEach { pathFile ->
+            list.forEach { pathFile ->
                 val tempList = readFromExcelFile(pathFile)
                 empList.addAll(tempList)
 //        empList += importer.readFromExcelFile(path)
@@ -57,7 +57,7 @@ class ImportExcelFile
         return empList
     }
 
-    private fun getPath(path: String? = null, pList: List<String>? = null): List<String> {
+    suspend fun getPath(path: String? = null, pList: List<String>? = null): List<String> {
         val pathList = if (pList == null) mutableListOf<String>() else return pList
         try {
             path.let { isPath ->
@@ -85,7 +85,7 @@ class ImportExcelFile
 
     }
 
-     fun getEmployReport(empList: List<CamRegisterDay>): List<EmployeeResult> {
+    suspend fun getEmployReport(empList: List<CamRegisterDay>): List<EmployeeResult> {
 
         return try {
 
@@ -117,7 +117,7 @@ class ImportExcelFile
                 } else {
                     println("No Employee Details Found")
 //                    LCE.ERROR("No Employee Details Found")
-emptyList()
+                    emptyList()
                 }
 
 
@@ -146,7 +146,7 @@ emptyList()
 
 
     @Throws
-    fun readFromExcelFile(filePath: String): List<CamRegisterDay> {
+   suspend fun readFromExcelFile(filePath: String): List<CamRegisterDay> {
         val empList = mutableListOf<CamRegisterDay>()
         try {
             val inputStream = FileInputStream(filePath)
@@ -261,7 +261,7 @@ emptyList()
         return empList
     }
 
-    private fun getEmpReport(list: List<CamRegisterDay>, empName: String = ""): EmployeeResult? {
+    private suspend fun getEmpReport(list: List<CamRegisterDay>, empName: String = ""): EmployeeResult? {
 
 
         val l = list.filter {
@@ -293,7 +293,7 @@ emptyList()
         return null
     }
 
-    fun getEmpReportById(list: List<CamRegisterDay>, id: String = "", empName: String = ""): EmployeeResult? {
+   suspend fun getEmpReportById(list: List<CamRegisterDay>, id: String = "", empName: String = ""): EmployeeResult? {
 
 
         val l = list.filter {
@@ -479,7 +479,7 @@ emptyList()
     }
 
     //    fun doSomeWork(list: List<Employee>){
-    private  fun doSomeWork(list: List<CamRegisterDay>): List<EmployeeResult> {
+    private suspend fun doSomeWork(list: List<CamRegisterDay>): List<EmployeeResult> {
         val employeeResultList = mutableListOf<EmployeeResult>()
 
         val empNameList =
@@ -506,7 +506,7 @@ emptyList()
     }
 
 
-    private fun getAbsentDays(list: List<CamRegisterDay>): EmployeeResult {
+    private suspend fun getAbsentDays(list: List<CamRegisterDay>): EmployeeResult {
         var empList = list.toMutableList()
         var numberOfAttendantDays = 0
         var attendDays = mutableListOf<DayDetails>()
@@ -576,7 +576,7 @@ emptyList()
                         val dayDetails =
                             DayDetails(
                                 empList[i].empName ?: "",
-                                empList[i].departName?: "",
+                                empList[i].departName ?: "",
                                 dayIn.dayOfMonth.toString(),
                                 month,
                                 year,
@@ -612,7 +612,7 @@ emptyList()
                             val dayDetails =
                                 DayDetails(
                                     empList[i].empName ?: "",
-                                    empList[i].departName?: "",
+                                    empList[i].departName ?: "",
                                     dayIn.dayOfMonth.toString(),
 
                                     month,
@@ -642,13 +642,15 @@ emptyList()
                     daysToCheckNoted += dayIn.dayOfMonth.toString() + " , "
 
                     val dayDetails =
-                        DayDetails(empList[i].empName ?: "",
-                            empList[i].departName?: "",
+                        DayDetails(
+                            empList[i].empName ?: "",
+                            empList[i].departName ?: "",
                             dayIn.dayOfMonth.toString(),
                             month,
                             year,
                             getDayDetails(empList[i]),
-                            dayType, pTime, note)
+                            dayType, pTime, note
+                        )
 
 //                    println(dayDetails)
                     attendDays.add(dayDetails)
@@ -708,7 +710,7 @@ emptyList()
                         val dayDetails =
                             DayDetails(
                                 empList[i].empName ?: "",
-                                empList[i].departName?: "",
+                                empList[i].departName ?: "",
                                 dayOut.dayOfMonth.toString(),
 
                                 month,
@@ -783,8 +785,8 @@ emptyList()
 
                             val dayDetails =
                                 DayDetails(
-                                    empList[i+1].empName ?: "",
-                                    empList[i+1].departName?: "",
+                                    empList[i + 1].empName ?: "",
+                                    empList[i + 1].departName ?: "",
                                     dayOut.dayOfMonth.toString(),
 
                                     month,
@@ -819,8 +821,9 @@ emptyList()
                     daysToCheckNoted += dayIn.dayOfMonth.toString() + " , "
 
                     val dayDetails =
-                        DayDetails(empList[i].empName ?: "",
-                            empList[i].departName?: "",
+                        DayDetails(
+                            empList[i].empName ?: "",
+                            empList[i].departName ?: "",
                             dayIn.dayOfMonth.toString(),
 
                             month,
@@ -828,7 +831,8 @@ emptyList()
                             getDayDetails(empList[i]),
                             dayType,
                             pTime,
-                            note)
+                            note
+                        )
 
 //                    println(dayDetails)
                     attendDays.add(dayDetails)

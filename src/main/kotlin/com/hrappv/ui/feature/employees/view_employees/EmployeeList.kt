@@ -78,10 +78,6 @@ fun ViewEmpScreen(viewModel: ViewEmpViewModel) {
     deletedEmpName.value = deleteEmployee.value.fname
 
 
-    var selectedGrid by remember { mutableStateOf(true) }
-    var selectedMenu by remember { mutableStateOf(false) }
-
-
     val deleteEmpState = viewModel.delete.collectAsState()
     if (deleteEmpState.value) {
         scope.launch { scaffoldState.snackbarHostState.showSnackbar("Employee ${deletedEmpName.value} deleted Sucssessful") }
@@ -109,7 +105,8 @@ fun ViewEmpScreen(viewModel: ViewEmpViewModel) {
         modifier = Modifier.fillMaxSize(),
         scaffoldState = scaffoldState
     ) {
-        Surface {         Column(modifier = Modifier.padding(6.dp), horizontalAlignment = Alignment.CenterHorizontally) {
+        Surface {
+            Column(modifier = Modifier.padding(6.dp), horizontalAlignment = Alignment.CenterHorizontally) {
 
 
             Box(

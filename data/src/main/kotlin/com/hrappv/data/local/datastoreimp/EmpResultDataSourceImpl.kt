@@ -45,8 +45,10 @@ class EmpResultDataSourceImpl @Inject constructor(
         }
     }
 
-    override fun insertMultiEmpResult(empResultList: List<EmployeeResult>) {
-//        withContext(dispatcher){
+    override suspend fun insertMultiEmpResult(empResultList: List<EmployeeResult>) : String {
+        var multiResult = ""
+
+        withContext(dispatcher){
         queries.transaction {
             empResultList.forEach { empResult ->
                 val result =
@@ -62,8 +64,11 @@ class EmpResultDataSourceImpl @Inject constructor(
                 }
 
             }
-//            }
+            afterCommit { multiResult = "All Days are Register" }
+            afterRollback { multiResult = "Register Day Fail" }
+            }
         }
+        return multiResult
     }
 
     override fun checkEmpResult(emp: String, month: String): GetEmpResult? {
@@ -145,21 +150,24 @@ class EmpResultDataSourceImpl @Inject constructor(
         }
     }
 
-    override fun insertMultiEmpDayDetails(dayDetailList: List<DayDetails>) {
-        queries.transaction {
-            dayDetailList.forEach { dayDetail ->
-                val day =
-                    queries.checkEmpDayDetail(
-                        fname = dayDetail.name,
-                        day = dayDetail.day,
-                        month = dayDetail.month,
-                        year = dayDetail.year
-                    )
-                        .executeAsOneOrNull()
-                if (day == null) {
-                    insertDayDetails(dayDetail)
-                }
+    override suspend fun insertMultiEmpDayDetails(dayDetailList: List<DayDetails>) {
+        withContext(dispatcher)
+        {
+            queries.transaction {
+                dayDetailList.forEach { dayDetail ->
+                    val day =
+                        queries.checkEmpDayDetail(
+                            fname = dayDetail.name,
+                            day = dayDetail.day,
+                            month = dayDetail.month,
+                            year = dayDetail.year
+                        )
+                            .executeAsOneOrNull()
+                    if (day == null) {
+                        insertDayDetails(dayDetail)
+                    }
 
+                }
             }
         }
     }
@@ -201,7 +209,7 @@ class EmpResultDataSourceImpl @Inject constructor(
 
     }
 
-    override fun checkEmpDayDetail(emp: String, day: String, month: String, year: String): DayDetails? {
+    override suspend fun checkEmpDayDetail(emp: String, day: String, month: String, year: String): DayDetails? {
         TODO("Not yet implemented")
     }
 

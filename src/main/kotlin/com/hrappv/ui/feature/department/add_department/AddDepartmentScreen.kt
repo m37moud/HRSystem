@@ -12,6 +12,7 @@ import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.*
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.ArrowBack
+import androidx.compose.material.icons.filled.Close
 import androidx.compose.material.icons.filled.Refresh
 import androidx.compose.material.icons.outlined.AddCircle
 import androidx.compose.material.icons.outlined.ArrowDropDown
@@ -245,6 +246,25 @@ fun AddDepartmentScreen(viewModel: AddDepartmentViewModel) {
                                         placeholder = { Text("Select Excel Folder") },
                                         label = { Text(text = "Folder Path ...") },
                                         leadingIcon = { Icon(Icons.Filled.Refresh, "search location") },
+                                        trailingIcon = {
+                                            if (path != "") {
+                                                IconButton(
+                                                    onClick = {
+//                                                    onCloseSearch()
+
+                                                        path = "" // Remove text from TextField when you press the 'X' icon
+                                                    }
+                                                ) {
+                                                    Icon(
+                                                        Icons.Default.Close,
+                                                        contentDescription = "",
+                                                        modifier = Modifier
+                                                            .padding(15.dp)
+                                                            .size(24.dp)
+                                                    )
+                                                }
+                                            }
+                                        },
                                         shape = RoundedCornerShape(16.dp),
 
 //                            elevation = ButtonDefaults.elevation(5.dp),

@@ -13,7 +13,7 @@ interface EmpResultDataSource {
 
     suspend fun insertEmpResult(empResult: EmployeeResult)
 
-    fun insertMultiEmpResult(empResultList: List<EmployeeResult>)
+    suspend fun insertMultiEmpResult(empResultList: List<EmployeeResult>) : String
 
     fun checkEmpResult(emp: String, month: String): GetEmpResult?
 
@@ -24,8 +24,8 @@ interface EmpResultDataSource {
     fun getAllEmpDayDetails(): List<DayDetails>
     suspend fun insertEmpDayDetails(dayDetail: DayDetails)
 
-    fun insertMultiEmpDayDetails(dayDetail: List<DayDetails>)
-    fun checkEmpDayDetail(emp: String,day: String, month: String, year: String): DayDetails?
+    suspend fun insertMultiEmpDayDetails(dayDetail: List<DayDetails>)
+    suspend  fun checkEmpDayDetail(emp: String,day: String, month: String, year: String): DayDetails?
 
 
 }
