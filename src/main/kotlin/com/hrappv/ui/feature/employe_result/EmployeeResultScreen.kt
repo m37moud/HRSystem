@@ -14,24 +14,22 @@ import androidx.compose.material.icons.filled.ArrowBack
 import androidx.compose.material.icons.filled.Close
 import androidx.compose.material.icons.filled.Refresh
 import androidx.compose.material.icons.outlined.AddCircle
-import androidx.compose.material.icons.outlined.Search
 import androidx.compose.runtime.*
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.ui.*
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.text.font.FontWeight
-import androidx.compose.ui.text.input.TextFieldValue
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
 import com.hrappv.data.models.EmployeeResult
+import com.hrappv.ui.components.DepartMenuDropDown
 import com.hrappv.ui.components.ShowMessageDialog
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.cancel
 import kotlinx.coroutines.isActive
 import kotlinx.coroutines.launch
-import util.Constatnts
 import utils.LCE
 
 @Composable
@@ -45,6 +43,7 @@ fun EmployeeResultScreen(
 //    var importState by remember { mutableStateOf<LCE<List<EmployeeResult>>?>(null) }
     val importState = viewModel.empResults.collectAsState()
     val insertResult = viewModel.insertEmpResults.collectAsState()
+    val startImporter by viewModel.startImporter.collectAsState()
 
     var showPathDialog by remember { mutableStateOf(false) }
     var showMessageDialog by remember { mutableStateOf(false) }
@@ -58,7 +57,8 @@ fun EmployeeResultScreen(
     /***
      * import
      */
-    var startImporter by remember { mutableStateOf(false) }
+//    var startImporter by remember { mutableStateOf(false) }
+//    var startImporter by rememberUpdatedState(false)
     var showWarningDialog by remember { mutableStateOf(false) }
 
     println("startImporter = $startImporter")
@@ -109,7 +109,7 @@ fun EmployeeResultScreen(
                 if (scope.isActive) {
                     scope.cancel()
                     showWarningDialog = false
-                    startImporter = false
+                    viewModel.setStartImporter(false)
                     viewModel.onBackPress()
                 }
 
@@ -161,102 +161,122 @@ fun EmployeeResultScreen(
 //                        shape = RoundedCornerShape(16.dp),
 //                        elevation = 10.dp
 //                    ) {
-                        Box(
-                            modifier = Modifier
-                                .fillMaxWidth()
-                                .padding(start = 8.dp, end = 8.dp, bottom = 6.dp)
-                        ) {
-                            Row(
-                                modifier = Modifier.align(Alignment.CenterStart)
-                                    .animateContentSize(),
-                                verticalAlignment = Alignment.CenterVertically
-                            )
-                            {
+                    Box(
+                        modifier = Modifier
+                            .fillMaxWidth()
+                            .padding(start = 8.dp, end = 8.dp, bottom = 6.dp)
+                    ) {
+                        Row(
+                            modifier = Modifier.align(Alignment.CenterStart)
+                                .animateContentSize(),
+                            verticalAlignment = Alignment.CenterVertically
+                        )
+                        {
+                            Button(
+                                onClick = {
+                                    showPathDialog = true
+
+                                },
+                                modifier = Modifier.padding(16.dp),
+                                // Provide a custom shape for this button. In this example. we specify the button to have
+                                // round corners of 16dp radius.
+                                shape = RoundedCornerShape(16.dp),
+                                elevation = ButtonDefaults.elevation(5.dp),
+                            ) {
+                                Text(text = "Import From Excel")
+                            }
+
+
+                            /**
+                             * if path text field is not empty anew button will appear
+                             */
+                            if (path.isNotEmpty()) {
                                 Button(
                                     onClick = {
-                                        showPathDialog = true
+
+//                                            startImporter = true
+
+//                                                startImporter =!
+//                                       val registerJop =
+                                           scope.launch(Dispatchers.IO)
+                                        {
+                                            viewModel.registerDayByCam(path)
+                                        viewModel.setStartImporter(false)
+
+                                        }
+//                                           .isCompleted
+//                                        viewModel.setStartImporter(!registerJop)
+
 
                                     },
-                                    modifier = Modifier.padding(16.dp),
+                                    modifier = Modifier.padding(start = 8.dp, end = 8.dp),
                                     // Provide a custom shape for this button. In this example. we specify the button to have
                                     // round corners of 16dp radius.
                                     shape = RoundedCornerShape(16.dp),
                                     elevation = ButtonDefaults.elevation(5.dp),
                                 ) {
-                                    Text(text = "Import From Excel")
+                                    Icon(imageVector = Icons.Outlined.AddCircle, contentDescription = null)
                                 }
+                            }
 
-
-                                /**
-                                 * if path text field is not empty anew button will appear
-                                 */
-                                if (path.isNotEmpty()) {
-                                    Button(
-                                        onClick = {
-
-                                            scope.launch(Dispatchers.IO) {
-//                                            employee = Constatnts.empExcelImporter(path).distinct()
-//                                            println(employee.toString())
-                                            startImporter = true
-
-//                                            if (employee.isNotEmpty()) {
-                                                startImporter = scope.launch(Dispatchers.IO)
-                                                {
-                                                    viewModel.registerDayByCam(path)
-                                                }.isCompleted
-//                                            }
-
-                                            }
-
-
-                                        },
-                                        modifier = Modifier.padding(start = 8.dp, end = 8.dp),
-                                        // Provide a custom shape for this button. In this example. we specify the button to have
-                                        // round corners of 16dp radius.
-                                        shape = RoundedCornerShape(16.dp),
-                                        elevation = ButtonDefaults.elevation(5.dp),
-                                    ) {
-                                        Icon(imageVector = Icons.Outlined.AddCircle, contentDescription = null)
-                                    }
-                                }
-
-                                OutlinedTextField(
-                                    value = path,
-                                    onValueChange = { path = it },
-                                    modifier = Modifier.padding(end = 16.dp),
-                                    placeholder = { Text("put url excel folder") },
-                                    label = { Text(text = "paste here ...") },
-                                    leadingIcon = {
-                                        Icon(
-                                            Icons.Filled.Refresh,
-                                            "search location"
-                                        )
-                                    },
-                                    trailingIcon = {
-                                        if (path != "") {
-                                            IconButton(
-                                                onClick = {
+                            OutlinedTextField(
+                                value = path,
+                                onValueChange = { path = it },
+                                modifier = Modifier.padding(end = 16.dp),
+                                placeholder = { Text("put url excel folder") },
+                                label = { Text(text = "paste here ...") },
+                                leadingIcon = {
+                                    Icon(
+                                        Icons.Filled.Refresh,
+                                        "search location"
+                                    )
+                                },
+                                trailingIcon = {
+                                    if (path != "") {
+                                        IconButton(
+                                            onClick = {
 //                                                    onCloseSearch()
 
-                                                    path = "" // Remove text from TextField when you press the 'X' icon
-                                                }
-                                            ) {
-                                                Icon(
-                                                    Icons.Default.Close,
-                                                    contentDescription = "",
-                                                    modifier = Modifier
-                                                        .padding(15.dp)
-                                                        .size(24.dp)
-                                                )
+                                                path = "" // Remove text from TextField when you press the 'X' icon
                                             }
+                                        ) {
+                                            Icon(
+                                                Icons.Default.Close,
+                                                contentDescription = "",
+                                                modifier = Modifier
+                                                    .padding(15.dp)
+                                                    .size(24.dp)
+                                            )
                                         }
-                                    },
-                                    shape = RoundedCornerShape(16.dp),
+                                    }
+                                },
+                                shape = RoundedCornerShape(16.dp),
 
-                                    )
+                                )
 
-                            }
                         }
+
+                        Row(modifier = Modifier.align(Alignment.CenterEnd)){
+
+
+//                            DepartMenuDropDown(
+//                                name = "Select Department",
+//                                departments = departments,
+//                                menuItemSelected = { depart ->
+//                                    if (depart != null) {
+//                                        department = if (depart.department == "Select Department") {
+//                                            ""
+//                                        } else {
+//                                            depart.department
+//
+//                                        }
+//
+//
+//                                    }
+//                                }
+//                            )
+                        }
+                    }
 //                    }
 
 //                    Row(

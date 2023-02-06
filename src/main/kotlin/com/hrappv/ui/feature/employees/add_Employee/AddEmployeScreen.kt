@@ -26,15 +26,18 @@ import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.text.input.TextFieldValue
 import androidx.compose.ui.unit.dp
 import com.hrappv.data.models.Employees
-import com.hrappv.ui.components.MenuDropDown
+import com.hrappv.ui.components.DepartMenuDropDown
 import com.hrappv.ui.components.ShowMessageDialog
 import com.hrappv.ui.value.HrAppVTheme
+import com.vanpra.composematerialdialogs.MaterialDialog
+import com.vanpra.composematerialdialogs.datetime.date.datepicker
+import com.vanpra.composematerialdialogs.rememberMaterialDialogState
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.cancel
 import kotlinx.coroutines.isActive
 import kotlinx.coroutines.launch
-import util.Constatnts
 import util.Constatnts.Companion.empExcelImporter
+import java.time.format.DateTimeFormatter
 
 
 @Composable
@@ -298,7 +301,7 @@ fun AddEmployeeScreen(
                             ),
                         )
                         Spacer(modifier = Modifier.height(8.dp))
-                        MenuDropDown(
+                        DepartMenuDropDown(
                             name = "Select Department", departments = departments,
                             menuItemSelected = { depart ->
                                 if (depart != null) {
@@ -316,7 +319,7 @@ fun AddEmployeeScreen(
 
 
                         Spacer(modifier = Modifier.height(8.dp))
-//            MyDateField()
+            MyDateField()
 
                         OutlinedTextField(
                             value = bith_day,
@@ -495,36 +498,37 @@ fun ReadonlyTextField(
     }
 }
 
-//
-//@Composable
-//fun MyDateField() {
-//    val dialogState = rememberMaterialDialogState()
-//    val textState = remember { mutableStateOf(TextFieldValue()) }
-//    val dialog = MaterialDialog(dialogState, buttons = {
-//        positiveButton("Ok")
-//        negativeButton("Cancel")
-//    }){
-//        datepicker { date ->
-////            val formattedDate = date.(
-////                DateTimeFormatter.ofPattern("dd.MM.yyyy")
-////            )
-//            textState.value = TextFieldValue(text = date.toString())
-//        }
-//    }
-//
-//    Column(modifier = Modifier.padding(16.dp)) {
-//        ReadonlyTextField(
-//            value = textState.value,
-//            onValueChange = { textState.value = it },
-//            onClick = {
-//                dialogState.show()
-//            },
-//            label = {
-//                Text(text = "Date")
-//            }
-//        )
-//    }
-//}
+
+@Composable
+fun MyDateField() {
+    val dialogState = rememberMaterialDialogState()
+    val textState = remember { mutableStateOf(TextFieldValue()) }
+    val dialog = MaterialDialog(dialogState, buttons = {
+        positiveButton("Ok")
+        negativeButton("Cancel")
+    }){
+        datepicker { date ->
+            println(date)
+//            val formattedDate = date(
+//                DateTimeFormatter.ofPattern("dd.MM.yyyy")
+//            )
+//            textState.value = TextFieldValue(text = formattedDate)
+        }
+    }
+
+    Column(modifier = Modifier.padding(16.dp)) {
+        ReadonlyTextField(
+            value = textState.value,
+            onValueChange = { textState.value = it },
+            onClick = {
+                dialogState.show()
+            },
+            label = {
+                Text(text = "Date")
+            }
+        )
+    }
+}
 
 //
 //

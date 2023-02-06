@@ -27,6 +27,9 @@ class EmployeeResultViewModel @Inject constructor(
     private val _insertEmpResults = MutableStateFlow("")
     val insertEmpResults: StateFlow<String> = _insertEmpResults
 
+    private val _startImporter = MutableStateFlow(false)
+    val startImporter: StateFlow<Boolean> = _startImporter
+
 
     private val _employee: MutableStateFlow<List<CamRegisterDay?>> = MutableStateFlow(emptyList())
     val employee: StateFlow<List<CamRegisterDay?>> = _employee
@@ -58,30 +61,34 @@ class EmployeeResultViewModel @Inject constructor(
 
 
     /* TODO insert all exel in database */
-     fun registerDayByCam(folderPath: String? = null, pList: List<String>? = null) {
-        launchOnIO {
-            val path = myRepo.importer.getPath(folderPath, pList)
-            if (path.isNotEmpty()) {
-                val camRegisterDay = myRepo.importer.getAllEmployeeInfo(path)
-                if (camRegisterDay.isNotEmpty()) {
+    suspend fun registerDayByCam(folderPath: String? = null, pList: List<String>? = null) {
+//        launchOnIO {
+        setStartImporter(true)
+        val path = myRepo.importer.getPath(folderPath, pList)
+        if (path.isNotEmpty()) {
+            val camRegisterDay = myRepo.importer.getAllEmployeeInfo(path)
+            if (camRegisterDay.isNotEmpty()) {
 
-                    result = myRepo.camRegister.insertMultiCamRegDay(camRegisterDay)
-                    if (result.isNotEmpty()) {
-                        dialogMessage("attends registered successful")
+                result = myRepo.camRegister.insertMultiCamRegDay(camRegisterDay)
+                if (result.isNotEmpty()) {
+//                    dialogMessage(result)
 
-                        val listEmpReporter = myRepo.importer.getEmployReport(camRegisterDay)
-                       val insertMultiEmpResultResult = myRepo.empResult.insertMultiEmpResult(listEmpReporter)
-                        dialogMessage(insertMultiEmpResultResult)
+                    val listEmpReporter = myRepo.importer.getEmployReport(camRegisterDay)
+                    val insertMultiEmpResultResult = myRepo.empResult.insertMultiEmpResult(listEmpReporter)
+                    dialogMessage(insertMultiEmpResultResult)
 
-                    }
+
                 }
-
-            } else {
-                println("Folder is Empty")
-                dialogMessage("Folder is Empty")
             }
 
+        } else {
+            println("Folder is Empty")
+            dialogMessage("Folder is Empty")
+            setStartImporter(false)
+
         }
+
+//        }
 //        if (camRegisterDay.isNotEmpty()) {
 //            message = "import successful do you want to insert it ?"
 //            if (insert) {
@@ -103,6 +110,10 @@ class EmployeeResultViewModel @Inject constructor(
 
     fun insert() {
         insert = true
+    }
+
+     fun setStartImporter(state: Boolean) {
+        _startImporter.value = state
     }
 
     fun onBackPress() {

@@ -2,11 +2,7 @@
 
 package com.hrappv.ui.feature.employees.view_employees
 
-import androidx.compose.animation.AnimatedVisibility
-import androidx.compose.animation.core.LinearOutSlowInEasing
 import androidx.compose.animation.core.tween
-import androidx.compose.animation.expandVertically
-import androidx.compose.animation.shrinkVertically
 import androidx.compose.desktop.ui.tooling.preview.Preview
 import androidx.compose.foundation.*
 import androidx.compose.foundation.layout.*
@@ -48,7 +44,7 @@ import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.hrappv.GetAllEmployees
-import com.hrappv.ui.components.MenuDropDown
+import com.hrappv.ui.components.DepartMenuDropDown
 import compose.icons.FontAwesomeIcons
 import compose.icons.fontawesomeicons.Solid
 import compose.icons.fontawesomeicons.solid.CashRegister
@@ -78,9 +74,11 @@ fun ViewEmpScreen(viewModel: ViewEmpViewModel) {
     deletedEmpName.value = deleteEmployee.value.fname
 
 
-    val deleteEmpState = viewModel.delete.collectAsState()
-    if (deleteEmpState.value) {
-        scope.launch { scaffoldState.snackbarHostState.showSnackbar("Employee ${deletedEmpName.value} deleted Sucssessful") }
+    val deleteEmpState by viewModel.delete.collectAsState()
+    if (deleteEmpState) {
+        LaunchedEffect( deleteEmpState) {
+            scaffoldState.snackbarHostState.showSnackbar("Employee ${deletedEmpName.value} deleted Sucssessful")
+        }
     }
 
     /*
@@ -109,97 +107,97 @@ fun ViewEmpScreen(viewModel: ViewEmpViewModel) {
             Column(modifier = Modifier.padding(6.dp), horizontalAlignment = Alignment.CenterHorizontally) {
 
 
-            Box(
-                modifier = Modifier.background(MaterialTheme.colors.surface)
+                Box(
+                    modifier = Modifier.background(MaterialTheme.colors.surface)
 
-                    .fillMaxWidth()
-                    .padding(start = 8.dp, end = 8.dp)
-            ) {
-
-
-                Row(modifier = Modifier.align(Alignment.CenterEnd))
-                {
+                        .fillMaxWidth()
+                        .padding(start = 8.dp, end = 8.dp)
+                ) {
 
 
-                    Button(
-                        onClick = {
-                            scope.launch(Dispatchers.IO) {
-
-                                viewModel.onAddEmployee()
-                            }
-                        },
-                        modifier = Modifier.padding(horizontal = 16.dp),
-                        // Provide a custom shape for this button. In this example. we specify the button to have
-                        // round corners of 16dp radius.
-                        shape = RoundedCornerShape(16.dp),
-                        elevation = ButtonDefaults.elevation(5.dp),
-                        enabled =  viewModel.checkIfNoDepartment() > 0
-                    ) {
-                        Icon(imageVector = Icons.Outlined.AddCircle, contentDescription = "Add Department Screen")
-
-                        Spacer(modifier = Modifier.width(6.dp))
-
-                        Text(text = "Add Employee")
-                    }
+                    Row(modifier = Modifier.align(Alignment.CenterEnd))
+                    {
 
 
-                }
-            }
-            /**
-             *
-             */
-            scope.launch(Dispatchers.IO) {
-                delay(1000)
+                        Button(
+                            onClick = {
+                                scope.launch(Dispatchers.IO) {
 
-                if (allEmployee != null) {
-                    if (allEmployee.isNotEmpty()) {
-                        viewModel.setEmpList(allEmployee)
-                    } else {
-                        val message =  if(viewModel.checkIfNoDepartment() > 0)  "No Employee is found "
-                        else  "No Employee is found \n" +
-                                "insert Department first"
-                        viewModel.setEmpError(
-                            message
-                        )
+                                    viewModel.onAddEmployee()
+                                }
+                            },
+                            modifier = Modifier.padding(horizontal = 16.dp),
+                            // Provide a custom shape for this button. In this example. we specify the button to have
+                            // round corners of 16dp radius.
+                            shape = RoundedCornerShape(16.dp),
+                            elevation = ButtonDefaults.elevation(5.dp),
+                            enabled = viewModel.checkIfNoDepartment() > 0
+                        ) {
+                            Icon(imageVector = Icons.Outlined.AddCircle, contentDescription = "Add Department Screen")
 
+                            Spacer(modifier = Modifier.width(6.dp))
 
-                    }
-                }
-
-            }
-
-
-            when (val state = employees.value) {
-                is LCE.LOADING -> LoadingUI()
-                is LCE.CONTENT -> {
-                    ContentUI(
-                        state.data,
-                        departments = departments,
-//                        allEmployee.value,
-                        onDeleteClick = { id ->
-                            try {
-
-                                viewModel.getSingleEmployee(id)
-
-                                viewModel.deleteEmployee(id)
-
-                            } catch (exception: Exception) {
-                                scope.launch { scaffoldState.snackbarHostState.showSnackbar("Delete failed") }
-                                println(exception.message)
-
-                            }
-                        }, onClick = { emp ->
-                            viewModel.onStartEmpDetails(emp)
+                            Text(text = "Add Employee")
                         }
-                    )
+
+
+                    }
+                }
+                /**
+                 *
+                 */
+                scope.launch(Dispatchers.IO) {
+                    delay(1000)
+
+                    if (allEmployee != null) {
+                        if (allEmployee.isNotEmpty()) {
+                            viewModel.setEmpList(allEmployee)
+                        } else {
+                            val message = if (viewModel.checkIfNoDepartment() > 0) "No Employee is found "
+                            else "No Employee is found \n" +
+                                    "insert Department first"
+                            viewModel.setEmpError(
+                                message
+                            )
+
+
+                        }
+                    }
+
                 }
 
-                is LCE.ERROR -> ErrorUI(state.error)
-                else -> {}
-            }
+
+                when (val state = employees.value) {
+                    is LCE.LOADING -> LoadingUI()
+                    is LCE.CONTENT -> {
+                        ContentUI(
+                            state.data,
+                            departments = departments,
+//                        allEmployee.value,
+                            onDeleteClick = { id ->
+                                try {
+
+                                    viewModel.getSingleEmployee(id)
+
+                                    viewModel.deleteEmployee(id)
+
+                                } catch (exception: Exception) {
+                                    scope.launch { scaffoldState.snackbarHostState.showSnackbar("Delete failed") }
+                                    println(exception.message)
+
+                                }
+                            }, onClick = { emp ->
+                                viewModel.onStartEmpDetails(emp)
+                            }
+                        )
+                    }
+
+                    is LCE.ERROR -> ErrorUI(state.error)
+                    else -> {}
+                }
 
 //        ItemList(state = textState, viewEmployee)
-        }
+            }
         }
 
     }
@@ -342,7 +340,7 @@ private fun SearchView(
 
             )
 
-        MenuDropDown(name = name, departments = departments, menuItemSelected = menuItemSelected)
+        DepartMenuDropDown(name = name, departments = departments, menuItemSelected = menuItemSelected)
 
 
 //        OutlinedTextField(
@@ -648,6 +646,7 @@ fun ContentUI(
 
 }
 
+@OptIn(ExperimentalFoundationApi::class)
 @Composable
 fun EmployeeGridLazyColumn(
     data: List<GetAllEmployees>,

@@ -64,7 +64,7 @@ class EmpResultDataSourceImpl @Inject constructor(
                 }
 
             }
-            afterCommit { multiResult = "All Days are Register" }
+            afterCommit { multiResult = "All Employee Result are Register" }
             afterRollback { multiResult = "Register Day Fail" }
             }
         }

@@ -21,7 +21,7 @@ import androidx.compose.ui.unit.dp
 import com.hrappv.data.models.Department
 
 @Composable
-fun MenuDropDown(
+fun DepartMenuDropDown(
     modifier: Modifier = Modifier,
     name: String,
     departments: List<Department>,
@@ -93,3 +93,5 @@ fun MenuDropDown(
         }
     }
 }
+
+
