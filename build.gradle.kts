@@ -88,6 +88,7 @@ dependencies {
 //    implementation("io.github.vanpra.compose-material-dialogs:datetime:0.9.0")
 //    implementation("com.afollestad.material-dialogs:input:3.3.0")
  implementation("ca.gosyer:compose-material-dialogs-datetime:0.8.0")
+   implementation("org.jetbrains.kotlinx:kotlinx-datetime:0.4.0")
 
 
 //lottie
