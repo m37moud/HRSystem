@@ -7,6 +7,7 @@ import com.hrappv.data.models.CamRegisterDay
 import com.hrappv.data.models.EmployeeResult
 import com.hrappv.data.repo.MyRepo
 import com.hrappv.util.ViewModel
+import com.toxicbakery.logging.Arbor
 import excel.ImportExcelFile
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
@@ -70,6 +71,7 @@ class EmployeeResultViewModel @Inject constructor(
 
     /* TODO insert all exel in database */
     suspend fun registerDayByCam(folderPath: String? = null, pList: List<String>? = null) {
+        _screenMessage.emit(null)
 
         if (date != null) {
             val month = date!!.monthValue.toString()
@@ -80,51 +82,45 @@ class EmployeeResultViewModel @Inject constructor(
             if (path.isNotEmpty()) {
                 val camRegisterDay = importer.getAllEmployeeInfo(path)
                 if (camRegisterDay.isNotEmpty()) {
+                    _screenMessage.emit(ScreenMessage.ScafoldStateMessage("start insert all days  = ${camRegisterDay.size} please wait..."))
 
                     result = myRepo.camRegister.insertMultiCamRegDay(camRegisterDay)
 
-
+                    Arbor.d(result.joinToString("\n"))
                     if (result.isNotEmpty()) {
 //                    dialogMessage(result)
-                        _screenMessage.emit(ScreenMessage.ScafoldStateMessage("${result.size}"))
+                        _screenMessage.emit(ScreenMessage.ScafoldStateMessage("calculate employee attends result days ${result.size} please wait..."))
 
                         val listEmpReporter = importer.getEmployReport(result)
+                        _screenMessage.emit(ScreenMessage.ScafoldStateMessage("start insert employee attends result days ${result.size} please wait..."))
+
                         val insertMultiEmpResultResult = myRepo.empResult.insertMultiEmpResult(listEmpReporter)
                         _screenMessage.emit(ScreenMessage.ScafoldStateMessage(insertMultiEmpResultResult))
 
 //                        dialogMessage(insertMultiEmpResultResult)
 
 
-                    }else{
+                    } else {
                         _screenMessage.emit(ScreenMessage.ScafoldStateMessage("employee is already in"))
 
                     }
+                } else {
+                    Arbor.d("please select correct month")
+                    _screenMessage.emit(ScreenMessage.DialogStateMessage(" please select correct month" , true))
+
+
                 }
 
             } else {
                 println("Folder is Empty")
 //                dialogMessage("Folder is Empty")
-                _screenMessage.emit(ScreenMessage.DialogStateMessage("Folder is Empty"))
-
-                setStartImporter(false)
-
+                _screenMessage.emit(ScreenMessage.DialogStateMessage("Folder is Empty" , error = true))
             }
 
         } else {
-            _screenMessage.emit(ScreenMessage.DialogStateMessage("No Date Initialized"))
+            _screenMessage.emit(ScreenMessage.DialogStateMessage("No Date Initialized" , error = true))
         }
-//        launchOnIO {
-
-
-//        }
-//        if (camRegisterDay.isNotEmpty()) {
-//            message = "import successful do you want to insert it ?"
-//            if (insert) {
-//            }
-//        }
-
-//        _employee.value = myRepo.importer.getAllEmployeeInfo(folderPath,pList)
-
+        setStartImporter(false)
     }
 
     fun insertEmpResult(empList: List<CamRegisterDay>) {
@@ -155,7 +151,7 @@ class EmployeeResultViewModel @Inject constructor(
 
     sealed class ScreenMessage {
         data class ScafoldStateMessage(val message: String) : ScreenMessage()
-        data class DialogStateMessage(val message: String) : ScreenMessage()
+        data class DialogStateMessage(val message: String, val error :Boolean = false) : ScreenMessage()
     }
 
 

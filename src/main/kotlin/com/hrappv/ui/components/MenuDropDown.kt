@@ -1,10 +1,8 @@
 package com.hrappv.ui.components
 
-import androidx.compose.foundation.clickable
+import androidx.compose.foundation.*
 import androidx.compose.foundation.layout.*
-import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.text.KeyboardOptions
-import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.*
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.ArrowDropDown
@@ -12,6 +10,7 @@ import androidx.compose.material.icons.filled.KeyboardArrowUp
 import androidx.compose.material.icons.outlined.ArrowDropDown
 import androidx.compose.material.icons.outlined.KeyboardArrowUp
 import androidx.compose.runtime.*
+import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.layout.onSizeChanged
 import androidx.compose.ui.platform.LocalDensity
@@ -28,7 +27,7 @@ fun DepartMenuDropDown(
     menuItemSelected: (Department?) -> Unit
 ) {
     var expanded by remember { mutableStateOf(false) }
-    var selectedText by remember { mutableStateOf("") }
+    var selectedText by remember { mutableStateOf("All Departments") }
 
     var dropDownWidth by remember { mutableStateOf(0) }
 
@@ -38,7 +37,8 @@ fun DepartMenuDropDown(
         Icons.Filled.ArrowDropDown
 
 
-    Column(modifier = modifier
+    Column(
+        modifier = modifier
 //        modifier = if (expanded) {
 //            Modifier.height(200.dp).verticalScroll(
 //                state = rememberScrollState(0), enabled = true
@@ -59,7 +59,7 @@ fun DepartMenuDropDown(
                 keyboardType = KeyboardType.Text,
                 imeAction = ImeAction.Next
             ),
-            label = { Text(name) },
+            label = { Text("Department") },
 //            trailingIcon = {
 //                Icon(icon, "contentDescription", Modifier.clickable { expanded = !expanded })
 //            },
@@ -74,36 +74,43 @@ fun DepartMenuDropDown(
                 }
             },
         )
-        DropdownMenu(
-            expanded = expanded,
-            onDismissRequest = { expanded = false },
-            modifier = modifier.verticalScroll(state = rememberScrollState(0), enabled = true)
-                .heightIn(200.dp)
-                .widthIn(
-                    with(LocalDensity.current) {
-                        dropDownWidth.toDp()
-                    })
-        ) {
-            DropdownMenuItem(onClick = {
-                selectedText = "All Departments"
-                menuItemSelected(Department())
-                expanded = false
-
-            }) {
-                Text(text = "All Departments")
-            }
-            departments.forEach { label ->
+        val stateVertical = rememberScrollState(0)
+            DropdownMenu(
+                expanded = expanded,
+                onDismissRequest = { expanded = false },
+                modifier = Modifier
+                    .height(200.dp)
+                    .width(
+                        with(LocalDensity.current) {
+                            dropDownWidth.toDp()
+                        })
+            ) {
                 DropdownMenuItem(onClick = {
-                    selectedText = label.department
-                    menuItemSelected(label)
+                    selectedText = "All Departments"
+                    menuItemSelected(Department())
                     expanded = false
 
                 }) {
-                    Text(text = label.department)
+                    Text(text = "All Departments")
+                }
+                departments.forEach { label ->
+                    DropdownMenuItem(onClick = {
+                        selectedText = label.department
+                        menuItemSelected(label)
+                        expanded = false
+
+                    }) {
+                        Text(text = label.department)
+                    }
                 }
             }
+//            VerticalScrollbar(
+//                modifier = Modifier
+////                    .align(Alignment.CenterEnd)
+//                    .fillMaxHeight(),
+//                adapter = rememberScrollbarAdapter(stateVertical)
+//            )
         }
-    }
 }
 
 

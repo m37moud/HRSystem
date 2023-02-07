@@ -241,7 +241,10 @@ class ImportExcelFile
                         status = status["attendState"],
                         shift = shift
                     )
-                    empList.add(employ)
+                     val patternCamRegisterDay = DateTimeFormatter.ofPattern("yyyy-MM-dd")
+
+                    if((LocalDate.parse(status["date"] , patternCamRegisterDay)) in startDate .. endDate)
+                        empList.add(employ)
 
 
                 }
@@ -270,6 +273,9 @@ class ImportExcelFile
             it.empName == empName
         }
         if (l.isNotEmpty()) {
+            Arbor.d(startDate.toString())
+            Arbor.d(endDate.toString())
+
             val ll = l.filter {
 
                 val date = LocalDate.parse(it.oDATE)
@@ -278,7 +284,7 @@ class ImportExcelFile
             return if (ll.isNotEmpty()) {
                 getAbsentDays(ll)
             } else {
-                println("please enter month  :::: \n ll size = ${ll.size} ")
+                println("please enter correct month  :::: \n ll size = ${ll.size} ")
                 null
 
             }
@@ -494,8 +500,10 @@ class ImportExcelFile
 //            val empName = it.name
 //            if (!empNameList.contains(empName)) {
 //            println("empName = $empName")
-            val empResult = getEmpReport(list, empName = empName!!)!!
-            employeeResultList.add(empResult)
+            val empResult = getEmpReport(list, empName = empName!!)
+            if (empResult != null) {
+                employeeResultList.add(empResult)
+            }
             i++
 //            println("done${i}")
 //           getEmpReport(list, empName)

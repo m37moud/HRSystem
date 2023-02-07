@@ -28,6 +28,7 @@ import com.hrappv.data.models.EmployeeResult
 import com.hrappv.ui.components.DepartMenuDropDown
 import com.hrappv.ui.components.MyDateField
 import com.hrappv.ui.components.ShowMessageDialog
+import com.toxicbakery.logging.Arbor
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.cancel
 import kotlinx.coroutines.isActive
@@ -54,30 +55,11 @@ fun EmployeeResultScreen(
     val startImporter by viewModel.startImporter.collectAsState()
     val screenMessage by viewModel.screenMessage.collectAsState()
     val scaffoldState = rememberScaffoldState()
-
-    LaunchedEffect(true) {
-        if (screenMessage != null) {
-            when (val state = screenMessage) {
-                is EmployeeResultViewModel.ScreenMessage.ScafoldStateMessage -> {
-                    scaffoldState.snackbarHostState.showSnackbar(
-                        state.message,
-                        actionLabel = "ok",
-                    )
-
-                }
-
-                is EmployeeResultViewModel.ScreenMessage.DialogStateMessage -> {
-                    viewModel.dialogMessage(state.message)
-                }
-
-                else -> {}
-            }
-        }
-    }
-
+    val scope = rememberCoroutineScope()
+    var showMessageDialog by remember { mutableStateOf(false) }
+    var errorMessageDialog = remember { mutableStateOf(false) }
 
     var showPathDialog by remember { mutableStateOf(false) }
-    var showMessageDialog by remember { mutableStateOf(false) }
     val date = Clock.System.now()
         .toLocalDateTime(TimeZone.currentSystemDefault())
         .date.toJavaLocalDate()
@@ -87,42 +69,70 @@ fun EmployeeResultScreen(
     val formatedDate = date.format(pattern)
     val dateState = remember { mutableStateOf(TextFieldValue(formatedDate)) }
 
-    LaunchedEffect(dateState)
-    { viewModel.setDate(dateState.value.text) }
+
+    LaunchedEffect(screenMessage) {
+//        if (screenMessage != null) {
+            when (val state = screenMessage) {
+                is EmployeeResultViewModel.ScreenMessage.ScafoldStateMessage -> {
+                    Arbor.d("ScafoldStateMessage")
+//                    scope.launch {
+                        scaffoldState.snackbarHostState.showSnackbar(
+                        state.message,
+                        actionLabel = "ok",
+                    )
+//                    }
+
+
+                }
+
+                is EmployeeResultViewModel.ScreenMessage.DialogStateMessage -> {
+                    Arbor.d("DialogStateMessage")
+                    viewModel.dialogMessage(state.message)
+                    errorMessageDialog.value = state.error
+                }
+
+                else -> {}
+            }
+//        }
+    }
+
+
+
+//    LaunchedEffect(dateState)
+//    {
+//        Arbor.d("please select correct month")
+//    }
 
     // 2
-    val scope = rememberCoroutineScope()
 
 
     /***
-     * import
+     * showMessageDialog
      */
-//    var startImporter by remember { mutableStateOf(false) }
-//    var startImporter by rememberUpdatedState(false)
     var showWarningDialog by remember { mutableStateOf(false) }
 
     println("startImporter = $startImporter")
 
-//    if (insertResult.value.isNotEmpty()) {
-//        showMessageDialog = true
-//
-//
-//    }
-//
-//
-//    if (showMessageDialog) {
-//        ShowMessageDialog(
-//            onDismissRequest = {
-//                viewModel.dialogMessage()//close
-//                showMessageDialog = false
-//            }, ok = {
-//                viewModel.dialogMessage()
-//                showMessageDialog = false
-//            },
-//            cancel = { showMessageDialog = false },
-//            message = insertResult.value
-//        )
-//    }
+    if (insertResult.value.isNotEmpty()) {
+        showMessageDialog = true
+
+
+    }
+
+
+    if (showMessageDialog) {
+        ShowMessageDialog(
+            onDismissRequest = {
+                viewModel.dialogMessage()//close
+                showMessageDialog = false
+            }, ok = {
+                viewModel.dialogMessage()
+                showMessageDialog = false
+            },
+            cancel = { showMessageDialog = false },
+            message = insertResult.value, error = errorMessageDialog.value
+        )
+    }
 
     /**
      * show chose file dialog
@@ -235,6 +245,8 @@ fun EmployeeResultScreen(
                                     onClick = {
                                         scope.launch(Dispatchers.IO)
                                         {
+                                            viewModel.setDate(dateState.value.text)
+
                                             viewModel.registerDayByCam(path)
                                             viewModel.setStartImporter(false)
 
@@ -293,7 +305,7 @@ fun EmployeeResultScreen(
 
                         Row(modifier = Modifier.align(Alignment.CenterEnd)) {
 
-                            MyDateField(dateState)
+                            MyDateField(dateState,errorMessageDialog)
 //
                         }
                     }

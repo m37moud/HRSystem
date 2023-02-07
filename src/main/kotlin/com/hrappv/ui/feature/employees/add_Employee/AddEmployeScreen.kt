@@ -64,6 +64,8 @@ fun AddEmployeeScreen(
 
     val formateDate = date.format(pattern)
     var bith_day = remember { mutableStateOf(TextFieldValue(formateDate)) }
+    var errorMessageDialog = remember { mutableStateOf(false) }
+
     var salary by remember { mutableStateOf("1000") }
     var vacanition by remember { mutableStateOf("0") }
     var vbalance by remember { mutableStateOf("0") }
@@ -335,7 +337,7 @@ fun AddEmployeeScreen(
                         /**
                          * Date Picker
                          */
-                        MyDateField(bith_day)
+                        MyDateField(bith_day,errorMessageDialog)
 
 //                        OutlinedTextField(
 //                            value = bith_day,

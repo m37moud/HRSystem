@@ -36,13 +36,19 @@ fun ReadonlyTextField(
     value: TextFieldValue,
     onValueChange: (TextFieldValue) -> Unit,
     modifier: Modifier = Modifier,
+    error: MutableState<Boolean>,
     onClick: () -> Unit,
     label: @Composable () -> Unit
 ) {
     Box {
         OutlinedTextField(
             value = value,
-            onValueChange = onValueChange,
+            onValueChange =
+            {
+                onValueChange(it)
+
+            }
+            ,
             modifier = modifier,
             readOnly = true,
             singleLine = true,
@@ -61,32 +67,35 @@ fun ReadonlyTextField(
                 }
             },
             shape = RoundedCornerShape(25.dp),
+            isError = error.value
 
-            )
+        )
     }
 }
 
 @Preview
 @Composable
-fun MyDateField(textState: MutableState<TextFieldValue>) {
+fun MyDateField(textState: MutableState<TextFieldValue>, error: MutableState<Boolean>) {
     val dialogState = rememberMaterialDialogState()
-     MaterialDialog(dialogState,
+    MaterialDialog(dialogState,
 
-         properties = MaterialDialogProperties(size = DpSize(350.dp ,500.dp), title = "Date pick"),
-         buttons = {
-        positiveButton("Ok")
-        negativeButton("Cancel")
-    }) {
+        properties = MaterialDialogProperties(size = DpSize(350.dp, 500.dp), title = "Date pick"),
+        buttons = {
+            positiveButton("Ok")
+            negativeButton("Cancel")
+        }) {
         datepicker { date ->
-            val pattern =  DateTimeFormatter.ofPattern("dd.MM.yyyy")
+            val pattern = DateTimeFormatter.ofPattern("dd.MM.yyyy")
 
-            val formatedDate =  date.toJavaLocalDate().format(pattern)
+            val formatedDate = date.toJavaLocalDate().format(pattern)
             textState.value = TextFieldValue(text = formatedDate)
+            error.value = false
         }
     }
 
     Column(modifier = Modifier.padding(16.dp)) {
         ReadonlyTextField(
+            error = error,
             value = textState.value,
             onValueChange = { textState.value = it },
             onClick = {
@@ -96,5 +105,13 @@ fun MyDateField(textState: MutableState<TextFieldValue>) {
                 Text(text = "Date")
             }
         )
+        if (error.value) {
+            Text(
+                text = "Select Correct Month",
+                color = MaterialTheme.colors.error,
+                style = MaterialTheme.typography.body2,
+                modifier = Modifier.padding(start = 16.dp)
+            )
+        }
     }
 }
