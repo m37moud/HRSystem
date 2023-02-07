@@ -6,7 +6,7 @@ import excel.ImportExcelFile
 import javax.inject.Inject
 
 class MyRepo @Inject constructor(
-    private val importerExcel: ImportExcelFile,
+//    private val importerExcel: ImportExcelFile,
     private val usersDataSource: UserDataSource,
     private val viewEmpDataSource: ViewEmpDataSource,
     private val departmentDataSource: DepartmentDataSource,
@@ -16,7 +16,7 @@ class MyRepo @Inject constructor(
 
     ) {
     fun getClickedWelcomeText() = "Hello Desktop!"
-    val importer = importerExcel
+//    val importer = importerExcel
     val users = usersDataSource
     val viewEmployees = viewEmpDataSource
     val department = departmentDataSource

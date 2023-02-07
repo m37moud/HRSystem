@@ -27,6 +27,7 @@ import androidx.compose.ui.text.input.TextFieldValue
 import androidx.compose.ui.unit.dp
 import com.hrappv.data.models.Employees
 import com.hrappv.ui.components.DepartMenuDropDown
+import com.hrappv.ui.components.MyDateField
 import com.hrappv.ui.components.ShowMessageDialog
 import com.hrappv.ui.value.HrAppVTheme
 import com.vanpra.composematerialdialogs.MaterialDialog
@@ -36,7 +37,12 @@ import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.cancel
 import kotlinx.coroutines.isActive
 import kotlinx.coroutines.launch
+import kotlinx.datetime.Clock
+import kotlinx.datetime.TimeZone
+import kotlinx.datetime.toJavaLocalDate
+import kotlinx.datetime.toLocalDateTime
 import util.Constatnts.Companion.empExcelImporter
+import java.time.LocalDate
 import java.time.format.DateTimeFormatter
 
 
@@ -50,7 +56,14 @@ fun AddEmployeeScreen(
     var emp_id by remember { mutableStateOf("") }
     var fname by remember { mutableStateOf("") }
     var totaldays by remember { mutableStateOf("21") }
-    var bith_day by remember { mutableStateOf("1990-11-16") }
+    val date =  Clock.System.now()
+        .toLocalDateTime(TimeZone.currentSystemDefault())
+        .date.toJavaLocalDate()
+    val pattern =  DateTimeFormatter.ofPattern("dd.MM.yyyy")
+//    val pattern =  DateTimeFormatter.ofPattern("dd-MM-yyyy")
+
+    val formateDate = date.format(pattern)
+    var bith_day = remember { mutableStateOf(TextFieldValue(formateDate)) }
     var salary by remember { mutableStateOf("1000") }
     var vacanition by remember { mutableStateOf("0") }
     var vbalance by remember { mutableStateOf("0") }
@@ -319,24 +332,23 @@ fun AddEmployeeScreen(
 
 
                         Spacer(modifier = Modifier.height(8.dp))
-            MyDateField()
+                        /**
+                         * Date Picker
+                         */
+                        MyDateField(bith_day)
 
-                        OutlinedTextField(
-                            value = bith_day,
-                            onValueChange = { bith_day = it },
-                            label = { Text("Birth Date") }, singleLine = true,
-                            keyboardOptions = KeyboardOptions(
-                                autoCorrect = true,
-                                keyboardType = KeyboardType.Text,
-                                imeAction = ImeAction.Next
-                            ),
-                        )
+//                        OutlinedTextField(
+//                            value = bith_day,
+//                            onValueChange = { bith_day = it },
+//                            label = { Text("Birth Date") }, singleLine = true,
+//                            keyboardOptions = KeyboardOptions(
+//                                autoCorrect = true,
+//                                keyboardType = KeyboardType.Text,
+//                                imeAction = ImeAction.Next
+//                            ),
+//                        )
                         Spacer(modifier = Modifier.height(8.dp))
 
-//           DatePicker(
-//            selectedDate = formState.value.bith_day,
-//            onDateSelected = { formState.value.bith_day = it }
-//        )
                         OutlinedTextField(
                             value = salary,
                             onValueChange = { salary = it },
@@ -417,7 +429,7 @@ fun AddEmployeeScreen(
                                     fname,
                                     department,
                                     totaldays.toLong(),
-                                    bith_day,
+                                    bith_day.value.text,
                                     salary.toFloat(),
                                     vacanition.toLong(),
                                     vbalance.toLong(),
@@ -473,62 +485,6 @@ fun FavoriteCollectionCardPreview() {
     }
 }
 
-
-@Composable
-fun ReadonlyTextField(
-    value: TextFieldValue,
-    onValueChange: (TextFieldValue) -> Unit,
-    modifier: Modifier = Modifier,
-    onClick: () -> Unit,
-    label: @Composable () -> Unit
-) {
-    Box {
-        TextField(
-            value = value,
-            onValueChange = onValueChange,
-            modifier = modifier,
-            label = label
-        )
-        Box(
-            modifier = Modifier
-                .matchParentSize()
-                .alpha(0f)
-                .clickable(onClick = onClick),
-        )
-    }
-}
-
-
-@Composable
-fun MyDateField() {
-    val dialogState = rememberMaterialDialogState()
-    val textState = remember { mutableStateOf(TextFieldValue()) }
-    val dialog = MaterialDialog(dialogState, buttons = {
-        positiveButton("Ok")
-        negativeButton("Cancel")
-    }){
-        datepicker { date ->
-            println(date)
-//            val formattedDate = date(
-//                DateTimeFormatter.ofPattern("dd.MM.yyyy")
-//            )
-//            textState.value = TextFieldValue(text = formattedDate)
-        }
-    }
-
-    Column(modifier = Modifier.padding(16.dp)) {
-        ReadonlyTextField(
-            value = textState.value,
-            onValueChange = { textState.value = it },
-            onClick = {
-                dialogState.show()
-            },
-            label = {
-                Text(text = "Date")
-            }
-        )
-    }
-}
 
 //
 //
@@ -604,67 +560,6 @@ fun MyDateField() {
 //
 //
 //// final code
-@OptIn(ExperimentalMaterialApi::class)
-@Composable
-fun TextFieldMenu(modifier: Modifier = Modifier, name: String) {
-
-//    val contextForToast = LocalContext.current.applicationContext
-
-    val listItems = arrayOf("Favorites", "Options", "Settings", "Share")
-
-    var selectedItem by remember {
-        mutableStateOf(listItems[0])
-    }
-
-    var expanded by remember {
-        mutableStateOf(false)
-    }
-
-    Column(modifier = modifier) {
-        // text field
-        TextField(
-            value = selectedItem,
-            onValueChange = {},
-            readOnly = true,
-            label = { Text(text = "$name") },
-            trailingIcon = {
-                IconButton(onClick = {
-                    expanded = !expanded
-                }) {
-                    Icon(
-                        imageVector =
-
-                        if (expanded) Icons.Outlined.KeyboardArrowUp else Icons.Outlined.ArrowDropDown,
-                        contentDescription =
-
-                        if (expanded) "show less" else "show more"
-                    )
-                }
-            },
-//            colors = DropdownMenuDefaults.textFieldColors()
-            // modifier = Modifier.clickable {
-            //      expanded = !expanded
-            // }
-        )
-
-        // menu
-        DropdownMenu(
-            expanded = expanded,
-            onDismissRequest = { expanded = false }
-        ) {
-            listItems.forEach { selectedOption ->
-                // menu item
-                DropdownMenuItem(onClick = {
-                    selectedItem = selectedOption
-                    expanded = false
-                }) {
-                    Text(text = selectedOption)
-                }
-            }
-        }
-    }
-}
-
 
 // in githup space in 19/1
 

@@ -22,11 +22,11 @@ import javax.inject.Inject
 import kotlin.math.roundToInt
 
 class ImportExcelFile
-//    (var month: String  ="", var year: String = "")
-@Inject constructor()
+    (val month: String  ="", val year: String = "")
+//@Inject constructor()
 {
-    var month: String = "8"
-    var year: String = "2022"
+//    var month: String = "8"
+//    var year: String = "2022"
     private var startDate = LocalDate.parse("$year-${getMonth((month.toInt() - 1).toString())}-21")
     private var endDate = LocalDate.parse("$year-${getMonth(month)}-20")
 

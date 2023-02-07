@@ -8,15 +8,10 @@ import org.jetbrains.kotlin.gradle.tasks.KotlinCompile
 //date picker https://gist.github.com/crisu83/92705fde7e2f27599a71642704e0ce62
 
 plugins {
-//    val kotlinVersion = "1.6.10"
-//    kotlin("jvm") version kotlinVersion
-//    kotlin("kapt") version kotlinVersion
-//    id("org.jetbrains.compose") version "1.1.0"
     val kotlinVersion = "1.7.10"
     kotlin("jvm") version kotlinVersion
     kotlin("kapt") version kotlinVersion
     id("org.jetbrains.compose") version "1.2.0-alpha01-dev764" //"1.2.0-alpha01-dev764"
-//    id("com.squareup.sqldelight") version "1.5.4"
 }
 
 group = "com.hrappv"
@@ -34,8 +29,20 @@ repositories {
         url = uri("https://repo.spring.io/release")
     }
     maven {
+
         url = uri("https://repository.jboss.org/maven2")
     }
+
+    maven {
+
+        url = uri("https://repo1.maven.org/maven2/")
+    }
+//    maven {
+//
+//        url = uri("https://repo.jenkins-ci.org/public/")
+//    }
+    maven {
+        url = uri("https://repo.gradle.org/gradle/libs-releases/") }
 }
 
 val daggerVersion by extra("2.44.2")
@@ -61,19 +68,18 @@ dependencies {
     implementation("com.theapache64:cyclone:1.0.0-alpha01")
     // Build, Execution, Deployment | Compiler | Kotlin Compiler | Kotlin Compiler version'
 
-    // Decompose : Decompose
 //    val decomposeVersion = "0.2.5"
 //    implementation("com.arkivanov.decompose:decompose-jvm:$decomposeVersion")
 //    implementation("com.arkivanov.decompose:extensions-compose-jetbrains-jvm:$decomposeVersion")
 
 //     Decompose : Decompose
-    implementation("com.arkivanov.decompose:decompose:1.0.0-alpha-04")
-    implementation("com.arkivanov.decompose:extensions-compose-jetbrains:1.0.0-alpha-04")
+    val decomposeVersion = "1.0.0-alpha-04"
+    implementation("com.arkivanov.decompose:decompose:$decomposeVersion")
+    implementation("com.arkivanov.decompose:extensions-compose-jetbrains:$decomposeVersion")
 
 
     //corotunie swing
-    implementation("org.jetbrains.kotlinx:kotlinx-coroutines-swing")
-
+    implementation("org.jetbrains.kotlinx:kotlinx-coroutines-swing:1.6.4")
 
 
     //Icons
@@ -87,14 +93,14 @@ dependencies {
     //implementation("com.vanpra.compose-material-dialogs:core:0.8.0")
 //    implementation("io.github.vanpra.compose-material-dialogs:datetime:0.9.0")
 //    implementation("com.afollestad.material-dialogs:input:3.3.0")
- implementation("ca.gosyer:compose-material-dialogs-datetime:0.8.0")
-   implementation("org.jetbrains.kotlinx:kotlinx-datetime:0.4.0")
+    implementation("ca.gosyer:compose-material-dialogs-datetime:0.8.0")
+    implementation("org.jetbrains.kotlinx:kotlinx-datetime:0.4.0")
 
 
 //lottie
 //val lottieVersion = "5.2.0"
 
-  //implementation("com.airbnb.android:lottie-compose:$lottieVersion")
+    //implementation("com.airbnb.android:lottie-compose:$lottieVersion")
 
 
     // implementation("com.github.ltttttttttttt.ComposeViews:maven_desktop:$version")//this, such as 1.3.4
@@ -126,10 +132,10 @@ dependencies {
 
     // JUnit : JUnit is a unit testing framework for Java, created by Erich Gamma and Kent Beck.
     testImplementation("org.jetbrains.kotlin:kotlin-test-junit5:1.7.22")
-    
+
     //sqldelight test
     testImplementation("com.squareup.sqldelight:sqlite-driver:1.5.4")
-      
+
 }
 
 

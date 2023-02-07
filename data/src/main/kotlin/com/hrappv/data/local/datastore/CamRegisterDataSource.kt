@@ -13,7 +13,7 @@ interface CamRegisterDataSource {
 
     fun insertCamRegisterDay(camRegister: CamRegisterDay): String
 
-    fun insertMultiCamRegDay(camRegList: List<CamRegisterDay>): String
+    fun insertMultiCamRegDay(camRegList: List<CamRegisterDay>): List<CamRegisterDay>
 
 
     suspend fun checkCamRegister(emp: String, oDate: String, hour: String, statue: String): Cam_register_d?

@@ -20,17 +20,25 @@ import androidx.compose.runtime.remember
 import androidx.compose.ui.*
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.text.font.FontWeight
+import androidx.compose.ui.text.input.TextFieldValue
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
 import com.hrappv.data.models.EmployeeResult
 import com.hrappv.ui.components.DepartMenuDropDown
+import com.hrappv.ui.components.MyDateField
 import com.hrappv.ui.components.ShowMessageDialog
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.cancel
 import kotlinx.coroutines.isActive
 import kotlinx.coroutines.launch
+import kotlinx.datetime.Clock
+import kotlinx.datetime.TimeZone
+import kotlinx.datetime.toJavaLocalDate
+import kotlinx.datetime.toLocalDateTime
 import utils.LCE
+import java.time.LocalDate
+import java.time.format.DateTimeFormatter
 
 @Composable
 fun EmployeeResultScreen(
@@ -44,15 +52,47 @@ fun EmployeeResultScreen(
     val importState = viewModel.empResults.collectAsState()
     val insertResult = viewModel.insertEmpResults.collectAsState()
     val startImporter by viewModel.startImporter.collectAsState()
+    val screenMessage by viewModel.screenMessage.collectAsState()
+    val scaffoldState = rememberScaffoldState()
+
+    LaunchedEffect(true) {
+        if (screenMessage != null) {
+            when (val state = screenMessage) {
+                is EmployeeResultViewModel.ScreenMessage.ScafoldStateMessage -> {
+                    scaffoldState.snackbarHostState.showSnackbar(
+                        state.message,
+                        actionLabel = "ok",
+                    )
+
+                }
+
+                is EmployeeResultViewModel.ScreenMessage.DialogStateMessage -> {
+                    viewModel.dialogMessage(state.message)
+                }
+
+                else -> {}
+            }
+        }
+    }
+
 
     var showPathDialog by remember { mutableStateOf(false) }
     var showMessageDialog by remember { mutableStateOf(false) }
+    val date = Clock.System.now()
+        .toLocalDateTime(TimeZone.currentSystemDefault())
+        .date.toJavaLocalDate()
+    val pattern = DateTimeFormatter.ofPattern("dd.MM.yyyy")
 
+
+    val formatedDate = date.format(pattern)
+    val dateState = remember { mutableStateOf(TextFieldValue(formatedDate)) }
+
+    LaunchedEffect(dateState)
+    { viewModel.setDate(dateState.value.text) }
 
     // 2
     val scope = rememberCoroutineScope()
 
-    val scaffoldState = rememberScaffoldState()
 
     /***
      * import
@@ -63,26 +103,26 @@ fun EmployeeResultScreen(
 
     println("startImporter = $startImporter")
 
-    if (insertResult.value.isNotEmpty()) {
-        showMessageDialog = true
-
-
-    }
-
-
-    if (showMessageDialog) {
-        ShowMessageDialog(
-            onDismissRequest = {
-                viewModel.dialogMessage()//close
-                showMessageDialog = false
-            }, ok = {
-                viewModel.dialogMessage()
-                showMessageDialog = false
-            },
-            cancel = { showMessageDialog = false },
-            message = insertResult.value
-        )
-    }
+//    if (insertResult.value.isNotEmpty()) {
+//        showMessageDialog = true
+//
+//
+//    }
+//
+//
+//    if (showMessageDialog) {
+//        ShowMessageDialog(
+//            onDismissRequest = {
+//                viewModel.dialogMessage()//close
+//                showMessageDialog = false
+//            }, ok = {
+//                viewModel.dialogMessage()
+//                showMessageDialog = false
+//            },
+//            cancel = { showMessageDialog = false },
+//            message = insertResult.value
+//        )
+//    }
 
     /**
      * show chose file dialog
@@ -97,7 +137,7 @@ fun EmployeeResultScreen(
 
 
     /**
-     * show Import excel message dialog
+     * show Import excel message dialog when back pressed
      */
 
     if (showWarningDialog) {
@@ -193,15 +233,10 @@ fun EmployeeResultScreen(
                             if (path.isNotEmpty()) {
                                 Button(
                                     onClick = {
-
-//                                            startImporter = true
-
-//                                                startImporter =!
-//                                       val registerJop =
-                                           scope.launch(Dispatchers.IO)
+                                        scope.launch(Dispatchers.IO)
                                         {
                                             viewModel.registerDayByCam(path)
-                                        viewModel.setStartImporter(false)
+                                            viewModel.setStartImporter(false)
 
                                         }
 //                                           .isCompleted
@@ -250,69 +285,18 @@ fun EmployeeResultScreen(
                                         }
                                     }
                                 },
-                                shape = RoundedCornerShape(16.dp),
+                                shape = RoundedCornerShape(25.dp),
 
                                 )
 
                         }
 
-                        Row(modifier = Modifier.align(Alignment.CenterEnd)){
+                        Row(modifier = Modifier.align(Alignment.CenterEnd)) {
 
-
-//                            DepartMenuDropDown(
-//                                name = "Select Department",
-//                                departments = departments,
-//                                menuItemSelected = { depart ->
-//                                    if (depart != null) {
-//                                        department = if (depart.department == "Select Department") {
-//                                            ""
-//                                        } else {
-//                                            depart.department
+                            MyDateField(dateState)
 //
-//                                        }
-//
-//
-//                                    }
-//                                }
-//                            )
                         }
                     }
-//                    }
-
-//                    Row(
-//                        modifier = Modifier
-//                            .fillMaxWidth()
-//                            .padding(
-//                                horizontal = 16.dp,
-//                                vertical = 16.dp
-//                            ), // this can change for contentPadding = PaddingValues(horizontal = 16.dp)
-//                        verticalAlignment = Alignment.CenterVertically, // this modifier for column
-//                        horizontalArrangement = Arrangement.Center      // this can change for Arrangement.spacedBy()
-//
-//                    ) {
-//
-//                        OutlinedTextField(
-//                            value = path,
-//                            onValueChange = { path = it },
-//                            modifier = Modifier.padding(end = 16.dp).weight(1f),
-//                            placeholder = { Text("put url excel folder") },
-//                            label = { Text(text = "paste here ...") },
-//                            leadingIcon = { Icon(Icons.Filled.Refresh, "search location") }
-//
-//                        )
-//
-//                        Button(onClick = {
-////                    importState = LCE.LOADING
-//
-//                            scope.launch(Dispatchers.IO) {
-//                                viewModel.getEmployeeResults(path)
-////                        scaffoldState.snackbarHostState.showSnackbar("Button Clicked ")
-////                        importState = repository.getEmployReport(path)
-//                            }
-//                        }) {
-//                            Icon(Icons.Outlined.Search, "Search")
-//                        }
-//                    }
 
 
                     when (val state = importState.value) {

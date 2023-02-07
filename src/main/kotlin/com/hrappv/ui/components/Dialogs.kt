@@ -8,6 +8,7 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.window.*
+import com.vanpra.composematerialdialogs.DesktopWindowPosition
 import kotlinx.coroutines.DelicateCoroutinesApi
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.GlobalScope
@@ -67,6 +68,7 @@ fun FileDialog( //FrameWindowScope.
             this.title = title
             this.file = "" // to select only folder
             this.directory
+//            this.location = DesktopWindowPosition(Alignment.Center)
 //            this.fileFilter = FileNameExtensionFilter("folders", "") // to
 
 //            painterResource("drawables/logo.png")

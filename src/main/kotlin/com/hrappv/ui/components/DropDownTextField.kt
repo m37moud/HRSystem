@@ -1,14 +1,13 @@
 package com.hrappv.ui.components
 
-import androidx.compose.foundation.clickable
-import androidx.compose.foundation.layout.*
+import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.heightIn
+import androidx.compose.foundation.layout.widthIn
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.*
 import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.filled.ArrowDropDown
-import androidx.compose.material.icons.filled.KeyboardArrowUp
 import androidx.compose.material.icons.outlined.ArrowDropDown
 import androidx.compose.material.icons.outlined.KeyboardArrowUp
 import androidx.compose.runtime.*
@@ -18,36 +17,30 @@ import androidx.compose.ui.platform.LocalDensity
 import androidx.compose.ui.text.input.ImeAction
 import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.unit.dp
-import com.hrappv.data.models.Department
 
 @Composable
-fun DepartMenuDropDown(
+fun TextFieldMenu(
     modifier: Modifier = Modifier,
     name: String,
-    departments: List<Department>,
-    menuItemSelected: (Department?) -> Unit
+    listItems: List<String> = listOf("-", "-", "-", "-"),
+    menuItemSelected: (String?) -> Unit
 ) {
-    var expanded by remember { mutableStateOf(false) }
-    var selectedText by remember { mutableStateOf("") }
 
     var dropDownWidth by remember { mutableStateOf(0) }
 
-    val icon = if (expanded)
-        Icons.Filled.KeyboardArrowUp
-    else
-        Icons.Filled.ArrowDropDown
+    var selectedItem by remember {
+        mutableStateOf(listItems[0])
+    }
 
+    var expanded by remember {
+        mutableStateOf(false)
+    }
 
-    Column(modifier = modifier
-//        modifier = if (expanded) {
-//            Modifier.height(200.dp).verticalScroll(
-//                state = rememberScrollState(0), enabled = true
-//            )
-//        } else Modifier
-    ) {
+    Column(modifier = modifier) {
+        // text field
         OutlinedTextField(
-            value = selectedText,
-            onValueChange = { selectedText = it },
+            value = selectedItem,
+            onValueChange = { selectedItem = it },
             modifier = modifier
                 .onSizeChanged {
                     dropDownWidth = it.width
@@ -68,42 +61,43 @@ fun DepartMenuDropDown(
                     expanded = !expanded
                 }) {
                     Icon(
-                        imageVector = icon,
-                        contentDescription = if (expanded) "show less" else "show more"
+                        imageVector =
+
+                        if (expanded) Icons.Outlined.KeyboardArrowUp else Icons.Outlined.ArrowDropDown,
+                        contentDescription =
+
+                        if (expanded) "show less" else "show more"
                     )
                 }
             },
         )
+
+        // menu
         DropdownMenu(
             expanded = expanded,
             onDismissRequest = { expanded = false },
-            modifier = modifier.verticalScroll(state = rememberScrollState(0), enabled = true)
+            modifier = modifier
+                .verticalScroll(
+                    state = rememberScrollState(0),
+                    enabled = true
+                )
                 .heightIn(200.dp)
-                .widthIn(
-                    with(LocalDensity.current) {
-                        dropDownWidth.toDp()
-                    })
+                .widthIn(with(LocalDensity.current) {
+                    dropDownWidth.toDp()
+                })
         ) {
-            DropdownMenuItem(onClick = {
-                selectedText = "All Departments"
-                menuItemSelected(Department())
-                expanded = false
-
-            }) {
-                Text(text = "All Departments")
-            }
-            departments.forEach { label ->
+            listItems.forEach { selectedOption ->
+                // menu item
                 DropdownMenuItem(onClick = {
-                    selectedText = label.department
-                    menuItemSelected(label)
-                    expanded = false
+                    selectedItem = selectedOption
+                    menuItemSelected(selectedOption)
 
+                    expanded = false
                 }) {
-                    Text(text = label.department)
+                    Text(text = selectedOption)
                 }
             }
         }
     }
 }
-
 

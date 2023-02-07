@@ -50,8 +50,8 @@ class CamRegisterDataSourceImpl @Inject constructor(
         return result
     }
 
-    override  fun insertMultiCamRegDay(camRegList: List<CamRegisterDay>): String {
-        var multiResult = ""
+    override  fun insertMultiCamRegDay(camRegList: List<CamRegisterDay>): List<CamRegisterDay> {
+        var multiResult = mutableListOf<CamRegisterDay>()
 //        withContext(dispatcher) {
             queries.transaction {
                 camRegList.forEach { regDay ->
@@ -59,12 +59,13 @@ class CamRegisterDataSourceImpl @Inject constructor(
                         queries.checkRegisterCam(regDay.empName!!, regDay.oDATE,regDay.hour, regDay.status).executeAsOneOrNull()
                     if (isFound == null) {
                         insertDay(regDay)
+                        multiResult.add(regDay)
                     }
                 }
 
 
-                afterCommit { multiResult = "All Days are Register" }
-                afterRollback { multiResult = "Register Day Fail" }
+//                afterCommit { multiResult = "All Days are Register" }
+//                afterRollback { multiResult = "Register Day Fail" }
             }
 
 //        }
