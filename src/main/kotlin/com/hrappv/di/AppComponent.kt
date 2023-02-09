@@ -2,7 +2,7 @@ package com.hrappv.di
 
 import com.hrappv.data.di.module.DatabaseModule
 import com.hrappv.ui.feature.employe_result.EditEmployeScreenComponent
-import com.hrappv.ui.feature.employe_result.EmployResultScreenComponent
+import com.hrappv.ui.feature.employe_result.register_attends.EmployResultScreenComponent
 import com.hrappv.ui.feature.login.LoginComponent
 import com.hrappv.ui.feature.main.MainScreenComponent
 import com.hrappv.ui.feature.splash.SplashScreenComponent

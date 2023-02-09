@@ -1,11 +1,15 @@
-package com.hrappv.ui.feature.employe_result
+package com.hrappv.ui.feature.employe_result.register_attends
 
 import FileDialog
 import androidx.compose.animation.animateContentSize
 import androidx.compose.desktop.ui.tooling.preview.Preview
+import androidx.compose.foundation.HorizontalScrollbar
+import androidx.compose.foundation.ScrollbarAdapter
+import androidx.compose.foundation.horizontalScroll
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
+import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.*
 import androidx.compose.material.icons.Icons
@@ -25,20 +29,15 @@ import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
 import com.hrappv.data.models.EmployeeResult
-import com.hrappv.ui.components.DepartMenuDropDown
 import com.hrappv.ui.components.MyDateField
 import com.hrappv.ui.components.ShowMessageDialog
 import com.toxicbakery.logging.Arbor
-import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.cancel
-import kotlinx.coroutines.isActive
-import kotlinx.coroutines.launch
+import kotlinx.coroutines.*
 import kotlinx.datetime.Clock
 import kotlinx.datetime.TimeZone
 import kotlinx.datetime.toJavaLocalDate
 import kotlinx.datetime.toLocalDateTime
 import utils.LCE
-import java.time.LocalDate
 import java.time.format.DateTimeFormatter
 
 @Composable
@@ -49,8 +48,10 @@ fun EmployeeResultScreen(
 
     var path by remember { mutableStateOf("") }
     // 1
-//    var importState by remember { mutableStateOf<LCE<List<EmployeeResult>>?>(null) }
-    val importState = viewModel.empResults.collectAsState()
+    //var importState by remember { mutableStateOf<LCE<List<EmployeeResult>>?>(null) }
+    val empResultState = viewModel.empResults.collectAsState()
+    val empResult = viewModel.employee.collectAsState(null).value
+
     val insertResult = viewModel.insertEmpResults.collectAsState()
     val startImporter by viewModel.startImporter.collectAsState()
     val screenMessage by viewModel.screenMessage.collectAsState()
@@ -310,8 +311,34 @@ fun EmployeeResultScreen(
                         }
                     }
 
+                    /**
+                     *observe all employee result
+                     */
+                    scope.launch(Dispatchers.IO) {
+                        delay(1000)
 
-                    when (val state = importState.value) {
+                        if (empResult != null) {
+                            if (empResult.isNotEmpty()) {
+                                viewModel.setEmpResult(empResult)
+                            } else {
+                                val message =
+//                                    if (viewModel.checkIfNoDepartment() > 0) "No Employee is found "
+//                                else
+                                    "No Employee is found \n" +
+                                        "insert Department first"
+                                viewModel.setEmpResultError(
+                                    message
+                                )
+
+
+                            }
+                        }
+
+                    }
+
+
+
+                    when (val state = empResultState.value) {
                         is LCE.LOADING -> LoadingUI()
                         is LCE.CONTENT -> ContentUI(state.data)
                         is LCE.ERROR -> ErrorUI(state.error)
@@ -343,9 +370,10 @@ fun EmployeeResultScreen(
 @Composable
 @Preview
 fun ContentUI(data: List<EmployeeResult>) {
-
-    Column(
-        modifier = Modifier.fillMaxSize()
+    val horizontalScrollState = rememberScrollState(0)
+    Box{
+        Column(
+        modifier = Modifier.fillMaxSize().horizontalScroll(state = horizontalScrollState , enabled = true)
 //            .horizontalScroll(rememberScrollState())
         ,
         horizontalAlignment = Alignment.CenterHorizontally // this can change for verticalAlignment
@@ -361,7 +389,7 @@ fun ContentUI(data: List<EmployeeResult>) {
                 horizontalArrangement = Arrangement.SpaceBetween
             ) {
 
-                Item(text = "ID", width = 55.dp)
+//                Item(text = "ID", width = 55.dp)
                 Item(text = "Name", width = 450.dp)
                 Item(text = "Department", width = 200.dp)
                 Item(text = "Attend Days", width = 200.dp)
@@ -385,6 +413,10 @@ fun ContentUI(data: List<EmployeeResult>) {
 
 
     }
+        HorizontalScrollbar(adapter = rememberScrollbarAdapter(horizontalScrollState) ,
+            modifier = Modifier.fillMaxWidth(),)
+
+    }
 
 }
 
@@ -406,7 +438,6 @@ fun EmployeeCard(employeeResult: EmployeeResult) {
 @Preview
 fun EmployeeItem(employeeResult: EmployeeResult) {
 
-
     Row(
         modifier = Modifier.fillMaxWidth()
             .padding(vertical = 5.dp, horizontal = 10.dp),
@@ -425,6 +456,7 @@ fun EmployeeItem(employeeResult: EmployeeResult) {
             Icon(Icons.Filled.AccountBox, "show employee detail")
         }
     }
+
 
 
 }

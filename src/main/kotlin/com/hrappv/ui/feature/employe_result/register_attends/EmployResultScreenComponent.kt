@@ -1,4 +1,4 @@
-package com.hrappv.ui.feature.employe_result
+package com.hrappv.ui.feature.employe_result.register_attends
 
 import androidx.compose.runtime.*
 import com.hrappv.di.AppComponent

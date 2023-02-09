@@ -18,12 +18,44 @@ class EmpResultDataSourceImpl @Inject constructor(
 ) : EmpResultDataSource {
 
     val queries = hrAppDb.emp_resultQueries
-    override fun getAllEmpResults(): Flow<List<GetEmpResult>> {
-        return queries.getEmpResult().asFlow().mapToList()
+    override fun getAllEmpResults(): Flow<List<EmployeeResult>> {
+        return queries.getEmpResult(
+            ::allEmpResultsMapper
+        ).asFlow().mapToList()
     }
 
-    override fun getAllEmployeeResults(): List<GetEmpResult> {
-        return queries.getEmpResult().executeAsList()
+    private fun allEmpResultsMapper(
+        empName: String,
+        department_name: String,
+        month: String?,
+        year: String?,
+        numberOfAttendDays: Int?,
+        daysToCheckNoted: String?,
+        numberOfAbsentDays: Int?,
+        totalPartTime: Double?,
+        partTimeDays: String?,
+        totalEarlyTime: Double?,
+        totalEarlyAccessTimeDays: String?,
+        absentDays: String?
+    ) =
+        EmployeeResult(
+            name = empName,
+            department = department_name,
+            month = month ?: "",
+            year = year ?: "",
+            numberOfAttendDays = numberOfAttendDays ?: 0,
+            daysToCheckNoted = daysToCheckNoted ?: "",
+            numberOfAbsentDays = numberOfAbsentDays ?: 0,
+            totalPartTime = totalPartTime ?: 0.0,
+            partTimeDays = partTimeDays ?: "",
+            totalEarlyTime = totalEarlyTime ?: 0.0,
+            totalEarlyAccessTimeDays = totalEarlyAccessTimeDays ?: "",
+            absentDays = absentDays ?: "",
+
+            )
+
+    override fun getAllEmployeeResults(): List<EmployeeResult> {
+        return queries.getEmpResult(::allEmpResultsMapper).executeAsList()
     }
 
     override suspend fun insertEmpResult(empResult: EmployeeResult) {
@@ -45,27 +77,27 @@ class EmpResultDataSourceImpl @Inject constructor(
         }
     }
 
-    override suspend fun insertMultiEmpResult(empResultList: List<EmployeeResult>) : String {
+    override suspend fun insertMultiEmpResult(empResultList: List<EmployeeResult>): String {
         var multiResult = ""
 
-        withContext(dispatcher){
-        queries.transaction {
-            empResultList.forEach { empResult ->
-                val result =
-                    queries.checkEmpResult(
-                        fname = empResult.name,
-                        month = empResult.month,
-                        year = empResult.year
-                    ).executeAsOneOrNull()
-                if (result == null) {
-                    insertEmployeeResult(empResult)
-                    insertMultiEmployeeDayDetails(empResult.attendDays)
+        withContext(dispatcher) {
+            queries.transaction {
+                empResultList.forEach { empResult ->
+                    val result =
+                        queries.checkEmpResult(
+                            fname = empResult.name,
+                            month = empResult.month,
+                            year = empResult.year
+                        ).executeAsOneOrNull()
+                    if (result == null) {
+                        insertEmployeeResult(empResult)
+                        insertMultiEmployeeDayDetails(empResult.attendDays)
+
+                    }
 
                 }
-
-            }
-            afterCommit { multiResult = "All Employee Result are Register" }
-            afterRollback { multiResult = "Register Day Fail" }
+                afterCommit { multiResult = "All Employee Result are Register" }
+                afterRollback { multiResult = "Register Day Fail" }
             }
         }
         return multiResult

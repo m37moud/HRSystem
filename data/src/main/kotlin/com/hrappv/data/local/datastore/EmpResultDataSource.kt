@@ -8,8 +8,8 @@ import kotlinx.coroutines.flow.Flow
 
 interface EmpResultDataSource {
 
-    fun getAllEmpResults(): Flow<List<GetEmpResult>>
-    fun getAllEmployeeResults(): List<GetEmpResult>
+    fun getAllEmpResults(): Flow<List<EmployeeResult>>
+    fun getAllEmployeeResults(): List<EmployeeResult>
 
     suspend fun insertEmpResult(empResult: EmployeeResult)
 

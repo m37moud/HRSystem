@@ -1,4 +1,4 @@
-package com.hrappv.ui.feature.employe_result
+package com.hrappv.ui.feature.employe_result.register_attends
 
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
@@ -37,12 +37,15 @@ class EmployeeResultViewModel @Inject constructor(
     private val _screenMessage = MutableStateFlow<ScreenMessage?>(null)
     val screenMessage: StateFlow<ScreenMessage?> = _screenMessage
 
+//
+//    private val _employeeResult: MutableStateFlow<List<CamRegisterDay?>> = MutableStateFlow(emptyList())
+//    val employeeResult: StateFlow<List<CamRegisterDay?>> = _employeeResult
 
-    private val _employee: MutableStateFlow<List<CamRegisterDay?>> = MutableStateFlow(emptyList())
-    val employee: StateFlow<List<CamRegisterDay?>> = _employee
+    val employee = myRepo.empResult.getAllEmpResults()
 
-    private val _empResults: MutableStateFlow<LCE<List<EmployeeResult>>> = MutableStateFlow(LCE.NOACTION)
-    val empResults: StateFlow<LCE<List<EmployeeResult>>> = _empResults
+    private val _empResults: MutableStateFlow<LCE<List<EmployeeResult>>?> = MutableStateFlow(null)
+    val empResults: StateFlow<LCE<List<EmployeeResult>>?> = _empResults
+
 
     var date by mutableStateOf<LocalDate?>(null)
         private set
@@ -68,6 +71,13 @@ class EmployeeResultViewModel @Inject constructor(
 //        _empResults.value = LCE.CONTENT(listEmpReporter)
     }
 
+    fun setEmpResult(empResult : List<EmployeeResult>){
+        _empResults.value =LCE.LOADING
+        _empResults.value =LCE.CONTENT(empResult)
+    }
+    fun setEmpResultError(error : String){
+        _empResults.value = LCE.ERROR(error)
+    }
 
     /* TODO insert all exel in database */
     suspend fun registerDayByCam(folderPath: String? = null, pList: List<String>? = null) {
@@ -106,7 +116,7 @@ class EmployeeResultViewModel @Inject constructor(
                     }
                 } else {
                     Arbor.d("please select correct month")
-                    _screenMessage.emit(ScreenMessage.DialogStateMessage(" please select correct month" , true))
+                    _screenMessage.emit(ScreenMessage.DialogStateMessage(" please select correct month", true))
 
 
                 }
@@ -114,11 +124,11 @@ class EmployeeResultViewModel @Inject constructor(
             } else {
                 println("Folder is Empty")
 //                dialogMessage("Folder is Empty")
-                _screenMessage.emit(ScreenMessage.DialogStateMessage("Folder is Empty" , error = true))
+                _screenMessage.emit(ScreenMessage.DialogStateMessage("Folder is Empty", error = true))
             }
 
         } else {
-            _screenMessage.emit(ScreenMessage.DialogStateMessage("No Date Initialized" , error = true))
+            _screenMessage.emit(ScreenMessage.DialogStateMessage("No Date Initialized", error = true))
         }
         setStartImporter(false)
     }
