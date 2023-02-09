@@ -3,13 +3,10 @@ package com.hrappv.ui.feature.employe_result.register_attends
 import FileDialog
 import androidx.compose.animation.animateContentSize
 import androidx.compose.desktop.ui.tooling.preview.Preview
-import androidx.compose.foundation.HorizontalScrollbar
-import androidx.compose.foundation.ScrollbarAdapter
-import androidx.compose.foundation.horizontalScroll
+import androidx.compose.foundation.*
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
-import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.*
 import androidx.compose.material.icons.Icons
@@ -340,7 +337,7 @@ fun EmployeeResultScreen(
 
                     when (val state = empResultState.value) {
                         is LCE.LOADING -> LoadingUI()
-                        is LCE.CONTENT -> ContentUI(state.data)
+                        is LCE.CONTENT ->   ContentUI(state.data)
                         is LCE.ERROR -> ErrorUI(state.error)
                         else -> {}
                     }
@@ -371,11 +368,14 @@ fun EmployeeResultScreen(
 @Preview
 fun ContentUI(data: List<EmployeeResult>) {
     val horizontalScrollState = rememberScrollState(0)
-    Box{
+    Box(
+        Modifier.fillMaxSize()
+    ){
         Column(
-        modifier = Modifier.fillMaxSize().horizontalScroll(state = horizontalScrollState , enabled = true)
+            modifier = Modifier.fillMaxSize().horizontalScroll(state = horizontalScrollState , enabled = true)
+,
 //            .horizontalScroll(rememberScrollState())
-        ,
+
         horizontalAlignment = Alignment.CenterHorizontally // this can change for verticalAlignment
     ) {
         Card(
@@ -413,8 +413,17 @@ fun ContentUI(data: List<EmployeeResult>) {
 
 
     }
-        HorizontalScrollbar(adapter = rememberScrollbarAdapter(horizontalScrollState) ,
-            modifier = Modifier.fillMaxWidth(),)
+        VerticalScrollbar(
+            modifier = Modifier.align(Alignment.CenterEnd)
+                .fillMaxHeight()
+            .padding(end = 8.dp),
+
+        adapter = rememberScrollbarAdapter(horizontalScrollState)
+        )
+        HorizontalScrollbar( modifier = Modifier.align(Alignment.BottomStart)
+            .fillMaxWidth()
+            .padding(bottom = 8.dp),
+            adapter = rememberScrollbarAdapter(horizontalScrollState))
 
     }
 
@@ -474,6 +483,7 @@ fun Item(text: String, width: Dp) {
             maxLines = 1,
             textAlign = TextAlign.Center,
             text = text,
+
             style = MaterialTheme.typography.h6.copy(fontWeight = FontWeight.ExtraBold),
             modifier = modifierText.width(width),
         )
