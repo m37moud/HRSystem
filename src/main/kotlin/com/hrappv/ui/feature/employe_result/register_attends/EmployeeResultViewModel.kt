@@ -56,6 +56,11 @@ class EmployeeResultViewModel @Inject constructor(
     var result by mutableStateOf(emptyList<CamRegisterDay>())
         private set
 
+    private val _resultDetailsPressed = MutableStateFlow<EmployeeResult?>(null)
+    val resultDetailsPressed: StateFlow<EmployeeResult?> = _resultDetailsPressed
+
+    private val _isResultDetailsPressed = MutableStateFlow(false)
+    val isResultDetailsPressed: StateFlow<Boolean> = _isResultDetailsPressed
 
     private val _isBackPressed = MutableStateFlow(false)
     val backToMain: StateFlow<Boolean> = _isBackPressed
@@ -71,11 +76,24 @@ class EmployeeResultViewModel @Inject constructor(
 //        _empResults.value = LCE.CONTENT(listEmpReporter)
     }
 
-    fun setEmpResult(empResult : List<EmployeeResult>){
-        _empResults.value =LCE.LOADING
-        _empResults.value =LCE.CONTENT(empResult)
+    fun setEmpResult(empResult: List<EmployeeResult>) {
+        _empResults.value = LCE.LOADING
+        _empResults.value = LCE.CONTENT(empResult)
     }
-    fun setEmpResultError(error : String){
+
+    suspend fun getResultByDate() {
+        _empResults.value = LCE.LOADING
+        val month = date!!.monthValue.toString()
+        val year = date!!.year.toString()
+        val result = myRepo.empResult.getEmpResultByMonthAndYear(month, year)
+        if (result.isNotEmpty())
+            _empResults.value = LCE.CONTENT(result)
+        else
+            setEmpResultError("No Employees Result For this month")
+
+    }
+
+    fun setEmpResultError(error: String) {
         _empResults.value = LCE.ERROR(error)
     }
 
@@ -159,9 +177,15 @@ class EmployeeResultViewModel @Inject constructor(
         _isBackPressed.value = true
     }
 
+    fun onStartResultDetails(empResult: EmployeeResult) {
+        _isResultDetailsPressed.value = true
+        _resultDetailsPressed.value = empResult
+
+    }
+
     sealed class ScreenMessage {
         data class ScafoldStateMessage(val message: String) : ScreenMessage()
-        data class DialogStateMessage(val message: String, val error :Boolean = false) : ScreenMessage()
+        data class DialogStateMessage(val message: String, val error: Boolean = false) : ScreenMessage()
     }
 
 

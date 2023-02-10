@@ -13,6 +13,9 @@ import com.hrappv.ui.feature.about.AboutComponent
 import com.hrappv.ui.feature.department.add_department.AddDepartmentComponent
 import com.hrappv.ui.feature.department.DefaultDepartmentComponent
 import com.hrappv.ui.feature.department.show_departments.DepartmentComponent
+import com.hrappv.ui.feature.employe_result.emp_result_detail.EmployeeResultDetailComponent
+import com.hrappv.ui.feature.employe_result.emp_result_detail.absent_days.DaysDetailComponent
+import com.hrappv.ui.feature.employe_result.emp_result_detail.details_days.AbsentDaysDetailComponent
 import com.hrappv.ui.feature.home_screen.HomeComponent
 import com.hrappv.ui.feature.login.LoginViewModel
 import com.hrappv.ui.feature.main.MainViewModel
@@ -43,6 +46,9 @@ interface AppComponent {
     fun inject(viewEmployeesComponent: ViewEmployeesComponent)
     fun inject(editEmployeScreenComponent: EditEmployeScreenComponent)
     fun inject(settingsComponent: SettingsComponent)
+    fun inject(employeeResultDetailComponent: EmployeeResultDetailComponent)
+    fun inject(daysDetailComponent: DaysDetailComponent)
+    fun inject(absentDaysDetailComponent: AbsentDaysDetailComponent)
     fun inject(aboutComponent: AboutComponent)
 
 //    fun getImporter() :ImportExcelFile

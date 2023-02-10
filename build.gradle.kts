@@ -22,6 +22,8 @@ repositories {
     mavenCentral()
     mavenLocal()
     google()
+    maven { url = uri("https://oss.sonatype.org/content/repositories/snapshots/")}
+
     maven { url = uri("https://jitpack.io") }
     maven { url = uri("https://maven.pkg.jetbrains.space/public/p/compose/dev") }
     maven { url = uri("https://dl.bintray.com/kotlin/kotlin-eap") }
@@ -41,6 +43,8 @@ repositories {
 //
 //        url = uri("https://repo.jenkins-ci.org/public/")
 //    }
+
+
     maven {
         url = uri("https://repo.gradle.org/gradle/libs-releases/") }
 }
@@ -100,14 +104,19 @@ dependencies {
 //lottie
 //val lottieVersion = "5.2.0"
 
-    //implementation("com.airbnb.android:lottie-compose:$lottieVersion")
-
+//    implementation("com.airbnb.android:lottie-compose:$lottieVersion")
 
     // implementation("com.github.ltttttttttttt.ComposeViews:maven_desktop:$version")//this, such as 1.3.4
 
-//
+    // Accompanist
 
 
+//    implementation("com.google.accompanist:accompanist-pager:0.25.0")
+
+//    implementation( "com.google.accompanist:accompanist-pager:0.25.0") // Pager
+//    implementation ("com.google.accompanist:accompanist-pager-indicators:0.25.0") // Pager Indicators
+
+    // ...
     /**
      * Testing Dependencies
      */

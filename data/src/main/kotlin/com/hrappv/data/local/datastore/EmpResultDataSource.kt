@@ -10,6 +10,7 @@ interface EmpResultDataSource {
 
     fun getAllEmpResults(): Flow<List<EmployeeResult>>
     fun getAllEmployeeResults(): List<EmployeeResult>
+    fun getEmpResultByMonthAndYear(month:String , year :String): List<EmployeeResult>
 
     suspend fun insertEmpResult(empResult: EmployeeResult)
 
@@ -22,6 +23,7 @@ interface EmpResultDataSource {
      */
     fun getAllDayDetails(): Flow<List<DayDetails>>
     fun getAllEmpDayDetails(): List<DayDetails>
+    fun getAllDayDetailsById(EmpName : String , month : String , year : String): List<DayDetails>
     suspend fun insertEmpDayDetails(dayDetail: DayDetails)
 
     suspend fun insertMultiEmpDayDetails(dayDetail: List<DayDetails>)

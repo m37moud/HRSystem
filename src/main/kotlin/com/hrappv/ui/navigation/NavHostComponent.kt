@@ -14,6 +14,7 @@ import com.arkivanov.decompose.router.stack.*
 import com.arkivanov.decompose.value.Value
 import com.hrappv.ui.feature.about.AboutComponent
 import com.hrappv.ui.feature.department.DefaultDepartmentComponent
+import com.hrappv.ui.feature.employe_result.DefaultResultComponent
 import com.hrappv.ui.feature.employees.DefaultViewEmpComponent
 import com.hrappv.ui.feature.home_screen.HomeComponent
 import com.hrappv.ui.feature.main.MainScreen2
@@ -95,7 +96,7 @@ class NavHostComponent(
 
             )
 
-            is Config.RegisterAttends -> EmployResultScreenComponent(
+            is Config.EmployeeResult -> DefaultResultComponent(
                 appComponent = appComponent,
                 componentContext = componentContext,
                 onBackPress = ::onBackPress
@@ -212,7 +213,7 @@ class NavHostComponent(
                 is DefaultDepartmentComponent -> 1
 //                is AddEmployeScreenComponent -> 2
                 is ViewEmployeesComponent -> 2
-                is EmployResultScreenComponent -> 3
+                is DefaultResultComponent -> 3
                 is SettingsComponent -> 4
                 is AboutComponent -> 5
                 is MainScreenComponent -> 6
@@ -265,7 +266,7 @@ class NavHostComponent(
 
     private fun startRegisterAttendsScreen() {
 //        router.replaceCurrent(Config.EmployeResult)
-        navigation.bringToFront(Config.RegisterAttends)
+        navigation.bringToFront(Config.EmployeeResult)
     }
 
     private fun startSettingsScreen() {

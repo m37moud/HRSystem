@@ -49,6 +49,22 @@ JOIN Department ON day_details.depart_id = Department.depart_id
 ORDER BY day_details.emp_id ASC ;
 
 
+getAllDayDetailsById:
+SELECT employe.fname AS empName, Department.department AS department_name,
+day_details.day,day_details.month,day_details.year
+,day_details.wardia,day_details.typeOfDay,day_details.partTime,
+day_details.earlyAccess,day_details.earlyAccessNote , day_details.notes
+FROM day_details
+JOIN employe ON day_details.emp_id = employe.emp_id
+JOIN Department ON day_details.depart_id = Department.depart_id
+-- WHERE day_register.emp_id = ?
+WHERE day_details.emp_id = (SELECT emp_id FROM employe WHERE fname = ?)
+AND day_details.month = ?
+AND day_details.year = ?
+
+ORDER BY day_details.emp_id ASC ;
+
+
 
 insertEmpDayDetails:
 INSERT INTO day_details
@@ -78,9 +94,23 @@ partTimeDays,totalEarlyTime,totalEarlyAccessTimeDays,absentDays
 FROM emp_result
 JOIN employe ON emp_result.emp_id = employe.emp_id
 JOIN Department ON emp_result.depart_id = Department.depart_id
-JOIN day_details ON emp_result.emp_id = day_details.emp_id
+-- JOIN day_details ON emp_result.emp_id = day_details.emp_id
 -- WHERE day_register.emp_id = ?
 ORDER BY emp_result.emp_id ASC ;
+
+
+getEmpResultByMonthAndYear:
+SELECT employe.fname AS empName, Department.department AS department_name ,
+emp_result.month,emp_result.year,numberOfAttendDays,daysToCheckNoted,numberOfAbsentDays,totalPartTime,
+partTimeDays,totalEarlyTime,totalEarlyAccessTimeDays,absentDays
+FROM emp_result
+JOIN employe ON emp_result.emp_id = employe.emp_id
+JOIN Department ON emp_result.depart_id = Department.depart_id
+-- JOIN day_details ON emp_result.emp_id = day_details.emp_id
+WHERE emp_result.month = ?
+AND emp_result.year = ?
+ORDER BY emp_result.emp_id ASC ;
+
 
 
 insertEmployeeResult:

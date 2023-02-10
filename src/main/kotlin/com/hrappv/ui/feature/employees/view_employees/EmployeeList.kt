@@ -45,6 +45,8 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.hrappv.GetAllEmployees
 import com.hrappv.ui.components.DepartMenuDropDown
+import com.hrappv.ui.components.ErrorUI
+import com.hrappv.ui.components.LoadingUI
 import compose.icons.FontAwesomeIcons
 import compose.icons.fontawesomeicons.Solid
 import compose.icons.fontawesomeicons.solid.CashRegister
@@ -963,33 +965,3 @@ fun Item(text: String, width: Dp) {
         )
     }
 }
-
-@Composable
-fun ErrorUI(error: String = "Something went wrong, try again in a few minutes. ¯\\_(ツ)_/¯") {
-    Box(
-        modifier = Modifier.fillMaxSize(),
-        contentAlignment = Alignment.Center
-    ) {
-        Text(
-            text = error,
-            modifier = Modifier
-                .fillMaxSize()
-                .padding(horizontal = 72.dp, vertical = 72.dp),
-            textAlign = TextAlign.Center,
-            style = MaterialTheme.typography.h6,
-            color = MaterialTheme.colors.error,
-        )
-    }
-}
-
-@Composable
-fun LoadingUI() {
-    Box(modifier = Modifier.fillMaxSize()) {
-        CircularProgressIndicator(
-            modifier = Modifier
-                .align(alignment = Alignment.Center)
-                .defaultMinSize(minWidth = 96.dp, minHeight = 96.dp),
-        )
-    }
-}
-

@@ -49,7 +49,7 @@ class ViewEmployeesComponent(
 
 
 
-        if (backToMain) {
+        if (backToMain&&!startAddEmp && !startEmpDetails) {
             println("startEmpResult is $backToMain")
             onBackPress()
 

@@ -36,6 +36,7 @@ import com.hrappv.ui.components.NavigationMenuItem
 import com.hrappv.ui.feature.employe_result.register_attends.EmployResultScreenComponent
 import com.hrappv.ui.feature.about.AboutComponent
 import com.hrappv.ui.feature.department.DefaultDepartmentComponent
+import com.hrappv.ui.feature.employe_result.DefaultResultComponent
 import com.hrappv.ui.feature.employees.DefaultViewEmpComponent
 import com.hrappv.ui.feature.home_screen.HomeComponent
 import com.hrappv.ui.feature.settings.SettingsComponent
@@ -574,7 +575,7 @@ fun NavMenu(
 
                 Spacer(modifier = modifier.height(8.dp))
                 NavigationMenuItem(
-                    selected = activeComponent is EmployResultScreenComponent,
+                    selected = activeComponent is DefaultResultComponent,
 
                     modifier = modifier.fillMaxWidth(),
                     icon = Icons.Default.Edit,

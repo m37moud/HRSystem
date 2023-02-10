@@ -53,7 +53,7 @@ sealed class Config(
 //    )
 //
     @Parcelize
-    object RegisterAttends : Config(
+    object EmployeeResult : Config(
         label = R.string.REGISTER_ATTENDS,
         icon = Icons.Rounded.Home
     )

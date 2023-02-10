@@ -40,6 +40,8 @@ import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.hrappv.data.models.Department
+import com.hrappv.ui.components.ErrorUI
+import com.hrappv.ui.components.LoadingUI
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
@@ -459,31 +461,3 @@ fun Item(text: String, width: Dp) {
         )
     }
 }
-
-@Composable
-fun ErrorUI(error: String = "Something went wrong, try again in a few minutes. ¯\\_(ツ)_/¯") {
-    Box(modifier = Modifier.fillMaxSize()) {
-        Text(
-            text = error,
-            modifier = Modifier
-                .fillMaxSize()
-                .padding(horizontal = 72.dp, vertical = 72.dp),
-            textAlign = TextAlign.Center,
-            style = MaterialTheme.typography.h6,
-            color = MaterialTheme.colors.error,
-        )
-    }
-}
-
-@Composable
-fun LoadingUI() {
-    Box(modifier = Modifier.fillMaxSize()) {
-        CircularProgressIndicator(
-            modifier = Modifier
-                .align(alignment = Alignment.Center)
-                .defaultMinSize(minWidth = 96.dp, minHeight = 96.dp),
-        )
-    }
-}
-
-

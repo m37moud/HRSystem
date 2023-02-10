@@ -2,11 +2,13 @@ package com.hrappv.ui.feature.employe_result.register_attends
 
 import FileDialog
 import androidx.compose.animation.animateContentSize
+import androidx.compose.animation.core.tween
 import androidx.compose.desktop.ui.tooling.preview.Preview
 import androidx.compose.foundation.*
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
+import androidx.compose.foundation.lazy.rememberLazyListState
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.*
 import androidx.compose.material.icons.Icons
@@ -15,17 +17,23 @@ import androidx.compose.material.icons.filled.ArrowBack
 import androidx.compose.material.icons.filled.Close
 import androidx.compose.material.icons.filled.Refresh
 import androidx.compose.material.icons.outlined.AddCircle
+import androidx.compose.material.icons.twotone.Favorite
 import androidx.compose.runtime.*
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.ui.*
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.graphics.ColorFilter
+import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.input.TextFieldValue
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
+import com.hrappv.GetAllEmployees
 import com.hrappv.data.models.EmployeeResult
+import com.hrappv.ui.components.ErrorUI
+import com.hrappv.ui.components.LoadingUI
 import com.hrappv.ui.components.MyDateField
 import com.hrappv.ui.components.ShowMessageDialog
 import com.toxicbakery.logging.Arbor
@@ -70,30 +78,29 @@ fun EmployeeResultScreen(
 
     LaunchedEffect(screenMessage) {
 //        if (screenMessage != null) {
-            when (val state = screenMessage) {
-                is EmployeeResultViewModel.ScreenMessage.ScafoldStateMessage -> {
-                    Arbor.d("ScafoldStateMessage")
+        when (val state = screenMessage) {
+            is EmployeeResultViewModel.ScreenMessage.ScafoldStateMessage -> {
+                Arbor.d("ScafoldStateMessage")
 //                    scope.launch {
-                        scaffoldState.snackbarHostState.showSnackbar(
-                        state.message,
-                        actionLabel = "ok",
-                    )
+                scaffoldState.snackbarHostState.showSnackbar(
+                    state.message,
+                    actionLabel = "ok",
+                )
 //                    }
 
 
-                }
-
-                is EmployeeResultViewModel.ScreenMessage.DialogStateMessage -> {
-                    Arbor.d("DialogStateMessage")
-                    viewModel.dialogMessage(state.message)
-                    errorMessageDialog.value = state.error
-                }
-
-                else -> {}
             }
+
+            is EmployeeResultViewModel.ScreenMessage.DialogStateMessage -> {
+                Arbor.d("DialogStateMessage")
+                viewModel.dialogMessage(state.message)
+                errorMessageDialog.value = state.error
+            }
+
+            else -> {}
+        }
 //        }
     }
-
 
 
 //    LaunchedEffect(dateState)
@@ -303,7 +310,7 @@ fun EmployeeResultScreen(
 
                         Row(modifier = Modifier.align(Alignment.CenterEnd)) {
 
-                            MyDateField(dateState,errorMessageDialog)
+                            MyDateField(dateState, errorMessageDialog)
 //
                         }
                     }
@@ -311,33 +318,46 @@ fun EmployeeResultScreen(
                     /**
                      *observe all employee result
                      */
-                    scope.launch(Dispatchers.IO) {
-                        delay(1000)
+                    Arbor.d(dateState.value.text)
 
-                        if (empResult != null) {
-                            if (empResult.isNotEmpty()) {
-                                viewModel.setEmpResult(empResult)
-                            } else {
-                                val message =
-//                                    if (viewModel.checkIfNoDepartment() > 0) "No Employee is found "
-//                                else
-                                    "No Employee is found \n" +
-                                        "insert Department first"
-                                viewModel.setEmpResultError(
-                                    message
-                                )
-
-
-                            }
-                        }
-
+                    LaunchedEffect(dateState.value.text)
+                    {
+                        viewModel.setDate(dateState.value.text)
+                        viewModel.getResultByDate()
                     }
-
+//                    scope.launch(Dispatchers.IO) {
+//                        delay(1000)
+//
+//
+////                        if (empResult != null) {
+////                            Arbor.d(empResult.size.toString())
+////                            if (empResult.isNotEmpty()) {
+//////                                viewModel.setEmpResult(empResult)
+////                                viewModel.getResultByDate()
+////                            } else {
+////                                val message =
+//////                                    if (viewModel.checkIfNoDepartment() > 0) "No Employee is found "
+//////                                else
+////                                    "No Employee is found \n" +
+////                                        "insert Department first"
+////                                viewModel.setEmpResultError(
+////                                    message
+////                                )
+////
+////
+////                            }
+////                        }
+//
+//                    }
 
 
                     when (val state = empResultState.value) {
                         is LCE.LOADING -> LoadingUI()
-                        is LCE.CONTENT ->   ContentUI(state.data)
+                        is LCE.CONTENT -> ContentUI(state.data,
+                            onClick = { empResult ->
+                            viewModel.onStartResultDetails(empResult)
+                        })
+
                         is LCE.ERROR -> ErrorUI(state.error)
                         else -> {}
                     }
@@ -364,22 +384,19 @@ fun EmployeeResultScreen(
 
 }
 
+@OptIn(ExperimentalFoundationApi::class)
 @Composable
 @Preview
-fun ContentUI(data: List<EmployeeResult>) {
+fun ContentUI(
+    data: List<EmployeeResult>,
+    onClick: (result: EmployeeResult) -> Unit,
+) {
     val horizontalScrollState = rememberScrollState(0)
-    Box(
-        Modifier.fillMaxSize()
-    ){
-        Column(
-            modifier = Modifier.fillMaxSize().horizontalScroll(state = horizontalScrollState , enabled = true)
-,
-//            .horizontalScroll(rememberScrollState())
-
+    Column(
+        modifier = Modifier.fillMaxSize(),
         horizontalAlignment = Alignment.CenterHorizontally // this can change for verticalAlignment
     ) {
         Card(
-//            backgroundColor = Color.LightGray,
             modifier = Modifier.padding(horizontal = 8.dp),
         ) {
             Row(
@@ -395,48 +412,87 @@ fun ContentUI(data: List<EmployeeResult>) {
                 Item(text = "Attend Days", width = 200.dp)
                 Item(text = "Absent Days", width = 200.dp)
                 Item(text = "Total Part Time", width = 200.dp)
+                Item(text = "Total early Access", width = 200.dp)
                 Spacer(Modifier.weight(1f).fillMaxWidth())
             }
         }
+        val state = rememberLazyListState()
 
-
-        LazyColumn(
+        Box(
             modifier = Modifier.fillMaxSize()
-//                .padding(vertical = 4.dp) // this can change for contentPadding = PaddingValues(horizontal = 16.dp)
-            , contentPadding = PaddingValues(vertical = 4.dp)
+//                .background(color = Color(180, 180, 180))
+//                .padding(10.dp)
         ) {
-            items(items = data) { employee ->
-                EmployeeCard(employee)
+            LazyColumn(
+                modifier = Modifier.fillMaxSize()
 
+                    .horizontalScroll(horizontalScrollState)
+//                .padding(vertical = 4.dp) // this can change for contentPadding = PaddingValues(horizontal = 16.dp)
+                , contentPadding = PaddingValues(vertical = 4.dp), state = state
+            ) {
+                items(items = data, key = { it },
+                    itemContent = { employee ->
+                        EmployeeCard(
+                            modifier = Modifier
+                                .animateItemPlacement(
+                                    animationSpec = tween(
+                                        durationMillis = 1000,
+//                            easing = LinearOutSlowInEasing,
+                                    )
+                                )
+                                .clickable {
+                                    onClick(employee)
+
+                                },
+                            employee
+                        )
+
+                    }
+                )
             }
+            VerticalScrollbar(
+                modifier = Modifier.align(Alignment.CenterEnd).fillMaxHeight().padding(end = 8.dp),
+                adapter = rememberScrollbarAdapter(
+                    scrollState = state
+                )
+            )
+//
+            HorizontalScrollbar(
+                modifier = Modifier.align(Alignment.BottomStart)
+                    .fillMaxWidth()
+                    .padding(bottom = 8.dp),
+                adapter = rememberScrollbarAdapter(horizontalScrollState)
+            )
+
         }
 
 
     }
-        VerticalScrollbar(
-            modifier = Modifier.align(Alignment.CenterEnd)
-                .fillMaxHeight()
-            .padding(end = 8.dp),
+//        VerticalScrollbar(
+//            modifier = Modifier.align(Alignment.CenterEnd)
+//                .fillMaxHeight()
+//            .padding(end = 8.dp),
+//
+//        adapter = rememberScrollbarAdapter(horizontalScrollState)
+//        )
 
-        adapter = rememberScrollbarAdapter(horizontalScrollState)
-        )
-        HorizontalScrollbar( modifier = Modifier.align(Alignment.BottomStart)
-            .fillMaxWidth()
-            .padding(bottom = 8.dp),
-            adapter = rememberScrollbarAdapter(horizontalScrollState))
+//        HorizontalScrollbar( modifier = Modifier.align(Alignment.BottomStart)
+//            .fillMaxWidth()
+//            .padding(bottom = 8.dp),
+//            adapter = rememberScrollbarAdapter(horizontalScrollState))
 
-    }
+//    }
 
 }
 
 @Composable
 @Preview
-fun EmployeeCard(employeeResult: EmployeeResult) {
+fun EmployeeCard(modifier: Modifier = Modifier, employeeResult: EmployeeResult) {
     Card(
-        backgroundColor =
-        Color.LightGray,
+//        backgroundColor =
+//        Color.LightGray,
 //        .cardColors(containerColor = MaterialTheme.colors.primary)
-        modifier = Modifier.padding(vertical = 4.dp, horizontal = 8.dp),
+        modifier = modifier.fillMaxWidth().padding(vertical = 4.dp, horizontal = 8.dp),
     ) {
         EmployeeItem(employeeResult)
     }
@@ -446,6 +502,7 @@ fun EmployeeCard(employeeResult: EmployeeResult) {
 @Composable
 @Preview
 fun EmployeeItem(employeeResult: EmployeeResult) {
+
 
     Row(
         modifier = Modifier.fillMaxWidth()
@@ -459,14 +516,13 @@ fun EmployeeItem(employeeResult: EmployeeResult) {
         Item(text = employeeResult.numberOfAttendDays.toString(), width = 200.dp)
         Item(text = employeeResult.numberOfAbsentDays.toString(), width = 200.dp)
         Item(text = employeeResult.totalPartTime.toString(), width = 200.dp)
+        Item(text = employeeResult.totalEarlyTime.toString(), width = 200.dp)
 
         Spacer(Modifier.weight(1f).fillMaxWidth())
         Button(onClick = {}, modifier = Modifier.align(Alignment.Bottom)) {
             Icon(Icons.Filled.AccountBox, "show employee detail")
         }
     }
-
-
 
 }
 
@@ -486,32 +542,6 @@ fun Item(text: String, width: Dp) {
 
             style = MaterialTheme.typography.h6.copy(fontWeight = FontWeight.ExtraBold),
             modifier = modifierText.width(width),
-        )
-    }
-}
-
-@Composable
-fun ErrorUI(error: String = "Something went wrong, try again in a few minutes. ¯\\_(ツ)_/¯") {
-    Box(modifier = Modifier.fillMaxSize()) {
-        Text(
-            text = error,
-            modifier = Modifier
-                .fillMaxSize()
-                .padding(horizontal = 72.dp, vertical = 72.dp),
-            textAlign = TextAlign.Center,
-            style = MaterialTheme.typography.h6,
-            color = MaterialTheme.colors.error,
-        )
-    }
-}
-
-@Composable
-fun LoadingUI() {
-    Box(modifier = Modifier.fillMaxSize()) {
-        CircularProgressIndicator(
-            modifier = Modifier
-                .align(alignment = Alignment.Center)
-                .defaultMinSize(minWidth = 96.dp, minHeight = 96.dp),
         )
     }
 }

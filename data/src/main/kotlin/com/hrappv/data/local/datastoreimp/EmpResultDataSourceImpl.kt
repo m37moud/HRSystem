@@ -24,6 +24,7 @@ class EmpResultDataSourceImpl @Inject constructor(
         ).asFlow().mapToList()
     }
 
+
     private fun allEmpResultsMapper(
         empName: String,
         department_name: String,
@@ -56,6 +57,10 @@ class EmpResultDataSourceImpl @Inject constructor(
 
     override fun getAllEmployeeResults(): List<EmployeeResult> {
         return queries.getEmpResult(::allEmpResultsMapper).executeAsList()
+    }
+
+    override fun getEmpResultByMonthAndYear(month: String, year: String): List<EmployeeResult> {
+        return queries.getEmpResultByMonthAndYear(month, year, ::allEmpResultsMapper).executeAsList()
     }
 
     override suspend fun insertEmpResult(empResult: EmployeeResult) {
@@ -147,22 +152,45 @@ class EmpResultDataSourceImpl @Inject constructor(
     }
 
     override fun getAllEmpDayDetails(): List<DayDetails> {
-        return queries.getAllDayDetails(mapper = { empName, department_name, month, year, day, wardia, typeOfDay, partTime, earlyAccess, earlyAccessNote, notes ->
-            DayDetails(
-                name = empName,
-                department = department_name,
-                month = month ?: "",
-                year = year ?: "",
-                day = day ?: "",
-                wardia = wardia ?: "",
-                typeOfDay = typeOfDay ?: "",
-                partTime = partTime ?: 0.0,
-                earlyAccess = earlyAccess ?: "",
-                earlyAccessNote = earlyAccessNote ?: "",
-                notes = notes ?: ""
-            )
-        }).executeAsList()
+        return queries.getAllDayDetails(
+            mapper = ::mapDayDetails
+
+        ).executeAsList()
     }
+
+    override fun getAllDayDetailsById(EmpName: String, month: String, year: String): List<DayDetails> {
+        return queries.getAllDayDetailsById(
+            EmpName,
+            month, year,
+            mapper = ::mapDayDetails
+        ).executeAsList()
+    }
+
+    private fun mapDayDetails(
+        empName: String,
+        department_name: String,
+        day: String?,
+        month: String?,
+        year: String?,
+        wardia: String?,
+        typeOfDay: String?,
+        partTime: Double?,
+        earlyAccess: String?,
+        earlyAccessNote: String?,
+        notes: String?
+    ) = DayDetails(
+        name = empName,
+        department = department_name,
+        month = month ?: "",
+        year = year ?: "",
+        day = day ?: "",
+        wardia = wardia ?: "",
+        typeOfDay = typeOfDay ?: "",
+        partTime = partTime ?: 0.0,
+        earlyAccess = earlyAccess ?: "",
+        earlyAccessNote = earlyAccessNote ?: "",
+        notes = notes ?: ""
+    )
 
     override suspend fun insertEmpDayDetails(dayDetail: DayDetails) {
         withContext(dispatcher) {
