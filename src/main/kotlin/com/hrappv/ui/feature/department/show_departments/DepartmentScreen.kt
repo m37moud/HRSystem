@@ -54,7 +54,7 @@ fun DepartmentScreen(viewModel: DepartmentViewModel) {
     val scope = rememberCoroutineScope()
     val scaffoldState = rememberScaffoldState()
 
-    val departmentResult = viewModel.departResults.collectAsState().value
+    val departmentResult = viewModel.departResults.collectAsState()
     val departments = viewModel.departments.collectAsState(null).value
 
 
@@ -128,13 +128,13 @@ fun DepartmentScreen(viewModel: DepartmentViewModel) {
 
             }
 
-            when (departmentResult) {
+            when (val state  = departmentResult.value) {
 
                 is LCE.LOADING -> LoadingUI()
 
                 is LCE.CONTENT -> {
                     ContentUI(
-                        departmentResult.data,
+                        state.data,
 //                        allEmployee.value,
                     ) {
                         try {
@@ -153,7 +153,7 @@ fun DepartmentScreen(viewModel: DepartmentViewModel) {
                     }
                 }
 
-                is LCE.ERROR -> ErrorUI(departmentResult.error)
+                is LCE.ERROR -> ErrorUI(state.error)
                 else -> {}
             }
 
