@@ -108,13 +108,11 @@ class DatabaseModule {
     @Singleton
     fun provideViewEmpDataSource(
         sqliteDriver: SqlDriver,
-//        hrDb: HrAppDb,
 
         dispatcher: CoroutineDispatcher
     ): ViewEmpDataSource {
         return ViewEmpDataSourceImpl(
             HrAppDb(sqliteDriver), dispatcher
-//            hrDb, dispatcher
         )
     }
 
@@ -168,6 +166,19 @@ class DatabaseModule {
         dispatcher: CoroutineDispatcher
     ): DayDetailsDataSource {
         return DayDetailsDataSourceImpl(
+            HrAppDb(sqliteDriver), dispatcher
+        )
+
+    }
+
+
+    @Provides
+    @Singleton
+    fun provideAbsentDay(
+        sqliteDriver: SqlDriver,
+        dispatcher: CoroutineDispatcher
+    ): AbsentDayDataSource {
+        return AbsentDayDataSourceImpl(
             HrAppDb(sqliteDriver), dispatcher
         )
 

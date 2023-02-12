@@ -8,7 +8,7 @@ import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.*
 import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.filled.ArrowBack
+import androidx.compose.material.icons.filled.*
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
@@ -18,13 +18,19 @@ import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
 import com.hrappv.data.models.EmployeeResult
+import com.hrappv.ui.components.NavigationMenuItem
+import com.hrappv.ui.feature.employe_result.emp_result_detail.absent_days.DaysDetailComponent
+import com.hrappv.ui.feature.employe_result.emp_result_detail.details_days.AbsentDaysDetailComponent
+import com.hrappv.ui.feature.home_screen.HomeComponent
+import com.hrappv.ui.navigation.Component
 
 @Composable
 fun EmpResultDetails(
     viewModel: EmployeeResultDetailViewModel,
     empResult: EmployeeResult,
-    onDaysClick: () ->Unit,
-    onAbsentDaysClick : () ->Unit,
+    activeComponent: Component,
+    onDaysClick: () -> Unit,
+    onAbsentDaysClick: () -> Unit,
     content: @Composable () -> Unit
 ) {
     Scaffold(modifier = Modifier.fillMaxSize(), topBar =
@@ -74,17 +80,78 @@ fun EmpResultDetails(
 
                     }
 
+                    BottomNavigation(
+                        modifier = Modifier.fillMaxWidth(),
+                        backgroundColor = MaterialTheme.colors.surface,
+                        elevation = 10.dp
+                    ) {
+                        BottomNavigationItem(
+                            selected = activeComponent is DaysDetailComponent,
+                            onClick = onDaysClick,
+                            icon = {
+                                Icon(
+                                    imageVector = Icons.Default.Refresh,
+                                    contentDescription = "Days",
+                                )
+                            },
+                            label = { Text(text = "Days", softWrap = false) },
+                        )
 
-                    Row(modifier = Modifier.fillMaxWidth()) {
-                        OutlinedButton(onClick = {
-                                                 onDaysClick()
-                        }, modifier = Modifier.weight(1f)) {
-                            Text("Days")
-                        }
-                        OutlinedButton(onClick = {onAbsentDaysClick()}, modifier = Modifier.weight(1f)) {
-                            Text("Absent Days")
-                        }
+                        BottomNavigationItem(
+                            selected = activeComponent is AbsentDaysDetailComponent,
+                            onClick = onAbsentDaysClick,
+
+                            icon = {
+                                val size = empResult.absentDays.size.minus(1)
+
+                                BadgedBox(
+                                    badge = {
+                                        if (size > 0)
+                                            Badge {
+                                                val size = empResult.absentDays.size.minus(1)
+                                                Text(size.toString())
+                                            }
+                                    }) {
+                                    Icon(
+                                        imageVector = Icons.Default.List,
+                                        contentDescription = "Absent Days",
+                                    )
+                                }
+
+                            },
+                            label = { Text(text = "Absent Days", softWrap = false) },
+                        )
                     }
+
+//                    Row(modifier = Modifier.fillMaxWidth()) {
+//                        NavigationMenuItem(
+//                            selected = activeComponent is DaysDetailComponent,
+//                            modifier = Modifier.weight(1f),
+//                            icon = Icons.Default.Home,
+//                            label = "Days",
+//                            isMenuPressed = true
+//                            ,
+//                            onClick = {  onDaysClick() }
+//                        )
+//
+//                        NavigationMenuItem(
+//                            selected = activeComponent is AbsentDaysDetailComponent,
+//                            modifier = Modifier.weight(1f),
+//                            icon = Icons.Default.Home,
+//                            label = "Absent Days",
+//                            isMenuPressed = true
+//                            ,
+//                            onClick = {  onAbsentDaysClick() }
+//                        )
+////                        OutlinedButton(onClick = {
+////                            onDaysClick()
+////                        }, modifier = Modifier.weight(1f)) {
+////                            Text("Days")
+////                        }
+////                        OutlinedButton(onClick = { onAbsentDaysClick() }, modifier = Modifier.weight(1f)) {
+////                            Text("Absent Days")
+////                        }
+//                    }
 
                     content()
                 }

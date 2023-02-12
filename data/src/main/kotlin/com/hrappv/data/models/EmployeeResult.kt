@@ -13,7 +13,7 @@ data class EmployeeResult(
     val partTimeDays: String = "",
     val totalEarlyTime: Double = 0.0,
     val totalEarlyAccessTimeDays: String = "",
-    val absentDays: String = "no absent",
+    val absentDays:  List<AbsentDay> = emptyList(),
     val attendDays: List<DayDetails> = emptyList()
 
     ) {

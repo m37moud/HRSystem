@@ -2,9 +2,7 @@ package com.hrappv.ui.components
 
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.layout.*
-import androidx.compose.material.CircularProgressIndicator
-import androidx.compose.material.MaterialTheme
-import androidx.compose.material.Text
+import androidx.compose.material.*
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
@@ -52,5 +50,36 @@ fun LoadingUI() {
         )
     }
 }
+
+
+@Composable
+fun LoadingScreen() {
+    Surface(
+//        color = MaterialTheme.colors.primary,
+        modifier = Modifier
+            .fillMaxHeight()
+            .fillMaxWidth()
+    ) {
+        Column(
+            verticalArrangement = Arrangement.Center,
+            horizontalAlignment = Alignment.CenterHorizontally
+        ) {
+
+            LinearProgressIndicator(
+                color = MaterialTheme.colors.secondary,
+                modifier = Modifier
+                    .width(128.dp)
+                    .padding(16.dp)
+            )
+
+            Text(
+                text = "Loading",
+//                style = mainTitle.copy(color = MaterialTheme.colors.secondary),
+                modifier = Modifier.wrapContentSize()
+            )
+        }
+    }
+}
+
 
 

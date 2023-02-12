@@ -1,8 +1,10 @@
 package com.hrappv.data.local.datastoreimp
 
+import com.hrappv.Absense
 import com.hrappv.GetEmpResult
 import com.hrappv.HrAppDb
 import com.hrappv.data.local.datastore.EmpResultDataSource
+import com.hrappv.data.models.AbsentDay
 import com.hrappv.data.models.DayDetails
 import com.hrappv.data.models.EmployeeResult
 import com.squareup.sqldelight.runtime.coroutines.asFlow
@@ -10,6 +12,7 @@ import com.squareup.sqldelight.runtime.coroutines.mapToList
 import kotlinx.coroutines.CoroutineDispatcher
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.withContext
+import java.time.LocalDate
 import javax.inject.Inject
 
 class EmpResultDataSourceImpl @Inject constructor(
@@ -37,7 +40,7 @@ class EmpResultDataSourceImpl @Inject constructor(
         partTimeDays: String?,
         totalEarlyTime: Double?,
         totalEarlyAccessTimeDays: String?,
-        absentDays: String?
+//        absentDays: String?
     ) =
         EmployeeResult(
             name = empName,
@@ -51,7 +54,7 @@ class EmpResultDataSourceImpl @Inject constructor(
             partTimeDays = partTimeDays ?: "",
             totalEarlyTime = totalEarlyTime ?: 0.0,
             totalEarlyAccessTimeDays = totalEarlyAccessTimeDays ?: "",
-            absentDays = absentDays ?: "",
+//            absentDays = absentDays ?: "",
 
             )
 
@@ -97,6 +100,7 @@ class EmpResultDataSourceImpl @Inject constructor(
                     if (result == null) {
                         insertEmployeeResult(empResult)
                         insertMultiEmployeeDayDetails(empResult.attendDays)
+                        insertMultiEmployeeAbsentDays(empResult.absentDays)
 
                     }
 
@@ -125,7 +129,7 @@ class EmpResultDataSourceImpl @Inject constructor(
             partTimeDays = empResult.partTimeDays,
             totalEarlyTime = empResult.totalEarlyTime,
             totalEarlyAccessTimeDays = empResult.totalEarlyAccessTimeDays,
-            absentDays = empResult.absentDays
+//            absentDays = empResult.absentDays
 
         )
     }
@@ -251,6 +255,33 @@ class EmpResultDataSourceImpl @Inject constructor(
         }
     }
 
+    fun insertMultiEmployeeAbsentDays(absentDayList: List<AbsentDay>) {
+        queries.transaction {
+            absentDayList.forEach { day ->
+                val absentDay =
+                    queries.checkEmpAbsentDay(
+                        fname = day.name ?: "",
+                        absnt_date = day.absnt_date.toString(),
+
+                        )
+                        .executeAsOneOrNull()
+                if (absentDay == null) {
+                    insertAbsentDay(day)
+                }
+
+            }
+        }
+    }
+
+    fun insertAbsentDay(absentDay: AbsentDay) {
+        queries.insertEmpAbsentDay(
+            absnt_type = absentDay.absnt_type.toString(),
+            absnt_date = absentDay.absnt_date.toString(),
+            absnt_reason = absentDay.absnt_reason,
+            fname = absentDay.name ?: "",
+            department = absentDay.department ?: ""
+        )
+    }
 
     private fun insertDayDetails(dayDetail: DayDetails) {
         queries.insertEmpDayDetails(

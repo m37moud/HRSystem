@@ -97,7 +97,9 @@ class EmployeeResultDetailComponent(
         if (back) {
             onBackPress()
         }
-        EmpResultDetails(viewModel, employeeResult , onDaysClick = {
+        EmpResultDetails(viewModel, employeeResult ,
+            activeComponent = activeComponent,
+            onDaysClick = {
             startDaysDetailScreen()
         },
         onAbsentDaysClick = {

@@ -1,5 +1,7 @@
 import com.hrappv.data.models.DayDetails;
+import com.hrappv.data.util.AbsentType;
 import java.lang.String;
+import java.time.LocalDate;
 import kotlin.collections.List;
 
 CREATE TABLE IF NOT EXISTS emp_result (
@@ -15,8 +17,8 @@ CREATE TABLE IF NOT EXISTS emp_result (
      totalPartTime REAL AS Double  ,
      partTimeDays TEXT,
      totalEarlyTime REAL AS Double,
-     totalEarlyAccessTimeDays TEXT,
-     absentDays TEXT
+     totalEarlyAccessTimeDays TEXT
+--      ,absentDays TEXT
 --      ,attendDays TEXT  AS List<String>
 
 
@@ -71,6 +73,18 @@ INSERT INTO day_details
 VALUES ((SELECT emp_id FROM employe WHERE fname = ?), (SELECT depart_id FROM Department WHERE department = ?) ,?,?, ?,?,?,?,?,?,?) ;
 
 
+insertEmpAbsentDay:
+INSERT INTO Absense
+VALUES ( ?,?, ?,(SELECT emp_id FROM employe WHERE fname = ?), (SELECT depart_id FROM Department WHERE department = ?)) ;
+
+
+checkEmpAbsentDay:
+SELECT *
+FROM Absense
+WHERE Absense.emp_id =  (SELECT emp_id FROM employe WHERE fname = ?)
+AND Absense.absnt_date = ?
+;
+
 checkEmpDayDetail:
 SELECT *
 FROM day_details
@@ -87,7 +101,8 @@ AND day_details.year = ?
 getEmpResult:
 SELECT employe.fname AS empName, Department.department AS department_name ,
 emp_result.month,emp_result.year,numberOfAttendDays,daysToCheckNoted,numberOfAbsentDays,totalPartTime,
-partTimeDays,totalEarlyTime,totalEarlyAccessTimeDays,absentDays
+partTimeDays,totalEarlyTime,totalEarlyAccessTimeDays
+-- ,absentDays
 -- ,(SELECT * FROM day_details WHERE day_details.emp_id = (SELECT emp_id FROM employe WHERE fname = ?))
 -- ,day_details.day,day_details.wardia,day_details.typeOfDay,
 -- day_details.partTime,day_details.earlyAccess,day_details.earlyAccessNote , day_details.notes
@@ -102,7 +117,8 @@ ORDER BY emp_result.emp_id ASC ;
 getEmpResultByMonthAndYear:
 SELECT employe.fname AS empName, Department.department AS department_name ,
 emp_result.month,emp_result.year,numberOfAttendDays,daysToCheckNoted,numberOfAbsentDays,totalPartTime,
-partTimeDays,totalEarlyTime,totalEarlyAccessTimeDays,absentDays
+partTimeDays,totalEarlyTime,totalEarlyAccessTimeDays
+-- ,absentDays
 FROM emp_result
 JOIN employe ON emp_result.emp_id = employe.emp_id
 JOIN Department ON emp_result.depart_id = Department.depart_id
@@ -115,7 +131,7 @@ ORDER BY emp_result.emp_id ASC ;
 
 insertEmployeeResult:
 INSERT INTO emp_result
-VALUES ( (SELECT emp_id FROM employe WHERE fname = ?), (SELECT depart_id FROM Department WHERE department = ?),?,?,?,?,?,?,?,?,?,?);
+VALUES ( (SELECT emp_id FROM employe WHERE fname = ?), (SELECT depart_id FROM Department WHERE department = ?),?,?,?,?,?,?,?,?,?);
 
 
 checkEmpResult:

@@ -41,6 +41,7 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.hrappv.data.models.Department
 import com.hrappv.ui.components.ErrorUI
+import com.hrappv.ui.components.LoadingScreen
 import com.hrappv.ui.components.LoadingUI
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.delay
@@ -130,7 +131,7 @@ fun DepartmentScreen(viewModel: DepartmentViewModel) {
 
             when (val state  = departmentResult.value) {
 
-                is LCE.LOADING -> LoadingUI()
+                is LCE.LOADING -> LoadingScreen()
 
                 is LCE.CONTENT -> {
                     ContentUI(

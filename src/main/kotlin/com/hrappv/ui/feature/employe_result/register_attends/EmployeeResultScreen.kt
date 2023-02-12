@@ -32,17 +32,12 @@ import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
 import com.hrappv.GetAllEmployees
 import com.hrappv.data.models.EmployeeResult
-import com.hrappv.ui.components.ErrorUI
-import com.hrappv.ui.components.LoadingUI
-import com.hrappv.ui.components.MyDateField
-import com.hrappv.ui.components.ShowMessageDialog
+import com.hrappv.ui.components.*
 import com.toxicbakery.logging.Arbor
 import kotlinx.coroutines.*
-import kotlinx.datetime.Clock
-import kotlinx.datetime.TimeZone
-import kotlinx.datetime.toJavaLocalDate
-import kotlinx.datetime.toLocalDateTime
+import kotlinx.datetime.*
 import utils.LCE
+import java.time.LocalDate
 import java.time.format.DateTimeFormatter
 
 @Composable
@@ -71,9 +66,12 @@ fun EmployeeResultScreen(
         .date.toJavaLocalDate()
     val pattern = DateTimeFormatter.ofPattern("dd.MM.yyyy")
 
+    val date1 = LocalDate.of(2022 , 8 , 1).toKotlinLocalDate().toJavaLocalDate()
 
-    val formatedDate = date.format(pattern)
+
+    val formatedDate = date1.format(pattern)
     val dateState = remember { mutableStateOf(TextFieldValue(formatedDate)) }
+//    val dateState = remember { mutableStateOf(TextFieldValue(date1.toString())) }
 
 
     LaunchedEffect(screenMessage) {
@@ -352,7 +350,7 @@ fun EmployeeResultScreen(
 
 
                     when (val state = empResultState.value) {
-                        is LCE.LOADING -> LoadingUI()
+                        is LCE.LOADING -> LoadingScreen()
                         is LCE.CONTENT -> ContentUI(state.data,
                             onClick = { empResult ->
                             viewModel.onStartResultDetails(empResult)

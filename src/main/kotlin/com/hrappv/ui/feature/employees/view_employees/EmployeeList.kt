@@ -46,6 +46,7 @@ import androidx.compose.ui.unit.sp
 import com.hrappv.GetAllEmployees
 import com.hrappv.ui.components.DepartMenuDropDown
 import com.hrappv.ui.components.ErrorUI
+import com.hrappv.ui.components.LoadingScreen
 import com.hrappv.ui.components.LoadingUI
 import compose.icons.FontAwesomeIcons
 import compose.icons.fontawesomeicons.Solid
@@ -170,7 +171,8 @@ fun ViewEmpScreen(viewModel: ViewEmpViewModel) {
 
 
                 when (val state = employees.value) {
-                    is LCE.LOADING -> LoadingUI()
+//                    is LCE.LOADING -> LoadingUI()
+                    is LCE.LOADING -> LoadingScreen()
                     is LCE.CONTENT -> {
                         ContentUI(
                             state.data,

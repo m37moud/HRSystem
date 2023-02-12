@@ -1,10 +1,8 @@
 package excel
 
-import com.hrappv.data.models.CamRegisterDay
+import com.hrappv.data.models.*
+import com.hrappv.data.util.AbsentType
 import org.apache.poi.ss.usermodel.WorkbookFactory
-import com.hrappv.data.models.DayDetails
-import com.hrappv.data.models.Employee
-import com.hrappv.data.models.EmployeeResult
 import com.toxicbakery.logging.Arbor
 import util.Constatnts.Companion.getLastDay
 import util.Constatnts.Companion.getMonth
@@ -22,10 +20,10 @@ import javax.inject.Inject
 import kotlin.math.roundToInt
 
 class ImportExcelFile
-    (val month: String  ="", val year: String = "")
+    (val month: String = "", val year: String = "")
 //@Inject constructor()
 {
-//    var month: String = "8"
+    //    var month: String = "8"
 //    var year: String = "2022"
     private var startDate = LocalDate.parse("$year-${getMonth((month.toInt() - 1).toString())}-21")
     private var endDate = LocalDate.parse("$year-${getMonth(month)}-20")
@@ -148,7 +146,7 @@ class ImportExcelFile
 
 
     @Throws
-   suspend fun readFromExcelFile(filePath: String): List<CamRegisterDay> {
+    suspend fun readFromExcelFile(filePath: String): List<CamRegisterDay> {
         val empList = mutableListOf<CamRegisterDay>()
         try {
             val inputStream = FileInputStream(filePath)
@@ -241,9 +239,9 @@ class ImportExcelFile
                         status = status["attendState"],
                         shift = shift
                     )
-                     val patternCamRegisterDay = DateTimeFormatter.ofPattern("yyyy-MM-dd")
+                    val patternCamRegisterDay = DateTimeFormatter.ofPattern("yyyy-MM-dd")
 
-                    if((LocalDate.parse(status["date"] , patternCamRegisterDay)) in startDate .. endDate)
+                    if ((LocalDate.parse(status["date"], patternCamRegisterDay)) in startDate..endDate)
                         empList.add(employ)
 
 
@@ -301,7 +299,7 @@ class ImportExcelFile
         return null
     }
 
-   suspend fun getEmpReportById(list: List<CamRegisterDay>, id: String = "", empName: String = ""): EmployeeResult? {
+    suspend fun getEmpReportById(list: List<CamRegisterDay>, id: String = "", empName: String = ""): EmployeeResult? {
 
 
         val l = list.filter {
@@ -534,7 +532,8 @@ class ImportExcelFile
 
 
         var numberOfAbsentDays = 0
-        var absentDays: String = ""
+//        var absentDays: String = ""
+        var absentDays: MutableList<AbsentDay> = mutableListOf<AbsentDay>()
 
         var i = 0
         var temp = 0
@@ -872,8 +871,16 @@ class ImportExcelFile
 
         for (i in 21..days) {
             if (!checkInList.contains(i)) {//check to see absent days
-
-                absentDays = absentDays.plus(i.toString().plus(","))
+                AbsentDay(
+                    absnt_type = AbsentType.RegularVacation,
+                    absnt_date = LocalDate.of(year.toInt(), month.toInt(), i),
+                    absnt_reason = "",
+                    name = list[0].empName!!,
+                    department = list[0].departName!!
+                ).apply {
+                    absentDays.add(this)
+                }
+//                absentDays = absentDays.plus(i.toString().plus(","))
 
                 numberOfAbsentDays++
             }
@@ -881,8 +888,16 @@ class ImportExcelFile
         }
         for (i in 1..20) {
             if (!checkInList.contains(i)) {//check to see absent days
-
-                absentDays = absentDays.plus(i.toString().plus(","))
+                AbsentDay(
+                    absnt_type = AbsentType.RegularVacation,
+                    absnt_date = LocalDate.of(year.toInt(), month.toInt(), i),
+                    absnt_reason = "",
+                    name = list[0].empName!!,
+                    department = list[0].departName!!
+                ).apply {
+                    absentDays.add(this)
+                }
+//                absentDays = absentDays.plus(i.toString().plus(","))
 
                 numberOfAbsentDays++
             }

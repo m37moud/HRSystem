@@ -1,8 +1,6 @@
 package com.hrappv.ui.components
 
-import androidx.compose.foundation.layout.Column
-import androidx.compose.foundation.layout.heightIn
-import androidx.compose.foundation.layout.widthIn
+import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.foundation.verticalScroll
@@ -22,7 +20,7 @@ import androidx.compose.ui.unit.dp
 fun TextFieldMenu(
     modifier: Modifier = Modifier,
     name: String,
-    listItems: List<String> = listOf("-", "-", "-", "-"),
+    listItems: List<*> = listOf("-", "-", "-", "-"),
     menuItemSelected: (String?) -> Unit
 ) {
 
@@ -39,7 +37,7 @@ fun TextFieldMenu(
     Column(modifier = modifier) {
         // text field
         OutlinedTextField(
-            value = selectedItem,
+            value = selectedItem.toString(),
             onValueChange = { selectedItem = it },
             modifier = modifier
                 .onSizeChanged {
@@ -81,8 +79,8 @@ fun TextFieldMenu(
                     state = rememberScrollState(0),
                     enabled = true
                 )
-                .heightIn(200.dp)
-                .widthIn(with(LocalDensity.current) {
+                .height(200.dp)
+                .width(with(LocalDensity.current) {
                     dropDownWidth.toDp()
                 })
         ) {
@@ -90,11 +88,11 @@ fun TextFieldMenu(
                 // menu item
                 DropdownMenuItem(onClick = {
                     selectedItem = selectedOption
-                    menuItemSelected(selectedOption)
+                    menuItemSelected(selectedOption.toString())
 
                     expanded = false
                 }) {
-                    Text(text = selectedOption)
+                    Text(text = selectedOption.toString())
                 }
             }
         }
