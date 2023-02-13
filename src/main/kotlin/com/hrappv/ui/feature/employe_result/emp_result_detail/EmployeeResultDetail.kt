@@ -18,10 +18,8 @@ import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
 import com.hrappv.data.models.EmployeeResult
-import com.hrappv.ui.components.NavigationMenuItem
-import com.hrappv.ui.feature.employe_result.emp_result_detail.absent_days.DaysDetailComponent
-import com.hrappv.ui.feature.employe_result.emp_result_detail.details_days.AbsentDaysDetailComponent
-import com.hrappv.ui.feature.home_screen.HomeComponent
+import com.hrappv.ui.feature.employe_result.emp_result_detail.details_days.DaysDetailComponent
+import com.hrappv.ui.feature.employe_result.emp_result_detail.absent_days.AbsentDaysDetailComponent
 import com.hrappv.ui.navigation.Component
 
 @Composable
@@ -102,13 +100,12 @@ fun EmpResultDetails(
                             onClick = onAbsentDaysClick,
 
                             icon = {
-                                val size = empResult.absentDays.size.minus(1)
-
+                                val size = empResult.numberOfAbsentDays
                                 BadgedBox(
                                     badge = {
                                         if (size > 0)
                                             Badge {
-                                                val size = empResult.absentDays.size.minus(1)
+//                                                val size = empResult.absentDays.size.minus(1)
                                                 Text(size.toString())
                                             }
                                     }) {

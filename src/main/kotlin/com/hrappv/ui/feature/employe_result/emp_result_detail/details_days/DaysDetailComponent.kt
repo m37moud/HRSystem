@@ -6,34 +6,32 @@ import androidx.compose.runtime.rememberCoroutineScope
 import com.arkivanov.decompose.ComponentContext
 import com.hrappv.data.models.EmployeeResult
 import com.hrappv.di.AppComponent
-import com.hrappv.ui.feature.employe_result.emp_result_detail.absent_days.DaysDetails
 import com.hrappv.ui.navigation.Component
 import javax.inject.Inject
 
-class AbsentDaysDetailComponent
-    (
+class DaysDetailComponent (
     appComponent: AppComponent,
     private val componentContext: ComponentContext,
-    private val onAbsentClick: () -> Unit,
+    private val onDaysClick: () -> Unit,
     private val employeeResult: EmployeeResult,
-//    private val onBackPress: () -> Unit
-) : Component, ComponentContext by componentContext {
+
+) : Component, ComponentContext by componentContext  {
     @Inject
-    lateinit var viewModel: AbsentDaysDetailViewModel
+    lateinit var viewModel: DaysDetailViewModel
     init {
         appComponent.inject(this)
     }
     @Composable
     override fun render() {
-        val scope = rememberCoroutineScope()
+       val scope = rememberCoroutineScope()
         LaunchedEffect(viewModel){
             viewModel.init(scope)
         }
 
 
-        onAbsentClick()
+        onDaysClick()
 
 
-        AbsentDaysDetails(viewModel,employeeResult)
+        DaysDetails(viewModel,employeeResult)
     }
 }

@@ -1,6 +1,7 @@
 package com.hrappv.data.local.datastore
 
 import com.hrappv.GetEmpResult
+import com.hrappv.data.models.AbsentDay
 import com.hrappv.data.models.DayDetails
 import com.hrappv.data.models.EmployeeResult
 import kotlinx.coroutines.flow.Flow
@@ -28,6 +29,12 @@ interface EmpResultDataSource {
 
     suspend fun insertMultiEmpDayDetails(dayDetail: List<DayDetails>)
     suspend  fun checkEmpDayDetail(emp: String,day: String, month: String, year: String): DayDetails?
+
+
+    /**
+     * AbsentDays
+     */
+    fun getAbsentListBy(emp: String , month: String , year: String) : List<AbsentDay>
 
 
 }

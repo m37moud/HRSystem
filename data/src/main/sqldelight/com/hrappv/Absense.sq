@@ -5,6 +5,8 @@ CREATE TABLE IF NOT EXISTS Absense (
     absnt_type   TEXT ,--AS  AbsentType NOT NULL,
     absnt_date   TEXT ,--AS LocalDate NOT NULL,
     absnt_reason TEXT,
+    month TEXT,
+    year TEXT,
     emp_id       INTEGER,
     depart_id    INTEGER
 );

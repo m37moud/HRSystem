@@ -73,9 +73,19 @@ INSERT INTO day_details
 VALUES ((SELECT emp_id FROM employe WHERE fname = ?), (SELECT depart_id FROM Department WHERE department = ?) ,?,?, ?,?,?,?,?,?,?) ;
 
 
+getAbsentDays:
+SELECT employe.fname AS empName, Department.department AS department_name,
+ absnt_type , absnt_date , absnt_reason , Absense.month , Absense.year
+FROM Absense
+JOIN employe ON Absense.emp_id = employe.emp_id
+JOIN Department ON Absense.depart_id = Department.depart_id
+WHERE Absense.emp_id = (SELECT emp_id FROM employe WHERE fname = ? )
+AND Absense.month = ?
+AND Absense.year = ?;
+
 insertEmpAbsentDay:
 INSERT INTO Absense
-VALUES ( ?,?, ?,(SELECT emp_id FROM employe WHERE fname = ?), (SELECT depart_id FROM Department WHERE department = ?)) ;
+VALUES ( ?,?, ?,?,?,(SELECT emp_id FROM employe WHERE fname = ?), (SELECT depart_id FROM Department WHERE department = ?)) ;
 
 
 checkEmpAbsentDay:
@@ -84,6 +94,13 @@ FROM Absense
 WHERE Absense.emp_id =  (SELECT emp_id FROM employe WHERE fname = ?)
 AND Absense.absnt_date = ?
 ;
+
+updateAbsent:
+UPDATE employe SET vacanition  = ?
+WHERE employe.emp_id =  (SELECT emp_id FROM employe WHERE fname = ?)
+ AND employe.depart_id =  (SELECT depart_id FROM Department WHERE department = ?)
+;
+
 
 checkEmpDayDetail:
 SELECT *
@@ -140,6 +157,8 @@ FROM emp_result
 WHERE emp_result.emp_id =  (SELECT emp_id FROM employe WHERE fname = ?)
 AND emp_result.month = ?
 AND emp_result.year = ?;
+
+
 
 
 

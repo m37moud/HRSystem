@@ -9,29 +9,30 @@ import com.hrappv.di.AppComponent
 import com.hrappv.ui.navigation.Component
 import javax.inject.Inject
 
-class DaysDetailComponent (
+class AbsentDaysDetailComponent
+    (
     appComponent: AppComponent,
     private val componentContext: ComponentContext,
-    private val onDaysClick: () -> Unit,
+    private val onAbsentClick: () -> Unit,
     private val employeeResult: EmployeeResult,
-
-) : Component, ComponentContext by componentContext  {
+//    private val onBackPress: () -> Unit
+) : Component, ComponentContext by componentContext {
     @Inject
-    lateinit var viewModel: DaysDetailViewModel
+    lateinit var viewModel: AbsentDaysDetailViewModel
     init {
         appComponent.inject(this)
     }
     @Composable
     override fun render() {
-       val scope = rememberCoroutineScope()
+        val scope = rememberCoroutineScope()
         LaunchedEffect(viewModel){
             viewModel.init(scope)
         }
 
 
-        onDaysClick()
+        onAbsentClick()
 
 
-        DaysDetails(viewModel,employeeResult)
+        AbsentDaysDetails(viewModel,employeeResult)
     }
 }

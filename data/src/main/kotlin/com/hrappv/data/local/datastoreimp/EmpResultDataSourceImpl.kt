@@ -7,6 +7,7 @@ import com.hrappv.data.local.datastore.EmpResultDataSource
 import com.hrappv.data.models.AbsentDay
 import com.hrappv.data.models.DayDetails
 import com.hrappv.data.models.EmployeeResult
+import com.hrappv.data.util.AbsentType
 import com.squareup.sqldelight.runtime.coroutines.asFlow
 import com.squareup.sqldelight.runtime.coroutines.mapToList
 import kotlinx.coroutines.CoroutineDispatcher
@@ -56,7 +57,7 @@ class EmpResultDataSourceImpl @Inject constructor(
             totalEarlyAccessTimeDays = totalEarlyAccessTimeDays ?: "",
 //            absentDays = absentDays ?: "",
 
-            )
+        )
 
     override fun getAllEmployeeResults(): List<EmployeeResult> {
         return queries.getEmpResult(::allEmpResultsMapper).executeAsList()
@@ -255,6 +256,43 @@ class EmpResultDataSourceImpl @Inject constructor(
         }
     }
 
+
+    private fun insertDayDetails(dayDetail: DayDetails) {
+        queries.insertEmpDayDetails(
+            fname = dayDetail.name,
+            department = dayDetail.department,
+            day = dayDetail.day ?: "",
+            month = dayDetail.month ?: "",
+            year = dayDetail.year ?: "",
+            wardia = dayDetail.wardia ?: "",
+            typeOfDay = dayDetail.typeOfDay ?: "",
+            partTime = dayDetail.partTime ?: 0.0,
+            earlyAccess = dayDetail.earlyAccess ?: "",
+            earlyAccessNote = dayDetail.earlyAccessNote ?: "",
+            notes = dayDetail.notes ?: ""
+        )
+
+    }
+
+    override suspend fun checkEmpDayDetail(emp: String, day: String, month: String, year: String): DayDetails? {
+        TODO("Not yet implemented")
+    }
+
+    override fun getAbsentListBy(emp: String, month: String, year: String): List<AbsentDay> {
+        return queries.getAbsentDays(
+            emp,
+            month,
+            year,
+            mapper = { empName, department_name, absnt_type, absnt_date, absnt_reason, month, year ->
+                AbsentDay(
+                    absnt_type = AbsentType.RegularVacation, absnt_date = LocalDate.parse(absnt_date),
+                    absnt_reason = absnt_reason, month = month, year = year,
+                    name = empName,
+                    department = department_name
+                )
+            }).executeAsList()
+    }
+
     fun insertMultiEmployeeAbsentDays(absentDayList: List<AbsentDay>) {
         queries.transaction {
             absentDayList.forEach { day ->
@@ -277,31 +315,12 @@ class EmpResultDataSourceImpl @Inject constructor(
         queries.insertEmpAbsentDay(
             absnt_type = absentDay.absnt_type.toString(),
             absnt_date = absentDay.absnt_date.toString(),
-            absnt_reason = absentDay.absnt_reason,
+            absnt_reason = absentDay.absnt_reason ?: "Emergency conditions",
+            month = absentDay.month,
+            year = absentDay.year,
             fname = absentDay.name ?: "",
             department = absentDay.department ?: ""
         )
-    }
-
-    private fun insertDayDetails(dayDetail: DayDetails) {
-        queries.insertEmpDayDetails(
-            fname = dayDetail.name,
-            department = dayDetail.department,
-            day = dayDetail.day ?: "",
-            month = dayDetail.month ?: "",
-            year = dayDetail.year ?: "",
-            wardia = dayDetail.wardia ?: "",
-            typeOfDay = dayDetail.typeOfDay ?: "",
-            partTime = dayDetail.partTime ?: 0.0,
-            earlyAccess = dayDetail.earlyAccess ?: "",
-            earlyAccessNote = dayDetail.earlyAccessNote ?: "",
-            notes = dayDetail.notes ?: ""
-        )
-
-    }
-
-    override suspend fun checkEmpDayDetail(emp: String, day: String, month: String, year: String): DayDetails? {
-        TODO("Not yet implemented")
     }
 
     private fun checkEmp(): Long = queries.checkIfnoEmployee().executeAsOne()

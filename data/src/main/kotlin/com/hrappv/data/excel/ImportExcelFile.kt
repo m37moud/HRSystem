@@ -875,6 +875,8 @@ class ImportExcelFile
                     absnt_type = AbsentType.RegularVacation,
                     absnt_date = LocalDate.of(year.toInt(), month.toInt(), i),
                     absnt_reason = "",
+                    month = month,
+                    year = year,
                     name = list[0].empName!!,
                     department = list[0].departName!!
                 ).apply {
@@ -892,6 +894,8 @@ class ImportExcelFile
                     absnt_type = AbsentType.RegularVacation,
                     absnt_date = LocalDate.of(year.toInt(), month.toInt(), i),
                     absnt_reason = "",
+                    month = month,
+                    year = year,
                     name = list[0].empName!!,
                     department = list[0].departName!!
                 ).apply {

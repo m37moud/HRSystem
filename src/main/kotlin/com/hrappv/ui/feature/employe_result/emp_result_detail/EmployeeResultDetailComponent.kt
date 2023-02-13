@@ -10,14 +10,11 @@ import com.arkivanov.decompose.router.stack.*
 import com.arkivanov.decompose.value.Value
 import com.arkivanov.essenty.parcelable.Parcelable
 import com.arkivanov.essenty.parcelable.Parcelize
-import com.hrappv.GetAllEmployees
 import com.hrappv.data.models.EmployeeResult
 import com.hrappv.di.AppComponent
 import com.hrappv.di.DaggerAppComponent
-import com.hrappv.ui.feature.employe_result.DefaultResultComponent
-import com.hrappv.ui.feature.employe_result.emp_result_detail.absent_days.DaysDetailComponent
-import com.hrappv.ui.feature.employe_result.emp_result_detail.details_days.AbsentDaysDetailComponent
-import com.hrappv.ui.feature.employe_result.register_attends.EmployResultScreenComponent
+import com.hrappv.ui.feature.employe_result.emp_result_detail.details_days.DaysDetailComponent
+import com.hrappv.ui.feature.employe_result.emp_result_detail.absent_days.AbsentDaysDetailComponent
 import com.hrappv.ui.navigation.Component
 import com.toxicbakery.logging.Arbor
 import javax.inject.Inject
