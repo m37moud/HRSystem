@@ -1,9 +1,0 @@
-CREATE TABLE IF NOT EXISTS emp_substraction (
-    substract_byday REAL AS Double,
-    sub_value       REAL AS Double,
-    sub_type        TEXT,
-    sub_date        TEXT,
-    sub_reason      TEXT,
-    emp_id          INTEGER,
-    depart_id       INTEGER
-);
