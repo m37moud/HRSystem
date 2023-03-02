@@ -12,9 +12,9 @@ Material Design ,
 
 
 https://youtu.be/2VLekPqCiYI
+
 [![Watch the video](https://user-images.githubusercontent.com/31845620/222424233-2dffefb5-13d1-4541-ab9d-5a435f50c366.png)](https://youtu.be/2VLekPqCiYI)
 
-![screen1](https://user-images.githubusercontent.com/31845620/218876412-18249e20-e603-4275-9b31-e3bd8fb65b3d.png)
 
 ![screen2](https://user-images.githubusercontent.com/31845620/218876445-6f7d5e2f-2d53-4197-8f8d-0887171dfc32.png)
 ![screen3](https://user-images.githubusercontent.com/31845620/218876459-bd482b8b-2584-44fc-8cac-0ff479bc1629.png)
